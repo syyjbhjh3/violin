@@ -2,3 +2,4 @@
 login/.gradle
 login/gradle
 login/settings.gradle.kts
+login/build/*

@@ -7,7 +7,8 @@ SpringBoot + React Basic Login
 - Filter, Intercepter, AOP등 Spring의 공통 처리 기능을 모두 사용하며, JVM을 최적화하여 메모리 관리한다.
 - JVM Warm Up, GC 튜닝등의 작업을 할 예정이다.
 
-Java 17  
+Java 21
+Gradle 8.11.1
 SpringBoot 3.3.3  
 
 
