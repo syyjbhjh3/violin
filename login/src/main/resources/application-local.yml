@@ -1,0 +1,20 @@
+spring:
+  data:
+    redis:
+      host: 192.168.106.3
+      port: 30379
+      password: admin123
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update  # DB 테이블 자동 생성
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLiteDialect
