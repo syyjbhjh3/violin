@@ -1,3 +1,7 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /login
 spring:
   data:
     redis:
@@ -14,7 +18,9 @@ spring:
       enabled: true
   jpa:
     hibernate:
-      ddl-auto: update  # DB 테이블 자동 생성
+      ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.SQLiteDialect
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+    show-sql: true
