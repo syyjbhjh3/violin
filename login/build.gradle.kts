@@ -28,6 +28,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
+	implementation ("com.h2database:h2")
 
 	/* Test */
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
