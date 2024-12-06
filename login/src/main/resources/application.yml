@@ -1,0 +1,6 @@
+spring:
+  data:
+    redis:
+      host: 192.168.106.3
+      port: 30379
+      password: admin123
