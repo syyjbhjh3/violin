@@ -1,8 +1,7 @@
 package com.api.login.user.controller;
 
-import com.api.login.common.msg.ResultVo;
+import com.api.login.common.model.vo.ResultVo;
 import com.api.login.user.model.vo.UserVo;
-import com.api.login.user.repo.UserRepository;
 import com.api.login.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
