@@ -1,5 +1,8 @@
 package com.api.login.common.model;
 
+import lombok.Getter;
+
+@Getter
 public enum MessageEnum {
     /* Result Message */
     RESULT_SUCCESS("success"),

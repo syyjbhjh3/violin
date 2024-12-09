@@ -1,4 +1,4 @@
-package com.api.login.common.redis;
+package com.api.login.common.util.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

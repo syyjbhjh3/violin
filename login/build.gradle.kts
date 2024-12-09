@@ -31,6 +31,7 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	implementation("com.h2database:h2")
+	implementation("io.jsonwebtoken:jjwt:0.9.1")
 
 	/* Test */
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
