@@ -7,4 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserService {
     ResultVo join(UserVo userVo);
+
+    ResultVo login(UserVo userVo);
 }

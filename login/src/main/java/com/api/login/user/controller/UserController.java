@@ -21,4 +21,9 @@ public class UserController {
     public ResultVo join(UserVo userVo) {
         return userService.join(userVo);
     }
+
+    @PostMapping("login")
+    public ResultVo login(UserVo userVo) {
+        return userService.login(userVo);
+    }
 }

@@ -32,6 +32,12 @@ public class UserServiceImpl implements UserService {
                         MessageEnum.EXIST_USER.message));
     }
 
+    public ResultVo login(UserVo userVo) {
+        return new ResultVo(
+                MessageEnum.RESULT_SUCCESS.message,
+                MessageEnum.JOIN_SUCCESS.message);
+    }
+
     public Boolean existUser(String id) {
         return userRepository.findById(id).isPresent();
     }

@@ -24,3 +24,9 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
     show-sql: true
+user:
+  jwt:
+    secret: qkrdudwn
+    expiration:
+       access: 900000
+       refresh: 604800000
