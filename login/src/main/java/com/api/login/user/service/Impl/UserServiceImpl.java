@@ -71,6 +71,11 @@ public class UserServiceImpl implements UserService {
                 MessageEnum.JOIN_SUCCESS.message);
     }
 
+    public ResultVo logout(UserVo userVo) {
+        redisService.deleteRefreshToken(userVo.getId());
+        return new ResultVo("", "");
+    }
+
     public Boolean existUser(String id) {
         return userRepository.findById(id).isPresent();
     }
