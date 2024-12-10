@@ -20,6 +20,7 @@ public class JwtTokenUtil {
 
     @Value("${user.jwt.expiration.refresh}")
     private static long refreshTokenExpiration;
+
     public static String createToken(String loginId, StatusEnum status) {
         long expiration = status == StatusEnum.ACCESS ? accessTokenExpiration : refreshTokenExpiration;
 
