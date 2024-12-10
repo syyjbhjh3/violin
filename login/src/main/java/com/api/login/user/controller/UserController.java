@@ -1,6 +1,7 @@
 package com.api.login.user.controller;
 
 import com.api.login.common.model.vo.ResultVo;
+import com.api.login.user.model.vo.LoginVo;
 import com.api.login.user.model.vo.UserVo;
 import com.api.login.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public ResultVo login(UserVo userVo) {
+    public LoginVo login(UserVo userVo) {
         return userService.login(userVo);
     }
 }
