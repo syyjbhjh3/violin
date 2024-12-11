@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public interface UserService {
     ResultVo join(UserVo userVo);
 
-    Boolean existUser(UserVo userVo);
+    Boolean existUser(String id);
 
     LoginVo login(UserVo userVo);
 }

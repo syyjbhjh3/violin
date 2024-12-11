@@ -24,8 +24,8 @@ public class UserController {
     }
 
     @PostMapping("existUser")
-    public Boolean existUser(UserVo userVo) {
-        return userService.existUser(userVo);
+    public Boolean existUser(String id) {
+        return userService.existUser(id);
     }
 
     @PostMapping("login")

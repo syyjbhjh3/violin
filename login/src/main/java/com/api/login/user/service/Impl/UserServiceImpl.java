@@ -47,6 +47,10 @@ public class UserServiceImpl implements UserService {
                         MessageEnum.EXIST_USER.message));
     }
 
+    public Boolean existUser(String id) {
+        return userRepository.findById(id).isPresent();
+    }
+
     public LoginVo login(UserVo userVo) {
         Optional<UserEntity> userEntity = userRepository.findById(userVo.getId());
 
@@ -73,10 +77,6 @@ public class UserServiceImpl implements UserService {
     public ResultVo logout(UserVo userVo) {
         redisService.deleteRefreshToken(userVo.getId());
         return new ResultVo("", "");
-    }
-
-    public Boolean existUser(String id) {
-        return userRepository.findById(id).isPresent();
     }
 
     public String refreshAccessToken(String loginId, String refreshToken) {
