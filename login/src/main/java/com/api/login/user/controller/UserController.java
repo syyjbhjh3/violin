@@ -23,6 +23,11 @@ public class UserController {
         return userService.join(userVo);
     }
 
+    @PostMapping("existUser")
+    public Boolean existUser(UserVo userVo) {
+        return userService.existUser(userVo);
+    }
+
     @PostMapping("login")
     public LoginVo login(UserVo userVo) {
         return userService.login(userVo);
