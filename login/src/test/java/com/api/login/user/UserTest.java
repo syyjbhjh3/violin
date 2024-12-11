@@ -1,6 +1,7 @@
 package com.api.login.user;
 
 import com.api.login.common.model.MessageEnum;
+import com.api.login.common.model.StatusEnum;
 import com.api.login.common.model.vo.ResultVo;
 import com.api.login.common.util.crypt.Encrypt;
 import com.api.login.user.model.entity.UserEntity;
@@ -56,7 +57,7 @@ class UserTest {
         ResultVo result = userService.join(userVo);
 
         /* Then */
-        assertEquals(MessageEnum.RESULT_SUCCESS.message, result.getResult());
+        assertEquals(StatusEnum.SUCCESS, result.getResult());
         assertEquals(MessageEnum.JOIN_SUCCESS.message, result.getResultMessage());
         verify(userRepository, times(1)).save(any(UserEntity.class));
     }
@@ -74,7 +75,7 @@ class UserTest {
 
         /* Then */
         assertNotNull(result);
-        assertEquals(MessageEnum.RESULT_ERROR.message, result.getResult());
+        assertEquals(StatusEnum.SUCCESS, result.getResult());
         assertEquals(MessageEnum.EXIST_USER.message, result.getResultMessage());
         verify(userRepository, times(0)).save(any(UserEntity.class));
     }

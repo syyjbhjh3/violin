@@ -1,5 +1,6 @@
 package com.api.login.user.model.vo;
 
+import com.api.login.common.model.StatusEnum;
 import com.api.login.user.model.entity.UserEntity;
 import lombok.Getter;
 
@@ -9,10 +10,10 @@ public class LoginVo {
     private String id;
     private String accessToken;
     private String refreshToken;
-    private String errCode;
+    private StatusEnum errCode;
     private String errMsg;
 
-    private LoginVo(String type, String id, String accessToken, String refreshToken, String errCode, String errMsg) {
+    private LoginVo(String type, String id, String accessToken, String refreshToken, StatusEnum errCode, String errMsg) {
         this.type = type;
         this.id = id;
         this.accessToken = accessToken;
@@ -26,7 +27,7 @@ public class LoginVo {
         return new LoginVo(type, id, accessToken, refreshToken, null, null);
     }
 
-    public static LoginVo error(String errCode, String errMsg) {
+    public static LoginVo error(StatusEnum errCode, String errMsg) {
         return new LoginVo(null, null, null, null, errCode, errMsg);
     }
 }

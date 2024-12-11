@@ -2,6 +2,7 @@ package com.api.login.user.service.Impl;
 
 import com.api.login.common.model.MessageEnum;
 import com.api.login.common.model.StatusEnum;
+import com.api.login.common.model.TypeEnum;
 import com.api.login.common.model.vo.ResultVo;
 import com.api.login.common.util.crypt.Encrypt;
 import com.api.login.common.util.jwt.JwtTokenUtil;
@@ -39,12 +40,12 @@ public class UserServiceImpl implements UserService {
                     userRepository.save(userEntity);
 
                     return new ResultVo(
-                            MessageEnum.RESULT_SUCCESS.message,
+                            StatusEnum.SUCCESS,
                             MessageEnum.JOIN_SUCCESS.message);
                 })
                 .orElseGet(() -> new ResultVo(
-                        MessageEnum.RESULT_ERROR.message,
-                        MessageEnum.EXIST_USER.message));
+                        StatusEnum.DUPLICATE,
+                        MessageEnum.JOIN_DUPLICATE.message));
     }
 
     public Boolean existUser(String id) {
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
         /* No Login Info - ID */
         if (userEntity.isEmpty()) {
-            return LoginVo.error("", "No matching user ID");
+            return LoginVo.error(StatusEnum.INVALID, MessageEnum.LOGIN_INVALID_ID.message);
         }
 
         UserEntity user = userEntity.get();
@@ -64,11 +65,11 @@ public class UserServiceImpl implements UserService {
 
         /* Not Matched - Password */
         if (!user.getPassword().equals(encryptedPassword)) {
-            return LoginVo.error("", "Incorrect password");
+            return LoginVo.error(StatusEnum.INVALID, MessageEnum.LOGIN_INVALID_PW.message);
         }
 
-        String accessToken = JwtTokenUtil.createToken(user.getId(), StatusEnum.ACCESS);
-        String refreshToken = JwtTokenUtil.createToken(user.getId(), StatusEnum.REFRESH);
+        String accessToken = JwtTokenUtil.createToken(user.getId(), TypeEnum.ACCESS);
+        String refreshToken = JwtTokenUtil.createToken(user.getId(), TypeEnum.REFRESH);
 
         redisService.storeRefreshToken(user.getId(), refreshToken);
         return LoginVo.success(user.getType(), user.getId(), accessToken, refreshToken);
@@ -76,13 +77,13 @@ public class UserServiceImpl implements UserService {
 
     public ResultVo logout(UserVo userVo) {
         redisService.deleteRefreshToken(userVo.getId());
-        return new ResultVo("", "");
+        return new ResultVo(StatusEnum.SUCCESS, MessageEnum.LOGOUT_SUCCESS.message);
     }
 
     public String refreshAccessToken(String loginId, String refreshToken) {
         if (!redisService.isRefreshTokenValid(loginId, refreshToken)) {
-            throw new RuntimeException("Invalid or expired refresh token.");
+            throw new RuntimeException(MessageEnum.TOKEN_NOTVALID.getMessage());
         }
-        return JwtTokenUtil.createToken(loginId, StatusEnum.ACCESS);
+        return JwtTokenUtil.createToken(loginId, TypeEnum.ACCESS);
     }
 }

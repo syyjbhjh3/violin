@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum StatusEnum {
-    NEW, ACCESS, REFRESH
+    SUCCESS, FAIL, ERROR, DUPLICATE, INVALID;
 }
