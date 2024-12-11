@@ -1,6 +1,6 @@
 package com.api.login.common.util.jwt;
 
-import com.api.login.common.model.StatusEnum;
+import com.api.login.common.model.TypeEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -21,8 +21,8 @@ public class JwtTokenUtil {
     @Value("${user.jwt.expiration.refresh}")
     private static long refreshTokenExpiration;
 
-    public static String createToken(String loginId, StatusEnum status) {
-        long expiration = status == StatusEnum.ACCESS ? accessTokenExpiration : refreshTokenExpiration;
+    public static String createToken(String loginId, TypeEnum status) {
+        long expiration = status == TypeEnum.ACCESS ? accessTokenExpiration : refreshTokenExpiration;
 
         Claims claims = Jwts.claims();
         claims.put("loginId", loginId);

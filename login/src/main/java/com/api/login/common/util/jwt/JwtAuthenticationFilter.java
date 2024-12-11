@@ -12,6 +12,7 @@ import jakarta.servlet.*;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
     private final String HEADER_STRING = "Authorization";
     private final String TOKEN_PREFIX = "Bearer ";
 
@@ -29,7 +30,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
         filterChain.doFilter(request, response);
     }
 

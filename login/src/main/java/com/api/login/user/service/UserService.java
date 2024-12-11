@@ -1,13 +1,14 @@
 package com.api.login.user.service;
 
-import com.api.login.common.model.vo.ResultVo;
-import com.api.login.user.model.vo.LoginVo;
-import com.api.login.user.model.vo.UserVo;
+import com.api.login.common.model.dto.ResultDTO;
+import com.api.login.user.model.dto.UserDTO;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
-    ResultVo join(UserVo userVo);
+    ResultDTO join(UserDTO userDTO);
 
-    LoginVo login(UserVo userVo);
+    Boolean existUser(String id);
+
+    ResultDTO login(UserDTO userDTO);
 }

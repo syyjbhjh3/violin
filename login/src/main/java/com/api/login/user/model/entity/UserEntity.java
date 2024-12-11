@@ -41,4 +41,15 @@ public class UserEntity {
 
 	@Column(name = "SALT")
 	private String salt;
+
+	public UserEntity(String type, String name, String password, String gender, String phone, String email, String address, String salt) {
+		this.type = type;
+		this.name = name;
+		this.password = password;
+		this.gender = gender;
+		this.phone = phone;
+		this.email = email;
+		this.address = address;
+		this.salt = salt;
+	}
 }

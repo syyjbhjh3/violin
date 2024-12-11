@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ActiveProfiles("test")
 public class RedisConnTest {
+
     @InjectMocks
     private StringRedisTemplate redisTemplate;
 
