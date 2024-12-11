@@ -3,13 +3,13 @@ package com.api.login.user.service.Impl;
 import com.api.login.common.model.MessageEnum;
 import com.api.login.common.model.StatusEnum;
 import com.api.login.common.model.TypeEnum;
-import com.api.login.common.model.vo.ResultVo;
+import com.api.login.common.model.dto.ResultDTO;
 import com.api.login.common.util.crypt.Encrypt;
 import com.api.login.common.util.jwt.JwtTokenUtil;
 import com.api.login.common.util.redis.RedisService;
+import com.api.login.user.model.dto.LoginDTO;
+import com.api.login.user.model.dto.UserDTO;
 import com.api.login.user.model.entity.UserEntity;
-import com.api.login.user.model.vo.LoginVo;
-import com.api.login.user.model.vo.UserVo;
 import com.api.login.user.repo.UserRepository;
 import com.api.login.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,23 +27,23 @@ public class UserServiceImpl implements UserService {
 
     private final Encrypt encrypt;
 
-    public ResultVo join(UserVo userVo) {
-        return Optional.of(userVo)
-                .filter(vo -> !existUser(vo.getId()))
-                .map(vo -> {
-                    UserEntity userEntity = vo.convertVo(vo);
+    public ResultDTO join(UserDTO userDTO) {
+        return Optional.of(userDTO)
+                .filter(dto -> !existUser(dto.getId()))
+                .map(dto -> {
+                    UserEntity userEntity = userDTO.toEntity();
 
                     String salt = encrypt.getSalt();
-                    String encrytPassword = encrypt.getEncrypt(vo.getPassword(), salt);
+                    String encrytPassword = encrypt.getEncrypt(dto.getPassword(), salt);
 
                     userEntity.setPassword(encrytPassword);
                     userRepository.save(userEntity);
 
-                    return new ResultVo(
+                    return new ResultDTO(
                             StatusEnum.SUCCESS,
                             MessageEnum.JOIN_SUCCESS.message);
                 })
-                .orElseGet(() -> new ResultVo(
+                .orElseGet(() -> new ResultDTO(
                         StatusEnum.DUPLICATE,
                         MessageEnum.JOIN_DUPLICATE.message));
     }
@@ -52,32 +52,40 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).isPresent();
     }
 
-    public LoginVo login(UserVo userVo) {
-        Optional<UserEntity> userEntity = userRepository.findById(userVo.getId());
+    public ResultDTO login(UserDTO userDTO) {
+        Optional<UserEntity> userEntity = userRepository.findById(userDTO.getId());
 
         /* No Login Info - ID */
         if (userEntity.isEmpty()) {
-            return LoginVo.error(StatusEnum.INVALID, MessageEnum.LOGIN_INVALID_ID.message);
+            return new ResultDTO(StatusEnum.INVALID, MessageEnum.LOGIN_INVALID_ID.message);
         }
 
         UserEntity user = userEntity.get();
-        String encryptedPassword = encrypt.getEncrypt(userVo.getPassword(), user.getSalt());
+        String encryptedPassword = encrypt.getEncrypt(userDTO.getPassword(), user.getSalt());
 
         /* Not Matched - Password */
         if (!user.getPassword().equals(encryptedPassword)) {
-            return LoginVo.error(StatusEnum.INVALID, MessageEnum.LOGIN_INVALID_PW.message);
+            return new ResultDTO(StatusEnum.INVALID, MessageEnum.LOGIN_INVALID_PW.message);
         }
 
         String accessToken = JwtTokenUtil.createToken(user.getId(), TypeEnum.ACCESS);
         String refreshToken = JwtTokenUtil.createToken(user.getId(), TypeEnum.REFRESH);
 
         redisService.storeRefreshToken(user.getId(), refreshToken);
-        return LoginVo.success(user.getType(), user.getId(), accessToken, refreshToken);
+
+        LoginDTO loginDTO = LoginDTO.builder()
+                .type(user.getType())
+                .id(user.getId())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+
+        return new ResultDTO(StatusEnum.SUCCESS, MessageEnum.LOGOUT_SUCCESS.message, loginDTO);
     }
 
-    public ResultVo logout(UserVo userVo) {
-        redisService.deleteRefreshToken(userVo.getId());
-        return new ResultVo(StatusEnum.SUCCESS, MessageEnum.LOGOUT_SUCCESS.message);
+    public ResultDTO logout(UserDTO userDTO) {
+        redisService.deleteRefreshToken(userDTO.getId());
+        return new ResultDTO(StatusEnum.SUCCESS, MessageEnum.LOGOUT_SUCCESS.message);
     }
 
     public String refreshAccessToken(String loginId, String refreshToken) {

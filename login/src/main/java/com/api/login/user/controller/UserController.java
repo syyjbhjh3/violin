@@ -1,8 +1,7 @@
 package com.api.login.user.controller;
 
-import com.api.login.common.model.vo.ResultVo;
-import com.api.login.user.model.vo.LoginVo;
-import com.api.login.user.model.vo.UserVo;
+import com.api.login.common.model.dto.ResultDTO;
+import com.api.login.user.model.dto.UserDTO;
 import com.api.login.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +18,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("join")
-    public ResultVo join(UserVo userVo) {
-        return userService.join(userVo);
+    public ResultDTO join(UserDTO userDTO) {
+        return userService.join(userDTO);
     }
 
     @PostMapping("existUser")
@@ -29,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public LoginVo login(UserVo userVo) {
-        return userService.login(userVo);
+    public ResultDTO login(UserDTO userDTO) {
+        return userService.login(userDTO);
     }
 }

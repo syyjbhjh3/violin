@@ -6,4 +6,6 @@ import lombok.Getter;
 public enum TypeEnum {
     /* JWT Token Type */
     ACCESS, REFRESH
+
+    /* OAuth Login Type */
 }

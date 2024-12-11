@@ -2,11 +2,11 @@ package com.api.login.user;
 
 import com.api.login.common.model.MessageEnum;
 import com.api.login.common.model.StatusEnum;
-import com.api.login.common.model.vo.ResultVo;
+import com.api.login.common.model.dto.ResultDTO;
 import com.api.login.common.util.crypt.Encrypt;
+import com.api.login.user.model.dto.LoginDTO;
+import com.api.login.user.model.dto.UserDTO;
 import com.api.login.user.model.entity.UserEntity;
-import com.api.login.user.model.vo.LoginVo;
-import com.api.login.user.model.vo.UserVo;
 import com.api.login.user.repo.UserRepository;
 import com.api.login.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -46,7 +46,7 @@ class UserTest {
     @DisplayName("[User] Join - Success")
     void testJoinSuccess() {
         /* Given */
-        UserVo userVo = new UserVo("user01", "password", "John Doe", "john@example.com", "010-1234-5678", "Address", "Role", "Active");
+        UserDTO userDTO = new UserDTO("user01", "password", "John Doe", "john@example.com", "010-1234-5678", "Address", "Role", "Active");
 
         when(userRepository.save(any(UserEntity.class))).thenReturn(new UserEntity());
         when(encrypt.getSalt()).thenReturn("randomSalt");
@@ -54,7 +54,7 @@ class UserTest {
         when(userService.existUser("user01")).thenReturn(false);
 
         /* When */
-        ResultVo result = userService.join(userVo);
+        ResultDTO result = userService.join(userDTO);
 
         /* Then */
         assertEquals(StatusEnum.SUCCESS, result.getResult());
@@ -66,17 +66,17 @@ class UserTest {
     @DisplayName("[User] Join - Fail(existUser)")
     void testJoinFailureDueToDuplicateUser() {
         /* Given */
-        UserVo userVo = new UserVo("user01", "password", "John Doe", "john@example.com", "010-1234-5678", "Address", "Role", "Active");
+        UserDTO userDTO = new UserDTO("user01", "password", "John Doe", "john@example.com", "010-1234-5678", "Address", "Role", "Active");
 
         when(userService.existUser("user01")).thenReturn(true);
 
         /* When */
-        ResultVo result = userService.join(userVo);
+        ResultDTO result = userService.join(userDTO);
 
         /* Then */
         assertNotNull(result);
         assertEquals(StatusEnum.SUCCESS, result.getResult());
-        assertEquals(MessageEnum.EXIST_USER.message, result.getResultMessage());
+        assertEquals(MessageEnum.JOIN_DUPLICATE.message, result.getResultMessage());
         verify(userRepository, times(0)).save(any(UserEntity.class));
     }
 
@@ -84,33 +84,23 @@ class UserTest {
     @DisplayName("[User] Login - Success")
     void testLoginSuccess() {
         /* Given */
-        UserVo userVo = new UserVo("user01", "password", "John Doe", "john@example.com", "010-1234-5678", "Address", "Role", "Active");
+        UserDTO userDTO = new UserDTO("user01", "password", "John Doe", "john@example.com", "010-1234-5678", "Address", "Role", "Active");
+        UserEntity userEntity = userDTO.toEntity();
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId("user01");
-        userEntity.setPassword("hashedPassword");
-        userEntity.setSalt("randomSalt");
-        userEntity.setType("regular");
-        userEntity.setName("John Doe");
-        userEntity.setGender("M");
-        userEntity.setPhone("010-1234-5678");
-        userEntity.setEmail("john@example.com");
-        userEntity.setAddress("123 Main St");
         when(userRepository.findById("user01")).thenReturn(Optional.of(userEntity));
 
         when(encrypt.getSalt()).thenReturn("randomSalt");
         when(encrypt.getEncrypt(anyString(), anyString())).thenReturn("hashedPassword");
 
-        LoginVo loginVo = LoginVo.success("", userEntity.getId(),"accessToken", "refreshToken");
+        LoginDTO loginVo = new LoginDTO(userEntity.getType(), userEntity.getId(), "accessToken", "refreshToken");
         when(redisTemplate.opsForValue().get(anyString())).thenReturn("refreshToken");
 
         /* When */
-        LoginVo returnedLoginVo = userService.login(userVo);
+        ResultDTO resultDTO = userService.login(userDTO);
 
         /* Then */
-        assertNotNull(returnedLoginVo);
-        assertNotNull(returnedLoginVo.getAccessToken());
-        assertNotNull(returnedLoginVo.getRefreshToken());
+        assertNotNull(resultDTO);
+        assertNotNull(resultDTO.getData());
 
         verify(redisTemplate).opsForValue().set(anyString(), anyString(), any());
 
