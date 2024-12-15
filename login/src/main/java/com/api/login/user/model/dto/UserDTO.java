@@ -1,20 +1,19 @@
 package com.api.login.user.model.dto;
 
-import com.api.login.common.model.StatusEnum;
 import com.api.login.user.model.entity.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class UserDTO {
-    private String type;
-    private String id;
-    private String password;
-    private String name;
-    private String gender;
-    private String phone;
-    private String email;
-    private String address;
+    private final String type;
+    private final String id;
+    private final String password;
+    private final String name;
+    private final String gender;
+    private final String phone;
+    private final String email;
+    private final String address;
 
     @Builder
     public UserDTO(String type, String id, String password, String name, String gender, String phone, String email, String address) {

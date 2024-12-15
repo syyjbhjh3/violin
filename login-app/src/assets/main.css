@@ -1,0 +1,95 @@
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #0050f0;
+    margin: 0;
+}
+
+.text {
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.sub-text {
+    color: white;
+    font-size: 1.2rem;
+    margin-top: 20px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.fade-in {
+    opacity: 1;
+}
+
+/* 버튼 스타일 */
+.buttons {
+    margin-top: 30px;
+}
+
+.btn {
+    background-color: #ffffff;
+    color: #0050f0;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.login-link, .join-link {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-link:hover, .join-link:hover {
+    text-decoration: underline;
+}
+
+.join-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.join-form label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.join-form input,
+.join-form select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.join-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.join-form button:hover {
+    background-color: #0056b3;
+}
