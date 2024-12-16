@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     private final Encrypt encrypt;
 
-    public ResultDTO join(UserDTO userDTO) {
+    public ResultDTO signUp(UserDTO userDTO) {
         return Optional.of(userDTO)
                 .filter(dto -> !existUser(dto.getId()))
                 .map(dto -> {

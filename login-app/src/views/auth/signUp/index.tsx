@@ -13,14 +13,14 @@ import {
     Text,
     useColorModeValue,
 } from '@chakra-ui/react';
-import axios, { AxiosError } from 'axios'; // axios 추가
+import axios, { AxiosError } from 'axios';
 import DefaultAuth from 'layouts/auth/Default';
 import illustration from 'assets/img/auth/auth.png';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { RiEyeCloseLine } from 'react-icons/ri';
+import * as process from "process";
 
 function SignUp() {
-    // State 관리
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -37,11 +37,13 @@ function SignUp() {
             return;
         }
 
+        setLoading(true);
         try {
             const response = await axios.post(
-                'https://api.example.com/signup',
+                process.env.REACT_APP_AUTH_API_URL + '/signUp',
                 {
-                    /* Type  */
+                    id : email,
+                    type : 1, /* No OAuth  */
                     email,
                     password,
                     name,
@@ -60,7 +62,6 @@ function SignUp() {
         }
     };
 
-    // Chakra UI Color Mode
     const textColor = useColorModeValue('navy.700', 'white');
     const textColorSecondary = 'gray.400';
     const brandStars = useColorModeValue('brand.500', 'brand.400');
@@ -91,7 +92,7 @@ function SignUp() {
                         fontWeight="400"
                         fontSize="md"
                     >
-                        Sign up and Usage our Platform!
+                        Sign up and Usage our K8S Platform!
                     </Text>
                 </Box>
                 <Flex
@@ -106,30 +107,59 @@ function SignUp() {
                     mb={{ base: '20px', md: 'auto' }}
                 >
                     <FormControl>
-                        <FormLabel color={textColor}>
+                        <FormLabel
+                            display="flex"
+                            ms="4px"
+                            fontSize="sm"
+                            fontWeight="500"
+                            color={textColor}
+                            mb="8px"
+                        >
                             Email<Text color={brandStars}>*</Text>
                         </FormLabel>
                         <Input
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            isRequired={true}
+                            variant="auth"
+                            fontSize="sm"
+                            ms={{ base: '0px', md: '0px' }}
                             type="email"
                             placeholder="mail@simmmple.com"
                             mb="24px"
+                            fontWeight="500"
+                            size="lg"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
 
-                        <FormLabel color={textColor}>
+                        <FormLabel
+                            ms="4px"
+                            fontSize="sm"
+                            fontWeight="500"
+                            color={textColor}
+                            display="flex"
+                        >
                             Password<Text color={brandStars}>*</Text>
                         </FormLabel>
                         <InputGroup size="md">
                             <Input
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                type={show ? 'text' : 'password'}
+                                isRequired={true}
+                                fontSize="sm"
                                 placeholder="New Password"
                                 mb="24px"
+                                size="lg"
+                                type={show ? 'text' : 'password'}
+                                variant="auth"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
-                            <InputRightElement>
+                            <InputRightElement
+                                display="flex"
+                                alignItems="center"
+                                mt="4px"
+                            >
                                 <Icon
+                                    color={textColorSecondary}
+                                    _hover={{ cursor: 'pointer' }}
                                     as={
                                         show
                                             ? RiEyeCloseLine
@@ -140,38 +170,64 @@ function SignUp() {
                             </InputRightElement>
                         </InputGroup>
 
-                        <FormLabel color={textColor}>
+                        <FormLabel
+                            ms="4px"
+                            fontSize="sm"
+                            fontWeight="500"
+                            color={textColor}
+                            display="flex"
+                        >
                             Confirm Password<Text color={brandStars}>*</Text>
                         </FormLabel>
                         <InputGroup size="md">
                             <Input
+                                isRequired={true}
+                                fontSize="sm"
+                                placeholder="Confirm Password"
+                                mb="24px"
+                                size="lg"
+                                type={show ? 'text' : 'password'}
+                                variant="auth"
                                 value={confirmPassword}
                                 onChange={(e) =>
                                     setConfirmPassword(e.target.value)
                                 }
-                                type={show ? 'text' : 'password'}
-                                placeholder="Confirm Password"
-                                mb="24px"
                             />
                         </InputGroup>
 
-                        <FormLabel color={textColor}>
+                        <FormLabel
+                            display="flex"
+                            ms="4px"
+                            fontSize="sm"
+                            fontWeight="500"
+                            color={textColor}
+                            mb="8px"
+                        >
                             Name<Text color={brandStars}>*</Text>
                         </FormLabel>
                         <Input
+                            isRequired={true}
+                            variant="auth"
+                            fontSize="sm"
+                            ms={{ base: '0px', md: '0px' }}
+                            type="email"
+                            placeholder="mail@simmmple.com"
+                            mb="24px"
+                            fontWeight="500"
+                            size="lg"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            type="text"
-                            placeholder="Your Name"
-                            mb="24px"
                         />
 
                         <Button
                             isLoading={loading}
                             onClick={handleSignUp}
-                            colorScheme="teal"
+                            fontSize="sm"
+                            variant="brand"
+                            fontWeight="500"
                             w="100%"
-                            h="50px"
+                            h="50"
+                            mb="24px"
                         >
                             Sign Up
                         </Button>

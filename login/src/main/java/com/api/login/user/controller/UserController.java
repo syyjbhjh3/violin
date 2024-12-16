@@ -17,9 +17,9 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("join")
-    public ResultDTO join(UserDTO userDTO) {
-        return userService.join(userDTO);
+    @PostMapping("signUp")
+    public ResultDTO signUp(UserDTO userDTO) {
+        return userService.signUp(userDTO);
     }
 
     @PostMapping("existUser")

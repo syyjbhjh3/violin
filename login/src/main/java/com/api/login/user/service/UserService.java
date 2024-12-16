@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
-    ResultDTO join(UserDTO userDTO);
+    ResultDTO signUp(UserDTO userDTO);
 
     Boolean existUser(String id);
 
