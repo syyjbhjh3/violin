@@ -4,6 +4,7 @@ import com.api.login.common.model.dto.ResultDTO;
 import com.api.login.user.model.dto.UserDTO;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public interface UserService {
     ResultDTO signUp(UserDTO userDTO);

@@ -48,6 +48,9 @@ function SignUp() {
                     password,
                     name,
                 },
+                {
+                    headers: { 'Content-Type': 'application/json' }
+                }
             );
             console.log('Sign Up Success:', response.data);
         } catch (error) {
@@ -59,6 +62,8 @@ function SignUp() {
             } else {
                 console.error('Unexpected Error:', error);
             }
+        } finally {
+            setLoading(false);
         }
     };
 
