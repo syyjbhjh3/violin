@@ -1,7 +1,7 @@
 package com.api.login.user;
 
-import com.api.login.common.model.MessageEnum;
-import com.api.login.common.model.StatusEnum;
+import com.api.login.common.model.enums.MessageEnum;
+import com.api.login.common.model.enums.StatusEnum;
 import com.api.login.common.model.dto.ResultDTO;
 import com.api.login.common.util.crypt.Encrypt;
 import com.api.login.common.util.redis.RedisService;
@@ -9,14 +9,11 @@ import com.api.login.user.model.dto.LoginDTO;
 import com.api.login.user.model.dto.UserDTO;
 import com.api.login.user.model.entity.UserEntity;
 import com.api.login.user.repo.UserRepository;
-import com.api.login.user.service.Impl.UserServiceImpl;
 import com.api.login.user.service.UserService;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

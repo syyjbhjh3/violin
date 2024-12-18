@@ -1,8 +1,8 @@
 package com.api.login.user.service.Impl;
 
-import com.api.login.common.model.MessageEnum;
-import com.api.login.common.model.StatusEnum;
-import com.api.login.common.model.TypeEnum;
+import com.api.login.common.model.enums.MessageEnum;
+import com.api.login.common.model.enums.StatusEnum;
+import com.api.login.common.model.enums.TypeEnum;
 import com.api.login.common.model.dto.ResultDTO;
 import com.api.login.common.util.crypt.Encrypt;
 import com.api.login.common.util.jwt.JwtTokenUtil;

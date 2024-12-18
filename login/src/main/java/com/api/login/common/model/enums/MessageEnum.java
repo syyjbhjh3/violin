@@ -1,4 +1,4 @@
-package com.api.login.common.model;
+package com.api.login.common.model.enums;
 
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package com.api.login.common.util.jwt;
 
-import com.api.login.common.model.TypeEnum;
+import com.api.login.common.model.enums.TypeEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
