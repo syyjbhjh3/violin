@@ -18,14 +18,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final String HEADER_STRING = "Authorization";
     private final String TOKEN_PREFIX = "Bearer ";
 
+    private final JwtTokenUtil jwtTokenUtil;
+
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String token = getJwtFromRequest(request);
 
-        if (token != null && !JwtTokenUtil.isExpired(token)) {
-            String loginId = JwtTokenUtil.getLoginId(token);
+        if (token != null && !jwtTokenUtil.isExpired(token)) {
+            String loginId = jwtTokenUtil.getLoginId(token);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     loginId, null, null

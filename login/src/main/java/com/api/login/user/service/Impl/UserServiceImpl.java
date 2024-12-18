@@ -29,6 +29,8 @@ public class UserServiceImpl implements UserService {
 
     private final Encrypt encrypt;
 
+    private final JwtTokenUtil jwtTokenUtil;
+
     public ResultDTO signUp(UserDTO userDTO) {
         return Optional.of(userDTO)
                 .filter(dto -> !existUser(dto.getId()))
@@ -37,6 +39,13 @@ public class UserServiceImpl implements UserService {
                     String encrytPassword = encrypt.getEncrypt(dto.getPassword(), salt);
 
                     UserDTO signUpDTO = UserDTO.builder()
+                            .type(dto.getType())
+                            .id(dto.getId())
+                            .name(dto.getName())
+                            .gender(dto.getGender())
+                            .phone(dto.getPhone())
+                            .email(dto.getEmail())
+                            .address(dto.getAddress())
                             .password(encrytPassword)
                             .salt(salt)
                             .build();
@@ -73,8 +82,8 @@ public class UserServiceImpl implements UserService {
             return new ResultDTO(StatusEnum.INVALID, MessageEnum.LOGIN_INVALID_PW.message);
         }
 
-        String accessToken = JwtTokenUtil.createToken(user.getId(), TypeEnum.ACCESS);
-        String refreshToken = JwtTokenUtil.createToken(user.getId(), TypeEnum.REFRESH);
+        String accessToken = jwtTokenUtil.createToken(user.getId(), TypeEnum.ACCESS);
+        String refreshToken = jwtTokenUtil.createToken(user.getId(), TypeEnum.REFRESH);
 
         redisService.storeRefreshToken(user.getId(), refreshToken);
 
@@ -85,7 +94,7 @@ public class UserServiceImpl implements UserService {
                 .refreshToken(refreshToken)
                 .build();
 
-        return new ResultDTO(StatusEnum.SUCCESS, MessageEnum.LOGOUT_SUCCESS.message, loginDTO);
+        return new ResultDTO(StatusEnum.SUCCESS, MessageEnum.LOGIN_SUCCESS.message, loginDTO);
     }
 
     public ResultDTO logout(UserDTO userDTO) {
@@ -97,6 +106,6 @@ public class UserServiceImpl implements UserService {
         if (!redisService.isRefreshTokenValid(loginId, refreshToken)) {
             throw new RuntimeException(MessageEnum.TOKEN_NOTVALID.getMessage());
         }
-        return JwtTokenUtil.createToken(loginId, TypeEnum.ACCESS);
+        return jwtTokenUtil.createToken(loginId, TypeEnum.ACCESS);
     }
 }
