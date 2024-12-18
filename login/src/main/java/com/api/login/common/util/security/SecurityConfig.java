@@ -1,5 +1,6 @@
-package com.api.login.common.util.jwt;
+package com.api.login.common.util.security;
 
+import com.api.login.common.util.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -12,23 +12,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/user/")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("signUp")
+    @PostMapping("/signUp")
     public ResultDTO signUp(@RequestBody UserDTO userDTO) {
         return userService.signUp(userDTO);
     }
 
-    @PostMapping("existUser")
+    @PostMapping("/existUser")
     public Boolean existUser(@RequestBody String id) {
         return userService.existUser(id);
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResultDTO login(@RequestBody UserDTO userDTO) {
         return userService.login(userDTO);
     }

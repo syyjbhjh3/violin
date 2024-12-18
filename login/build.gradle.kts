@@ -31,9 +31,14 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	implementation("com.h2database:h2")
+
+	/* Token */
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 	implementation("javax.xml.bind:jaxb-api:2.3.1")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")
+	
+	/* Logging */
+	implementation ("org.springframework.boot:spring-boot-starter-logging:3.1.0")
 
 	/* Test */
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
