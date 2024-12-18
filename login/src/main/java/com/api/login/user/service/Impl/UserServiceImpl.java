@@ -33,12 +33,15 @@ public class UserServiceImpl implements UserService {
         return Optional.of(userDTO)
                 .filter(dto -> !existUser(dto.getId()))
                 .map(dto -> {
-                    UserEntity userEntity = userDTO.toEntity();
-
                     String salt = encrypt.getSalt();
                     String encrytPassword = encrypt.getEncrypt(dto.getPassword(), salt);
 
-                    userEntity.setPassword(encrytPassword);
+                    UserDTO signUpDTO = UserDTO.builder()
+                            .password(encrytPassword)
+                            .salt(salt)
+                            .build();
+
+                    UserEntity userEntity = signUpDTO.toEntity();
                     userRepository.save(userEntity);
 
                     return new ResultDTO(

@@ -18,7 +18,7 @@ public class MDCRequestLoggingFilter implements Filter {
             throws IOException, ServletException {
 
         String uuid = UUID.randomUUID().toString();
-        MDC.put("request_id", uuid);
+        MDC.put("trace_id", uuid);
         MDC.put("resource", "Auth");
 
         try {

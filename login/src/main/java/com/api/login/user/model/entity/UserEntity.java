@@ -2,10 +2,11 @@ package com.api.login.user.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
+@Getter
 @NoArgsConstructor
 @Table(name = "TB_USER")
 public class UserEntity {
