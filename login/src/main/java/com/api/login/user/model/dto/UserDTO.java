@@ -14,9 +14,10 @@ public class UserDTO {
     private final String phone;
     private final String email;
     private final String address;
+    private final String salt;
 
     @Builder
-    public UserDTO(String type, String id, String password, String name, String gender, String phone, String email, String address) {
+    public UserDTO(String type, String id, String password, String name, String gender, String phone, String email, String address, String salt) {
         this.type = type;
         this.id = id;
         this.password = password;
@@ -25,9 +26,10 @@ public class UserDTO {
         this.phone = phone;
         this.email = email;
         this.address = address;
+        this.salt = salt;
     }
 
     public UserEntity toEntity() {
-        return new UserEntity(this.type, this.id, this.password, this.name, this.gender, this.phone, this.email, this.address);
+        return new UserEntity(this.type, this.id, this.name, this.password, this.gender, this.phone, this.email, this.address, this.salt);
     }
 }

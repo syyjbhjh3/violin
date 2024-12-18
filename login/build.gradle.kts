@@ -32,6 +32,8 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	implementation("com.h2database:h2")
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
+	implementation("javax.xml.bind:jaxb-api:2.3.1")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")
 
 	/* Test */
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

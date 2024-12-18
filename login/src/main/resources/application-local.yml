@@ -9,7 +9,7 @@ spring:
       port: 30379
       password: admin123
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:./data/auth
     driverClassName: org.h2.Driver
     username: sa
     password:
@@ -30,3 +30,8 @@ user:
     expiration:
        access: 900000
        refresh: 604800000
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

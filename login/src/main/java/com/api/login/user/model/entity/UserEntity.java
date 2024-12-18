@@ -1,10 +1,6 @@
 package com.api.login.user.model.entity;
 
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -42,8 +38,9 @@ public class UserEntity {
 	@Column(name = "SALT")
 	private String salt;
 
-	public UserEntity(String type, String name, String password, String gender, String phone, String email, String address, String salt) {
+	public UserEntity(String type, String id, String name, String password, String gender, String phone, String email, String address, String salt) {
 		this.type = type;
+		this.id = id;
 		this.name = name;
 		this.password = password;
 		this.gender = gender;
