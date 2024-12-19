@@ -1,4 +1,4 @@
-package com.api.login.common.util.oauth;
+package com.api.login.common.util.oauth.info;
 
 import com.api.login.user.model.entity.UserEntity;
 import lombok.Builder;
@@ -38,6 +38,6 @@ public class OAuthAttributes {
     }
 
     public UserEntity toEntity() {
-        return new UserEntity("google", this.email, this.name, null, null, null, this.email, null, null);
+        return new UserEntity("2", this.email, this.name, null, null, null, this.email, null, null);
     }
 }

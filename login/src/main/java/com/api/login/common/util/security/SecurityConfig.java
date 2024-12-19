@@ -2,7 +2,7 @@ package com.api.login.common.util.security;
 
 import com.api.login.common.util.jwt.JwtAuthenticationFilter;
 import com.api.login.common.util.oauth.CustomOAuth2UserService;
-import com.api.login.common.util.oauth.Oauth2UserSuccessHandler;
+import com.api.login.common.util.oauth.handler.Oauth2UserSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

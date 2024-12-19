@@ -12,4 +12,6 @@ public interface UserService {
     Boolean existUser(String id);
 
     ResultDTO login(UserDTO userDTO);
+
+    ResultDTO oAuthLogin(String id);
 }

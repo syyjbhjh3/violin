@@ -101,6 +101,30 @@ public class UserServiceImpl implements UserService {
         return new ResultDTO(Status.SUCCESS, Message.LOGIN_SUCCESS.message, loginDTO);
     }
 
+    public ResultDTO oAuthLogin(String id) {
+        Optional<UserEntity> userEntity = userRepository.findById(id);
+
+        if (userEntity.isEmpty()) {
+            return new ResultDTO(Status.INVALID, Message.LOGIN_INVALID_ID.message);
+        }
+
+        UserEntity user = userEntity.get();
+
+        String accessToken = jwtTokenUtil.createToken(user.getId(), Type.ACCESS);
+        String refreshToken = jwtTokenUtil.createToken(user.getId(), Type.REFRESH);
+
+        redisService.storeRefreshToken(user.getId(), refreshToken);
+
+        LoginDTO loginDTO = LoginDTO.builder()
+                .type(user.getType())
+                .id(user.getId())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+
+        return new ResultDTO(Status.SUCCESS, Message.LOGIN_SUCCESS.message, loginDTO);
+    }
+
     public ResultDTO logout(UserDTO userDTO) {
         redisService.deleteRefreshToken(userDTO.getId());
         return new ResultDTO(Status.SUCCESS, Message.LOGOUT_SUCCESS.message);

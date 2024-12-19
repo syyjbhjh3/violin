@@ -32,4 +32,9 @@ public class UserController {
     public ResultDTO login(@RequestBody UserDTO userDTO) {
         return userService.login(userDTO);
     }
+
+    @PostMapping("/oAuthLogin")
+    public ResultDTO oAuthLogin(@RequestBody String id) {
+        return userService.oAuthLogin(id);
+    }
 }
