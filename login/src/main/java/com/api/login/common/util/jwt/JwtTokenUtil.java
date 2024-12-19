@@ -1,10 +1,9 @@
 package com.api.login.common.util.jwt;
 
-import com.api.login.common.model.enums.TypeEnum;
+import com.api.login.common.model.enums.Type;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +21,8 @@ public class JwtTokenUtil {
     @Value("${user.jwt.expiration.refresh}")
     private long refreshTokenExpiration;
 
-    public String createToken(String loginId, TypeEnum status) {
-        long expiration = status == TypeEnum.ACCESS ? accessTokenExpiration : refreshTokenExpiration;
+    public String createToken(String loginId, Type status) {
+        long expiration = status == Type.ACCESS ? accessTokenExpiration : refreshTokenExpiration;
 
         Claims claims = Jwts.claims();
         claims.put("loginId", loginId);

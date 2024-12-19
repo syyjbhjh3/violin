@@ -3,7 +3,7 @@ package com.api.login.common.model.enums;
 import lombok.Getter;
 
 @Getter
-public enum TypeEnum {
+public enum Type {
     /* JWT Token Type */
     ACCESS, REFRESH
 

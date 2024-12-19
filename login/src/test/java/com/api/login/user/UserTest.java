@@ -1,7 +1,7 @@
 package com.api.login.user;
 
-import com.api.login.common.model.enums.MessageEnum;
-import com.api.login.common.model.enums.StatusEnum;
+import com.api.login.common.model.enums.Message;
+import com.api.login.common.model.enums.Status;
 import com.api.login.common.model.dto.ResultDTO;
 import com.api.login.common.util.crypt.Encrypt;
 import com.api.login.common.util.redis.RedisService;
@@ -77,8 +77,8 @@ class UserTest {
         ResultDTO result = userService.signUp(userDTO);
 
         /* Then */
-        assertEquals(StatusEnum.SUCCESS, result.getResult());
-        assertEquals(MessageEnum.JOIN_SUCCESS.message, result.getResultMessage());
+        assertEquals(Status.SUCCESS, result.getResult());
+        assertEquals(Message.JOIN_SUCCESS.message, result.getResultMessage());
         verify(userRepository, times(1)).save(any(UserEntity.class));
     }
 
@@ -105,8 +105,8 @@ class UserTest {
 
         /* Then */
         assertNotNull(result);
-        assertEquals(StatusEnum.SUCCESS, result.getResult());
-        assertEquals(MessageEnum.JOIN_DUPLICATE.message, result.getResultMessage());
+        assertEquals(Status.SUCCESS, result.getResult());
+        assertEquals(Message.JOIN_DUPLICATE.message, result.getResultMessage());
         verify(userRepository, times(0)).save(any(UserEntity.class));
     }
 

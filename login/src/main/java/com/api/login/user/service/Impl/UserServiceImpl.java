@@ -1,8 +1,8 @@
 package com.api.login.user.service.Impl;
 
-import com.api.login.common.model.enums.MessageEnum;
-import com.api.login.common.model.enums.StatusEnum;
-import com.api.login.common.model.enums.TypeEnum;
+import com.api.login.common.model.enums.Message;
+import com.api.login.common.model.enums.Status;
+import com.api.login.common.model.enums.Type;
 import com.api.login.common.model.dto.ResultDTO;
 import com.api.login.common.util.crypt.Encrypt;
 import com.api.login.common.util.jwt.JwtTokenUtil;
@@ -35,8 +35,12 @@ public class UserServiceImpl implements UserService {
         return Optional.of(userDTO)
                 .filter(dto -> !existUser(dto.getId()))
                 .map(dto -> {
-                    String salt = encrypt.getSalt();
-                    String encrytPassword = encrypt.getEncrypt(dto.getPassword(), salt);
+                    String salt = null, encrytPassword = null;
+
+                    if (dto.getType().equals("1")) {
+                        salt = encrypt.getSalt();
+                        encrytPassword = encrypt.getEncrypt(dto.getPassword(), salt);
+                    }
 
                     UserDTO signUpDTO = UserDTO.builder()
                             .type(dto.getType())
@@ -54,12 +58,12 @@ public class UserServiceImpl implements UserService {
                     userRepository.save(userEntity);
 
                     return new ResultDTO(
-                            StatusEnum.SUCCESS,
-                            MessageEnum.JOIN_SUCCESS.message);
+                            Status.SUCCESS,
+                            Message.JOIN_SUCCESS.message);
                 })
                 .orElseGet(() -> new ResultDTO(
-                        StatusEnum.DUPLICATE,
-                        MessageEnum.JOIN_DUPLICATE.message));
+                        Status.DUPLICATE,
+                        Message.JOIN_DUPLICATE.message));
     }
 
     public Boolean existUser(String id) {
@@ -71,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
         /* No Login Info - ID */
         if (userEntity.isEmpty()) {
-            return new ResultDTO(StatusEnum.INVALID, MessageEnum.LOGIN_INVALID_ID.message);
+            return new ResultDTO(Status.INVALID, Message.LOGIN_INVALID_ID.message);
         }
 
         UserEntity user = userEntity.get();
@@ -79,11 +83,11 @@ public class UserServiceImpl implements UserService {
 
         /* Not Matched - Password */
         if (!user.getPassword().equals(encryptedPassword)) {
-            return new ResultDTO(StatusEnum.INVALID, MessageEnum.LOGIN_INVALID_PW.message);
+            return new ResultDTO(Status.INVALID, Message.LOGIN_INVALID_PW.message);
         }
 
-        String accessToken = jwtTokenUtil.createToken(user.getId(), TypeEnum.ACCESS);
-        String refreshToken = jwtTokenUtil.createToken(user.getId(), TypeEnum.REFRESH);
+        String accessToken = jwtTokenUtil.createToken(user.getId(), Type.ACCESS);
+        String refreshToken = jwtTokenUtil.createToken(user.getId(), Type.REFRESH);
 
         redisService.storeRefreshToken(user.getId(), refreshToken);
 
@@ -94,18 +98,18 @@ public class UserServiceImpl implements UserService {
                 .refreshToken(refreshToken)
                 .build();
 
-        return new ResultDTO(StatusEnum.SUCCESS, MessageEnum.LOGIN_SUCCESS.message, loginDTO);
+        return new ResultDTO(Status.SUCCESS, Message.LOGIN_SUCCESS.message, loginDTO);
     }
 
     public ResultDTO logout(UserDTO userDTO) {
         redisService.deleteRefreshToken(userDTO.getId());
-        return new ResultDTO(StatusEnum.SUCCESS, MessageEnum.LOGOUT_SUCCESS.message);
+        return new ResultDTO(Status.SUCCESS, Message.LOGOUT_SUCCESS.message);
     }
 
     public String refreshAccessToken(String loginId, String refreshToken) {
         if (!redisService.isRefreshTokenValid(loginId, refreshToken)) {
-            throw new RuntimeException(MessageEnum.TOKEN_NOTVALID.getMessage());
+            throw new RuntimeException(Message.TOKEN_NOTVALID.getMessage());
         }
-        return jwtTokenUtil.createToken(loginId, TypeEnum.ACCESS);
+        return jwtTokenUtil.createToken(loginId, Type.ACCESS);
     }
 }

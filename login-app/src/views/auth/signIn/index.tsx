@@ -133,6 +133,7 @@ function SignIn() {
                         _hover={googleHover}
                         _active={googleActive}
                         _focus={googleActive}
+                        onClick={() => window.location.href = 'http://localhost:9090/auth/oauth2/authorization/google'}
                     >
                         <Icon as={FcGoogle} w="20px" h="20px" me="10px" />
                         Sign in with Google

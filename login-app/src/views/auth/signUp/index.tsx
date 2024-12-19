@@ -52,7 +52,7 @@ function SignUp() {
                     headers: { 'Content-Type': 'application/json' }
                 }
             );
-            console.log('Sign Up Success:', response.data);
+
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error(

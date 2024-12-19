@@ -3,7 +3,7 @@ package com.api.login.common.model.enums;
 import lombok.Getter;
 
 @Getter
-public enum MessageEnum {
+public enum Message {
     /**
     *   Convention : METHOD_STATUS
     **/
@@ -22,7 +22,7 @@ public enum MessageEnum {
 
     public final String message;
 
-    MessageEnum(String message) {
+    Message(String message) {
         this.message = message;
     }
 }

@@ -3,6 +3,6 @@ package com.api.login.common.model.enums;
 import lombok.Getter;
 
 @Getter
-public enum StatusEnum {
+public enum Status {
     SUCCESS, FAIL, ERROR, DUPLICATE, INVALID;
 }
