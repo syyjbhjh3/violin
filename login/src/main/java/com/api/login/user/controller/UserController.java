@@ -24,8 +24,8 @@ public class UserController {
     }
 
     @PostMapping("/existUser")
-    public Boolean existUser(@RequestBody String id) {
-        return userService.existUser(id);
+    public Boolean existUser(@RequestBody UserDTO userDTO) {
+        return userService.existUser(userDTO);
     }
 
     @PostMapping("/login")
@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/oAuthLogin")
-    public ResultDTO oAuthLogin(@RequestBody String id) {
-        return userService.oAuthLogin(id);
+    public ResultDTO oAuthLogin(@RequestBody UserDTO userDTO) {
+        return userService.oAuthLogin(userDTO);
     }
 }

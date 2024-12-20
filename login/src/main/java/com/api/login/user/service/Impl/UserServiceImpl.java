@@ -66,6 +66,10 @@ public class UserServiceImpl implements UserService {
                         Message.JOIN_DUPLICATE.message));
     }
 
+    public Boolean existUser(UserDTO userDTO) {
+        return userRepository.findById(userDTO.getId()).isPresent();
+    }
+
     public Boolean existUser(String id) {
         return userRepository.findById(id).isPresent();
     }
@@ -101,8 +105,8 @@ public class UserServiceImpl implements UserService {
         return new ResultDTO(Status.SUCCESS, Message.LOGIN_SUCCESS.message, loginDTO);
     }
 
-    public ResultDTO oAuthLogin(String id) {
-        Optional<UserEntity> userEntity = userRepository.findById(id);
+    public ResultDTO oAuthLogin(UserDTO userDTO) {
+        Optional<UserEntity> userEntity = userRepository.findById(userDTO.getId());
 
         if (userEntity.isEmpty()) {
             return new ResultDTO(Status.INVALID, Message.LOGIN_INVALID_ID.message);

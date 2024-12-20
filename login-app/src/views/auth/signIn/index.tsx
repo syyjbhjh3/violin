@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import {
     Box,
     Button,
@@ -79,6 +79,46 @@ function SignIn() {
             setLoading(false);
         }
     };
+    const location = useLocation();
+
+    useEffect(() => {
+        if (!location.search) return;
+
+        const params = new URLSearchParams(location.search);
+        const isSignUp = params.get('isSignUp');
+
+        if (isSignUp === 'false') {
+            setLoading(true);
+
+            axios.post(
+                    process.env.REACT_APP_AUTH_API_URL + '/oAuthLogin',
+                    {
+                        id : params.get('email')
+                    },
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                    }
+                )
+                .then((response) => {
+                    console.log('Sign In Success:', response.data);
+                })
+                .catch((error) => {
+                    if (axios.isAxiosError(error)) {
+                        console.error(
+                            'Sign In Error:',
+                            error.response?.data || error.message
+                        );
+                    } else {
+                        console.error('Unexpected Error:', error);
+                    }
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        } else {
+            alert('OAuth Sign Up Success');
+        }
+    }, [location.search]);
 
     return (
         <DefaultAuth illustrationBackground={illustration} image={illustration}>

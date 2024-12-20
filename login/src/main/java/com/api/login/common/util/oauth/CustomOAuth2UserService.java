@@ -42,7 +42,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             return new CustomOAuth2User(
                     false,
                     attributes.getAttributes(),
-                    attributes.getNameAttributeKey()
+                    attributes.getNameAttributeKey(),
+                    attributes.getEmail()
             );
         } else {
             return signUpOAuth(attributes);
@@ -63,7 +64,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             return new CustomOAuth2User(
                     true,
                     attributes.getAttributes(),
-                    attributes.getNameAttributeKey()
+                    attributes.getNameAttributeKey(),
+                    attributes.getEmail()
             );
         } else {
             throw new OAuth2AuthenticationException("회원가입에 실패했습니다.");

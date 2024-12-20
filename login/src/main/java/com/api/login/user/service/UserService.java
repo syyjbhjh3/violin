@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 public interface UserService {
     ResultDTO signUp(UserDTO userDTO);
 
+    Boolean existUser(UserDTO userDTO);
+
     Boolean existUser(String id);
 
     ResultDTO login(UserDTO userDTO);
 
-    ResultDTO oAuthLogin(String id);
+    ResultDTO oAuthLogin(UserDTO userDTO);
 }

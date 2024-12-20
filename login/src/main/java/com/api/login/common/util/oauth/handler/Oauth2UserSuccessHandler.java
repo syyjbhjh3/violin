@@ -20,12 +20,12 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         String qString = null;
 
         if (oAuth2User.isSignUp()) {
-            qString = "";
+            qString = "?isSignUp=" + oAuth2User.isSignUp();
         } else {
-            qString = "" + oAuth2User.getEmail();
+            qString = "?isSignUp=" + oAuth2User.isSignUp() + "&email=" + oAuth2User.getEmail();
         }
 
-        String targetUrl = "http://localhost:3000/auth/signIn" + "?" + qString;
+        String targetUrl = "http://localhost:3000/auth/sign-in" + qString;
         String redirectUrl = UriComponentsBuilder.fromUriString(targetUrl)
                 .build().toUriString();
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);

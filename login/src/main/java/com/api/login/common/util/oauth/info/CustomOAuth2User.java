@@ -14,11 +14,11 @@ public class CustomOAuth2User implements OAuth2User {
     private final String nameAttributeKey;
     private final String email;
 
-    public CustomOAuth2User(boolean isSignUp, Map<String, Object> attributes, String nameAttributeKey) {
+    public CustomOAuth2User(boolean isSignUp, Map<String, Object> attributes, String nameAttributeKey, String email) {
         this.isSignUp = isSignUp;
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
-        this.email = (String) attributes.get(nameAttributeKey);
+        this.email = email;
     }
 
     public boolean isSignUp() {
