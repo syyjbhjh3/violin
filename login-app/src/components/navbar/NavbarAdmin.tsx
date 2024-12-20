@@ -126,7 +126,7 @@ export default function AdminNavbar(props: {
                             </BreadcrumbLink>
                         </BreadcrumbItem>
 
-                        <BreadcrumbItem color={secondaryText} fontSize="sm" marginBottom={1}>
+                        <BreadcrumbItem color={secondaryText} fontSize="sm" marginBottom={1.5}>
                             <BreadcrumbLink href="#" color={secondaryText}>
                                 {brandText}
                             </BreadcrumbLink>
