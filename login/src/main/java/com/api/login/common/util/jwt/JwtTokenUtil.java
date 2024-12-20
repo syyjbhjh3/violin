@@ -1,28 +1,28 @@
 package com.api.login.common.util.jwt;
 
-import com.api.login.common.model.TypeEnum;
+import com.api.login.common.model.enums.Type;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@RequiredArgsConstructor
+@Component
 public class JwtTokenUtil {
 
     @Value("${user.jwt.secret}")
-    private static String secretKey;
+    private String secretKey;
 
     @Value("${user.jwt.expiration.access}")
-    private static long accessTokenExpiration;
+    private long accessTokenExpiration;
 
     @Value("${user.jwt.expiration.refresh}")
-    private static long refreshTokenExpiration;
+    private long refreshTokenExpiration;
 
-    public static String createToken(String loginId, TypeEnum status) {
-        long expiration = status == TypeEnum.ACCESS ? accessTokenExpiration : refreshTokenExpiration;
+    public String createToken(String loginId, Type status) {
+        long expiration = status == Type.ACCESS ? accessTokenExpiration : refreshTokenExpiration;
 
         Claims claims = Jwts.claims();
         claims.put("loginId", loginId);
@@ -35,16 +35,16 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public static String getLoginId(String token) {
+    public String getLoginId(String token) {
         return extractClaims(token).get("loginId").toString();
     }
 
-    public static boolean isExpired(String token) {
+    public boolean isExpired(String token) {
         Date expiredDate = extractClaims(token).getExpiration();
         return expiredDate.before(new Date());
     }
 
-    private static Claims extractClaims(String token) {
+    private Claims extractClaims(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 }

@@ -1,5 +1,5 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
     Box,
     Button,
@@ -23,6 +23,8 @@ import illustration from 'assets/img/auth/auth.png';
 import { FcGoogle } from 'react-icons/fc';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { RiEyeCloseLine } from 'react-icons/ri';
+import axios, {AxiosError} from "axios";
+import * as process from "process";
 
 function SignIn() {
     // Chakra color mode
@@ -41,8 +43,86 @@ function SignIn() {
         { bg: 'secondaryGray.300' },
         { bg: 'whiteAlpha.200' },
     );
-    const [show, setShow] = React.useState(false);
     const handleClick = () => setShow(!show);
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleSignIn = async () => {
+
+        setLoading(true);
+        try {
+            const response = await axios.post(
+                process.env.REACT_APP_AUTH_API_URL + '/login',
+                {
+                    id : email,
+                    type : 1, /* No OAuth  */
+                    password,
+                },
+                {
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            );
+            console.log('Sign In Success:', response.data);
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                console.error(
+                    'Sign In Error:',
+                    error.response?.data || error.message,
+                );
+            } else {
+                console.error('Unexpected Error:', error);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (!location.search) return;
+
+        const params = new URLSearchParams(location.search);
+        const isSignUp = params.get('isSignUp');
+
+        if (isSignUp === 'false') {
+            setLoading(true);
+
+            axios.post(
+                    process.env.REACT_APP_AUTH_API_URL + '/oAuthLogin',
+                    {
+                        id : params.get('email')
+                    },
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                    }
+                )
+                .then((response) => {
+                    console.log('Sign In Success:', response.data);
+                    navigate('/admin/default');
+                })
+                .catch((error) => {
+                    if (axios.isAxiosError(error)) {
+                        console.error(
+                            'Sign In Error:',
+                            error.response?.data || error.message
+                        );
+                    } else {
+                        console.error('Unexpected Error:', error);
+                    }
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        } else {
+            alert('OAuth Sign Up Success');
+        }
+    }, [location.search]);
+
     return (
         <DefaultAuth illustrationBackground={illustration} image={illustration}>
             <Flex
@@ -96,6 +176,7 @@ function SignIn() {
                         _hover={googleHover}
                         _active={googleActive}
                         _focus={googleActive}
+                        onClick={() => window.location.href = 'http://localhost:9090/auth/oauth2/authorization/google'}
                     >
                         <Icon as={FcGoogle} w="20px" h="20px" me="10px" />
                         Sign in with Google
@@ -128,6 +209,8 @@ function SignIn() {
                             mb="24px"
                             fontWeight="500"
                             size="lg"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <FormLabel
                             ms="4px"
@@ -147,6 +230,8 @@ function SignIn() {
                                 size="lg"
                                 type={show ? 'text' : 'password'}
                                 variant="auth"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                             <InputRightElement
                                 display="flex"
@@ -198,6 +283,8 @@ function SignIn() {
                             </NavLink>
                         </Flex>
                         <Button
+                            isLoading={loading}
+                            onClick={handleSignIn}
                             fontSize="sm"
                             variant="brand"
                             fontWeight="500"

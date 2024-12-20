@@ -1,7 +1,7 @@
 package com.api.login.user;
 
-import com.api.login.common.model.MessageEnum;
-import com.api.login.common.model.StatusEnum;
+import com.api.login.common.model.enums.Message;
+import com.api.login.common.model.enums.Status;
 import com.api.login.common.model.dto.ResultDTO;
 import com.api.login.common.util.crypt.Encrypt;
 import com.api.login.common.util.redis.RedisService;
@@ -9,14 +9,11 @@ import com.api.login.user.model.dto.LoginDTO;
 import com.api.login.user.model.dto.UserDTO;
 import com.api.login.user.model.entity.UserEntity;
 import com.api.login.user.repo.UserRepository;
-import com.api.login.user.service.Impl.UserServiceImpl;
 import com.api.login.user.service.UserService;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -59,7 +56,17 @@ class UserTest {
     @DisplayName("[User] Join - Success")
     void testJoinSuccess() {
         /* Given */
-        UserDTO userDTO = new UserDTO("user01", "password", "John Doe", "john@example.com", "010-1234-5678", "Address", "Role", "Active");
+        UserDTO userDTO = UserDTO.builder()
+                .type("userType")
+                .id("userId")
+                .password("encryptedPassword")
+                .name("John Doe")
+                .gender("M")
+                .phone("123-456-7890")
+                .email("john.doe@example.com")
+                .address("123 Main St")
+                .salt("randomSalt")
+                .build();
 
         when(userRepository.save(any(UserEntity.class))).thenReturn(new UserEntity());
         when(encrypt.getSalt()).thenReturn("randomSalt");
@@ -67,11 +74,11 @@ class UserTest {
         when(userService.existUser("user01")).thenReturn(false);
 
         /* When */
-        ResultDTO result = userService.join(userDTO);
+        ResultDTO result = userService.signUp(userDTO);
 
         /* Then */
-        assertEquals(StatusEnum.SUCCESS, result.getResult());
-        assertEquals(MessageEnum.JOIN_SUCCESS.message, result.getResultMessage());
+        assertEquals(Status.SUCCESS, result.getResult());
+        assertEquals(Message.JOIN_SUCCESS.message, result.getResultMessage());
         verify(userRepository, times(1)).save(any(UserEntity.class));
     }
 
@@ -79,17 +86,27 @@ class UserTest {
     @DisplayName("[User] Join - Fail(existUser)")
     void testJoinFailureDueToDuplicateUser() {
         /* Given */
-        UserDTO userDTO = new UserDTO("user01", "password", "John Doe", "john@example.com", "010-1234-5678", "Address", "Role", "Active");
+        UserDTO userDTO = UserDTO.builder()
+                .type("userType")
+                .id("userId")
+                .password("encryptedPassword")
+                .name("John Doe")
+                .gender("M")
+                .phone("123-456-7890")
+                .email("john.doe@example.com")
+                .address("123 Main St")
+                .salt("randomSalt")
+                .build();
 
         when(userService.existUser("user01")).thenReturn(true);
 
         /* When */
-        ResultDTO result = userService.join(userDTO);
+        ResultDTO result = userService.signUp(userDTO);
 
         /* Then */
         assertNotNull(result);
-        assertEquals(StatusEnum.SUCCESS, result.getResult());
-        assertEquals(MessageEnum.JOIN_DUPLICATE.message, result.getResultMessage());
+        assertEquals(Status.SUCCESS, result.getResult());
+        assertEquals(Message.JOIN_DUPLICATE.message, result.getResultMessage());
         verify(userRepository, times(0)).save(any(UserEntity.class));
     }
 
@@ -97,7 +114,18 @@ class UserTest {
     @DisplayName("[User] Login - Success")
     void testLoginSuccess() {
         /* Given */
-        UserDTO userDTO = new UserDTO("user01", "password", "John Doe", "john@example.com", "010-1234-5678", "Address", "Role", "Active");
+        UserDTO userDTO = UserDTO.builder()
+                .type("userType")
+                .id("userId")
+                .password("encryptedPassword")
+                .name("John Doe")
+                .gender("M")
+                .phone("123-456-7890")
+                .email("john.doe@example.com")
+                .address("123 Main St")
+                .salt("randomSalt")
+                .build();
+
         UserEntity userEntity = userDTO.toEntity();
 
         when(userRepository.findById("user01")).thenReturn(Optional.of(userEntity));
