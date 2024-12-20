@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
     Box,
     Button,
@@ -50,6 +50,9 @@ function SignIn() {
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const handleSignIn = async () => {
 
         setLoading(true);
@@ -79,7 +82,6 @@ function SignIn() {
             setLoading(false);
         }
     };
-    const location = useLocation();
 
     useEffect(() => {
         if (!location.search) return;
@@ -101,6 +103,7 @@ function SignIn() {
                 )
                 .then((response) => {
                     console.log('Sign In Success:', response.data);
+                    navigate('/admin/default');
                 })
                 .catch((error) => {
                     if (axios.isAxiosError(error)) {

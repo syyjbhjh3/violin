@@ -5,8 +5,8 @@ import Footer from 'components/footer/FooterAdmin';
 import Navbar from 'components/navbar/NavbarAdmin';
 import Sidebar from 'components/sidebar/Sidebar';
 import { SidebarContext } from 'contexts/SidebarContext';
-import { useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import routes from 'routes';
 
 // Custom Chakra theme
@@ -15,6 +15,18 @@ export default function Dashboard(props: { [x: string]: any }) {
     // states and functions
     const [fixed] = useState(false);
     const [toggleSidebar, setToggleSidebar] = useState(false);
+    const [brandText, setBrandText] = useState('Default Brand Text');
+    const [navbarSecondary, setNavbarSecondary] = useState(false);
+    const [navbarMessage, setNavbarMessage] = useState<string | boolean>('');
+
+    const location = useLocation();
+
+    useEffect(() => {
+        setBrandText(getActiveRoute(routes));
+        setNavbarSecondary(getActiveNavbar(routes));
+        setNavbarMessage(getActiveNavbarText(routes));
+    }, [location.pathname, routes]);
+
     // functions for changing the states from components
     const getRoute = () => {
         return window.location.pathname !== '/admin/full-screen-maps';
@@ -103,9 +115,9 @@ export default function Dashboard(props: { [x: string]: any }) {
                             <Navbar
                                 onOpen={onOpen}
                                 logoText={'Horizon UI Dashboard PRO'}
-                                brandText={getActiveRoute(routes)}
-                                secondary={getActiveNavbar(routes)}
-                                message={getActiveNavbarText(routes)}
+                                brandText={brandText}
+                                secondary={navbarSecondary}
+                                message={navbarMessage}
                                 fixed={fixed}
                                 {...rest}
                             />

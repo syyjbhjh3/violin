@@ -56,7 +56,7 @@ export default function SidebarDocs() {
                     px="10px"
                     mb="14px"
                 >
-                    Upgrade to PRO
+                    K8S Platform
                 </Text>
                 <Text
                     fontSize="14px"
@@ -65,11 +65,11 @@ export default function SidebarDocs() {
                     mb="14px"
                     textAlign="center"
                 >
-                    Improve your development process and start doing more with
-                    Horizon UI PRO!
+                    Manage your Kubernetes Environment
+                    with VIOLIN!
                 </Text>
             </Flex>
-            <Link href="https://horizon-ui.com/pro">
+            <Link href="https://github.com/syyjbhjh3">
                 <Button
                     bg="whiteAlpha.300"
                     _hover={{ bg: 'whiteAlpha.200' }}
@@ -81,7 +81,7 @@ export default function SidebarDocs() {
                     minW="185px"
                     mx="auto"
                 >
-                    Upgrade to PRO
+                    Go Developer GitHub
                 </Button>
             </Link>
         </Flex>
