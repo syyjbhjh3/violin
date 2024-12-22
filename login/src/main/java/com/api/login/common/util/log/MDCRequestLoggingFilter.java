@@ -17,14 +17,14 @@ public class MDCRequestLoggingFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        String uuid = UUID.randomUUID().toString();
-        MDC.put("trace_id", uuid);
-        MDC.put("resource", "Auth");
-
-        try {
-            chain.doFilter(request, response);
-        } finally {
-            MDC.clear();
-        }
+//        String uuid = UUID.randomUUID().toString();
+//        MDC.put("trace_id", uuid);
+//        MDC.put("resource", "Auth");
+//
+//        try {
+//            chain.doFilter(request, response);
+//        } finally {
+//            MDC.clear();
+//        }
     }
 }
