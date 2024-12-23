@@ -8,6 +8,8 @@ spring:
       host: 192.168.64.3
       port: 30679
       password: admin123
+  application:
+    name: K8sService
   datasource:
     url: jdbc:h2:./data/auth
     driverClassName: org.h2.Driver
