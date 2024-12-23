@@ -10,7 +10,6 @@ import {
     Text,
     useColorModeValue,
 } from '@chakra-ui/react';
-import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import AdminNavbarLinks from 'components/navbar/NavbarLinksAdmin';
 
@@ -31,11 +30,6 @@ export default function AdminNavbar(props: {
             window.removeEventListener('scroll', changeNavbar);
         };
     });
-
-    const location = useLocation();
-    useEffect(() => {
-
-    }, [location.pathname]);
 
     const { secondary, brandText } = props;
 
@@ -126,7 +120,7 @@ export default function AdminNavbar(props: {
                             </BreadcrumbLink>
                         </BreadcrumbItem>
 
-                        <BreadcrumbItem color={secondaryText} fontSize="sm" marginBottom={1}>
+                        <BreadcrumbItem color={secondaryText} fontSize="sm" marginBottom={1.5}>
                             <BreadcrumbLink href="#" color={secondaryText}>
                                 {brandText}
                             </BreadcrumbLink>

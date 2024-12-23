@@ -1,4 +1,4 @@
-package com.api.login.common.util.log;
+package com.api.kubernetes.common.util.log;
 
 import jakarta.servlet.*;
 import org.slf4j.MDC;

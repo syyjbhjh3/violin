@@ -41,6 +41,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
 	/* Logging */
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-tracing-bridge-brave")
 	implementation ("org.springframework.boot:spring-boot-starter-logging:3.1.0")
 
 	/* Test */
