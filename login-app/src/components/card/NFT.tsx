@@ -24,8 +24,9 @@ export default function NFT(props: {
     bidders: string[];
     download: string;
     currentbid: string | number;
+    btn: string;
 }) {
-    const { image, name, author, bidders, download, currentbid } = props;
+    const { image, name, author, bidders, download, currentbid, btn } = props;
     const [like, setLike] = useState(false);
     const textColor = useColorModeValue('navy.700', 'white');
     const textColorBid = useColorModeValue('brand.500', 'white');
@@ -166,7 +167,7 @@ export default function NFT(props: {
                                 px="24px"
                                 py="5px"
                             >
-                                Place Bid
+                                {btn}
                             </Button>
                         </Link>
                     </Flex>

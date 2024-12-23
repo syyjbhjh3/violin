@@ -5,6 +5,7 @@ import {
     MdHome,
     MdLock,
     MdOutlineShoppingCart,
+    MdBallot,
 } from 'react-icons/md';
 
 // Admin Imports
@@ -27,12 +28,12 @@ const routes = [
         component: <MainDashboard />,
     },
     {
-        name: 'NFT Marketplace',
+        name: 'Cluster',
         layout: '/admin',
         path: '/nft-marketplace',
         icon: (
             <Icon
-                as={MdOutlineShoppingCart}
+                as={MdBallot}
                 width="20px"
                 height="20px"
                 color="inherit"

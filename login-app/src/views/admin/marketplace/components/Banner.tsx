@@ -30,7 +30,7 @@ export default function Banner() {
                 fontWeight="700"
                 lineHeight={{ base: '32px', md: '42px' }}
             >
-                Discover, collect, and sell extraordinary NFTs
+                Register & Manage Kubernetes Cluster
             </Text>
             <Text
                 fontSize="md"
@@ -63,13 +63,8 @@ export default function Banner() {
                     px="27"
                     me="38px"
                 >
-                    Discover now
+                    Regist Cluster
                 </Button>
-                <Link>
-                    <Text color="white" fontSize="sm" fontWeight="500">
-                        Watch video
-                    </Text>
-                </Link>
             </Flex>
         </Flex>
     );
