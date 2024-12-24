@@ -16,6 +16,11 @@ public class ClusterController {
 
     private final ClusterService clusterService;
 
+    @PostMapping("/connect")
+    public ResultDTO connect(@RequestBody ClusterDTO clusterDTO) {
+        return clusterService.connect(clusterDTO);
+    }
+
     @PostMapping("/create")
     public ResultDTO create(@RequestBody ClusterDTO clusterDTO) {
         return clusterService.create(clusterDTO);

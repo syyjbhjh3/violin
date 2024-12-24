@@ -28,18 +28,20 @@ import {
     Button,
     Flex,
     Grid,
-    Link,
     Text,
     useColorModeValue,
     SimpleGrid,
+    useDisclosure
 } from '@chakra-ui/react';
 
 // Custom components
-import Banner from 'views/admin/marketplace/components/Banner';
-import TableTopCreators from 'views/admin/marketplace/components/TableTopCreators';
-import HistoryItem from 'views/admin/marketplace/components/HistoryItem';
+import Banner from './components/Banner';
+import TableTopCreators from './components/TableTopCreators';
+import HistoryItem from './components/HistoryItem';
 import NFT from 'components/card/NFT';
 import Card from 'components/card/Card';
+import RegistrationPopup from './popup/ClusterRegist';
+
 
 // Assets
 import Nft1 from 'assets/img/nfts/Nft1.png';
@@ -48,16 +50,15 @@ import Nft3 from 'assets/img/nfts/Nft3.png';
 import Nft4 from 'assets/img/nfts/Nft4.png';
 import Nft5 from 'assets/img/nfts/Nft5.png';
 import Nft6 from 'assets/img/nfts/Nft6.png';
-import Avatar1 from 'assets/img/avatars/avatar1.png';
-import Avatar2 from 'assets/img/avatars/avatar2.png';
-import Avatar3 from 'assets/img/avatars/avatar3.png';
-import Avatar4 from 'assets/img/avatars/avatar4.png';
-import tableDataTopCreators from 'views/admin/marketplace/variables/tableDataTopCreators';
+import tableDataTopCreators from './variables/tableDataTopCreators';
 
-export default function Marketplace() {
+export default function Cluster() {
     // Chakra Color Mode
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const textColorBrand = useColorModeValue('brand.500', 'white');
+
+    const { isOpen, onOpen, onClose } = useDisclosure(); // 팝업 상태 관리
+
     return (
         <Box pt={{ base: '180px', md: '80px', xl: '80px' }}>
             {/* Main Fields */}
@@ -250,6 +251,7 @@ export default function Marketplace() {
                 </Flex>
             </Grid>
             {/* Delete Product */}
+            <RegistrationPopup isOpen={isOpen} onClose={onClose} />
         </Box>
     );
 }

@@ -1,11 +1,13 @@
 package com.api.kubernetes.cluster.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,42 +16,39 @@ import lombok.NoArgsConstructor;
 public class ClusterEntity {
 
 	@Id
-	@Column(name = "ID")
-	private String id;
+	@Column(name = "CLUSTER_ID")
+	@GeneratedValue(generator = "UUID")
+	private UUID clusterId;
 
-	@Column(name = "TYPE")
-	private String type;
+	@Column(name = "CLUSTER_NAME")
+	private String clusterName;
 
-	@Column(name = "NAME")
-	private String name;
+	@Column(name = "URL")
+	private String url;
 
-	@Column(name = "PASSWORD")
-	private String password;
+	@Column(name = "USER_ID")
+	private String userId;
 
-	@Column(name = "GENDER")
-	private String gender;
+	@Column(name = "STATUS")
+	private String status;
 
-	@Column(name = "PHONE")
-	private String phone;
+	@Column(name = "USE_YN")
+	private String useYn;
 
-	@Column(name = "EMAIL")
-	private String email;
+	@CreationTimestamp
+	@Column(name = "CREATED_AT")
+	private LocalDateTime createdAt;
 
-	@Column(name = "ADDRESS")
-	private String address;
+	@UpdateTimestamp
+	@Column(name = "UPDATED_AT")
+	private LocalDateTime updatedAt;
 
-	@Column(name = "SALT")
-	private String salt;
-
-	public ClusterEntity(String type, String id, String name, String password, String gender, String phone, String email, String address, String salt) {
-		this.type = type;
-		this.id = id;
-		this.name = name;
-		this.password = password;
-		this.gender = gender;
-		this.phone = phone;
-		this.email = email;
-		this.address = address;
-		this.salt = salt;
+	public ClusterEntity(UUID clusterId, String clusterName, String url, String userId, String status, String useYn) {
+		this.clusterId = clusterId;
+		this.clusterName = clusterName;
+		this.url = url;
+		this.userId = userId;
+		this.status = status;
+		this.useYn = useYn;
 	}
 }

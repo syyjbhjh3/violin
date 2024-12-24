@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ClusterService {
+    ResultDTO connect(ClusterDTO clusterDTO);
+
     ResultDTO create(ClusterDTO clusterDTO);
 
     ResultDTO update(ClusterDTO clusterDTO);
