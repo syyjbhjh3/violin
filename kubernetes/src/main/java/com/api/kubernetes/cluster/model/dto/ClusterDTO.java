@@ -4,20 +4,27 @@ import com.api.kubernetes.cluster.model.entity.ClusterEntity;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Builder
 @Getter
 public class ClusterDTO {
-    private final String type;
-    private final String id;
-    private final String password;
-    private final String name;
-    private final String gender;
-    private final String phone;
-    private final String email;
-    private final String address;
-    private final String salt;
+    private UUID clusterId;
+    private String clusterName;
+    private String url;
+    private String userId;
+    private String status;
+    private String useYn;
 
     public ClusterEntity toEntity() {
-        return new ClusterEntity(this.type, this.id, this.name, this.password, this.gender, this.phone, this.email, this.address, this.salt);
+        return new ClusterEntity();
+    }
+
+    public void updateClusterUseYn(String useYn) {
+        this.useYn = useYn;
+    }
+
+    public void updateClusterStatus(String useYn) {
+        this.useYn = useYn;
     }
 }

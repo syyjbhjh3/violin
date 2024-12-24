@@ -10,7 +10,7 @@ import {
 
 // Admin Imports
 import MainDashboard from 'views/admin/default';
-import NFTMarketplace from 'views/admin/marketplace';
+import Cluster from 'views/admin/cluster';
 import Profile from 'views/admin/profile';
 import DataTables from 'views/admin/dataTables';
 import RTL from 'views/admin/rtl';
@@ -30,7 +30,7 @@ const routes = [
     {
         name: 'Cluster',
         layout: '/admin',
-        path: '/nft-marketplace',
+        path: '/cluster',
         icon: (
             <Icon
                 as={MdBallot}
@@ -39,7 +39,7 @@ const routes = [
                 color="inherit"
             />
         ),
-        component: <NFTMarketplace />,
+        component: <Cluster />,
         secondary: true,
     },
     {

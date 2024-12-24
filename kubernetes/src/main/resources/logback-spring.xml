@@ -1,0 +1,19 @@
+<configuration>
+    <!-- 로그 색상 설정 (선택사항) -->
+    <conversionRule conversionWord="clr" class="org.springframework.boot.logging.logback.ColorConverter"/>
+
+    <!-- 콘솔에 로그를 출력하는 appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                <!-- 날짜, 레벨, trace_id, resource, 메시지 출력 -->
+                %clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(%-5level){%highlight} %clr([trace_id=%X{traceId}]){blue} %clr([span_id=%X{spanId}]){green} %clr([%X{application}]){cyan} %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 기본 로그 레벨 및 appender 연결 -->
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>
