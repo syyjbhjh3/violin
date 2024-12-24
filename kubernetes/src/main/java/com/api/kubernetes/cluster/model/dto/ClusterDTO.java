@@ -18,5 +18,5 @@ public class ClusterDTO {
 
     public ClusterEntity toEntity() {
         return new ClusterEntity();
-    } 
+    }
 }
