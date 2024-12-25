@@ -17,7 +17,7 @@ public class ClusterDTO {
     private String useYn;
 
     public ClusterEntity toEntity() {
-        return new ClusterEntity();
+        return new ClusterEntity(this.clusterId, this.clusterName, this.url, this.userId, this.status, this.useYn);
     }
 
     public void updateClusterUseYn(String useYn) {
