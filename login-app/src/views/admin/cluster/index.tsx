@@ -28,18 +28,20 @@ import {
     Button,
     Flex,
     Grid,
-    Link,
     Text,
     useColorModeValue,
     SimpleGrid,
+    useDisclosure
 } from '@chakra-ui/react';
 
 // Custom components
-import Banner from 'views/admin/marketplace/components/Banner';
-import TableTopCreators from 'views/admin/marketplace/components/TableTopCreators';
-import HistoryItem from 'views/admin/marketplace/components/HistoryItem';
+import Banner from './components/Banner';
+import TableTopCreators from './components/TableTopCreators';
+import HistoryItem from './components/HistoryItem';
 import NFT from 'components/card/NFT';
 import Card from 'components/card/Card';
+import RegistrationPopup from './popup/ClusterRegist';
+
 
 // Assets
 import Nft1 from 'assets/img/nfts/Nft1.png';
@@ -48,16 +50,15 @@ import Nft3 from 'assets/img/nfts/Nft3.png';
 import Nft4 from 'assets/img/nfts/Nft4.png';
 import Nft5 from 'assets/img/nfts/Nft5.png';
 import Nft6 from 'assets/img/nfts/Nft6.png';
-import Avatar1 from 'assets/img/avatars/avatar1.png';
-import Avatar2 from 'assets/img/avatars/avatar2.png';
-import Avatar3 from 'assets/img/avatars/avatar3.png';
-import Avatar4 from 'assets/img/avatars/avatar4.png';
-import tableDataTopCreators from 'views/admin/marketplace/variables/tableDataTopCreators';
+import tableDataTopCreators from './variables/tableDataTopCreators';
 
-export default function Marketplace() {
+export default function Cluster() {
     // Chakra Color Mode
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const textColorBrand = useColorModeValue('brand.500', 'white');
+
+    const { isOpen, onOpen, onClose } = useDisclosure(); // 팝업 상태 관리
+
     return (
         <Box pt={{ base: '180px', md: '80px', xl: '80px' }}>
             {/* Main Fields */}
@@ -89,7 +90,7 @@ export default function Marketplace() {
                                 ms="24px"
                                 fontWeight="700"
                             >
-                                Trending NFTs
+                                K8S Resource
                             </Text>
                             <Flex
                                 align="center"
@@ -97,90 +98,38 @@ export default function Marketplace() {
                                 ms={{ base: '24px', md: '0px' }}
                                 mt={{ base: '20px', md: '0px' }}
                             >
-                                <Link
-                                    color={textColorBrand}
-                                    fontWeight="500"
-                                    me={{ base: '34px', md: '44px' }}
-                                    href="#art"
-                                >
-                                    Art
-                                </Link>
-                                <Link
-                                    color={textColorBrand}
-                                    fontWeight="500"
-                                    me={{ base: '34px', md: '44px' }}
-                                    href="#music"
-                                >
-                                    Music
-                                </Link>
-                                <Link
-                                    color={textColorBrand}
-                                    fontWeight="500"
-                                    me={{ base: '34px', md: '44px' }}
-                                    href="#collectibles"
-                                >
-                                    Collectibles
-                                </Link>
-                                <Link
-                                    color={textColorBrand}
-                                    fontWeight="500"
-                                    href="#sports"
-                                >
-                                    Sports
-                                </Link>
                             </Flex>
                         </Flex>
                         <SimpleGrid columns={{ base: 1, md: 3 }} gap="20px">
                             <NFT
-                                name="Abstract Colors"
+                                name="Pod"
                                 author="By Esthera Jackson"
                                 bidders={[
-                                    Avatar1,
-                                    Avatar2,
-                                    Avatar3,
-                                    Avatar4,
-                                    Avatar1,
-                                    Avatar1,
-                                    Avatar1,
-                                    Avatar1,
                                 ]}
                                 image={Nft1}
                                 currentbid="0.91 ETH"
                                 download="#"
+                                btn="Pod"
                             />
                             <NFT
-                                name="ETH AI Brain"
+                                name="Deployment"
                                 author="By Nick Wilson"
                                 bidders={[
-                                    Avatar1,
-                                    Avatar2,
-                                    Avatar3,
-                                    Avatar4,
-                                    Avatar1,
-                                    Avatar1,
-                                    Avatar1,
-                                    Avatar1,
                                 ]}
                                 image={Nft2}
                                 currentbid="0.91 ETH"
                                 download="#"
+                                btn="Deployment"
                             />
                             <NFT
-                                name="Mesh Gradients "
+                                name="Service"
                                 author="By Will Smith"
                                 bidders={[
-                                    Avatar1,
-                                    Avatar2,
-                                    Avatar3,
-                                    Avatar4,
-                                    Avatar1,
-                                    Avatar1,
-                                    Avatar1,
-                                    Avatar1,
                                 ]}
                                 image={Nft3}
                                 currentbid="0.91 ETH"
                                 download="#"
+                                btn="Service"
                             />
                         </SimpleGrid>
                         <Text
@@ -202,52 +151,31 @@ export default function Marketplace() {
                                 name="Swipe Circles"
                                 author="By Peter Will"
                                 bidders={[
-                                    Avatar1,
-                                    Avatar2,
-                                    Avatar3,
-                                    Avatar4,
-                                    Avatar1,
-                                    Avatar1,
-                                    Avatar1,
-                                    Avatar1,
                                 ]}
                                 image={Nft4}
                                 currentbid="0.91 ETH"
                                 download="#"
+                                btn="123"
                             />
                             <NFT
                                 name="Colorful Heaven"
                                 author="By Mark Benjamin"
                                 bidders={[
-                                    Avatar1,
-                                    Avatar2,
-                                    Avatar3,
-                                    Avatar4,
-                                    Avatar1,
-                                    Avatar1,
-                                    Avatar1,
-                                    Avatar1,
                                 ]}
                                 image={Nft5}
                                 currentbid="0.91 ETH"
                                 download="#"
+                                btn="123"
                             />
                             <NFT
                                 name="3D Cubes Art"
                                 author="By Manny Gates"
                                 bidders={[
-                                    Avatar1,
-                                    Avatar2,
-                                    Avatar3,
-                                    Avatar4,
-                                    Avatar1,
-                                    Avatar1,
-                                    Avatar1,
-                                    Avatar1,
                                 ]}
                                 image={Nft6}
                                 currentbid="0.91 ETH"
                                 download="#"
+                                btn="123"
                             />
                         </SimpleGrid>
                     </Flex>
@@ -323,6 +251,7 @@ export default function Marketplace() {
                 </Flex>
             </Grid>
             {/* Delete Product */}
+            <RegistrationPopup isOpen={isOpen} onClose={onClose} />
         </Box>
     );
 }

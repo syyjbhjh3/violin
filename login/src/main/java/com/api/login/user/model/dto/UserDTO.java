@@ -7,17 +7,20 @@ import lombok.Getter;
 @Builder
 @Getter
 public class UserDTO {
-    private final String type;
-    private final String id;
-    private final String password;
-    private final String name;
-    private final String gender;
-    private final String phone;
-    private final String email;
-    private final String address;
-    private final String salt;
+    private String type;
+    private String id;
+    private String password;
+    private String name;
+    private String email;
+    private String address;
+    private String salt;
 
     public UserEntity toEntity() {
-        return new UserEntity(this.type, this.id, this.name, this.password, this.gender, this.phone, this.email, this.address, this.salt);
+        return new UserEntity(this.type, this.id, this.name, this.password, this.email, this.address, this.salt);
+    }
+
+    public void updateUserPassword(String password, String salt) {
+        this.password = password;
+        this.salt = salt;
     }
 }

@@ -1,10 +1,13 @@
 // Chakra imports
-import { Button, Flex, Link, Text } from '@chakra-ui/react';
+import {Button, Flex, Text, useDisclosure} from '@chakra-ui/react';
 
 // Assets
 import banner from 'assets/img/nfts/NftBanner1.png';
+import RegistrationPopup from "../popup/ClusterRegist";
 
 export default function Banner() {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
     // Chakra Color Mode
     return (
         <Flex
@@ -30,7 +33,7 @@ export default function Banner() {
                 fontWeight="700"
                 lineHeight={{ base: '32px', md: '42px' }}
             >
-                Discover, collect, and sell extraordinary NFTs
+                Register & Manage Kubernetes Cluster
             </Text>
             <Text
                 fontSize="md"
@@ -47,8 +50,7 @@ export default function Banner() {
                 mb="40px"
                 lineHeight="28px"
             >
-                Enter in this creative world. Discover now the latest NFTs or
-                start creating your own!
+                Once your cluster is registered and accessible, you can manage its resources.
             </Text>
             <Flex align="center">
                 <Button
@@ -62,15 +64,14 @@ export default function Banner() {
                     py="20px"
                     px="27"
                     me="38px"
+                    onClick={onOpen} // 팝업 열기
                 >
-                    Discover now
+                    Regist Cluster
                 </Button>
-                <Link>
-                    <Text color="white" fontSize="sm" fontWeight="500">
-                        Watch video
-                    </Text>
-                </Link>
             </Flex>
+
+            {/* RegistrationPopup 연결 */}
+            <RegistrationPopup isOpen={isOpen} onClose={onClose} />
         </Flex>
     );
 }
