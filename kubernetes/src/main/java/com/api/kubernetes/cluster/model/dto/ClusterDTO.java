@@ -9,14 +9,22 @@ import java.util.UUID;
 @Builder
 @Getter
 public class ClusterDTO {
-    private final UUID clusterId;
-    private final String clusterName;
-    private final String url;
-    private final String userId;
-    private final String status;
-    private final String useYn;
+    private UUID clusterId;
+    private String clusterName;
+    private String url;
+    private String userId;
+    private String status;
+    private String useYn;
 
     public ClusterEntity toEntity() {
-        return new ClusterEntity();
+        return new ClusterEntity(this.clusterId, this.clusterName, this.url, this.userId, this.status, this.useYn);
+    }
+
+    public void updateClusterUseYn(String useYn) {
+        this.useYn = useYn;
+    }
+
+    public void updateClusterStatus(String useYn) {
+        this.useYn = useYn;
     }
 }

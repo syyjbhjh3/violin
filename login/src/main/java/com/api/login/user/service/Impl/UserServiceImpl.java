@@ -42,19 +42,9 @@ public class UserServiceImpl implements UserService {
                         encrytPassword = encrypt.getEncrypt(dto.getPassword(), salt);
                     }
 
-                    UserDTO signUpDTO = UserDTO.builder()
-                            .type(dto.getType())
-                            .id(dto.getId())
-                            .name(dto.getName())
-                            .gender(dto.getGender())
-                            .phone(dto.getPhone())
-                            .email(dto.getEmail())
-                            .address(dto.getAddress())
-                            .password(encrytPassword)
-                            .salt(salt)
-                            .build();
+                    userDTO.updateUserPassword(encrytPassword, encrypt.getSalt());
 
-                    UserEntity userEntity = signUpDTO.toEntity();
+                    UserEntity userEntity = userDTO.toEntity();
                     userRepository.save(userEntity);
 
                     return new ResultDTO(
