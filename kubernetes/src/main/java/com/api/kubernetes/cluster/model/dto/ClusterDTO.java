@@ -11,20 +11,16 @@ import java.util.UUID;
 public class ClusterDTO {
     private UUID clusterId;
     private String clusterName;
+    private String type;
     private String url;
     private String userId;
     private String status;
-    private String useYn;
 
     public ClusterEntity toEntity() {
-        return new ClusterEntity(this.clusterId, this.clusterName, this.url, this.userId, this.status, this.useYn);
+        return new ClusterEntity(this.clusterId, this.clusterName, this.type,  this.url, this.userId, this.status);
     }
 
-    public void updateClusterUseYn(String useYn) {
-        this.useYn = useYn;
-    }
-
-    public void updateClusterStatus(String useYn) {
-        this.useYn = useYn;
+    public void updateClusterStatus(String status) {
+        this.status = status;
     }
 }

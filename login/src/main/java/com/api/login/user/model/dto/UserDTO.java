@@ -11,14 +11,12 @@ public class UserDTO {
     private String id;
     private String password;
     private String name;
-    private String gender;
-    private String phone;
     private String email;
     private String address;
     private String salt;
 
     public UserEntity toEntity() {
-        return new UserEntity(this.type, this.id, this.name, this.password, this.gender, this.phone, this.email, this.address, this.salt);
+        return new UserEntity(this.type, this.id, this.name, this.password, this.email, this.address, this.salt);
     }
 
     public void updateUserPassword(String password, String salt) {

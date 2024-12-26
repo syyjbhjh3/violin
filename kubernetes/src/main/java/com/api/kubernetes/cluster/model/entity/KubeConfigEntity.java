@@ -12,25 +12,25 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "TB_CLUSTER")
-public class ClusterEntity {
+@Table(name = "TB_KUBECONFIG")
+public class KubeConfigEntity {
 
 	@Id
+	@Column(name = "KUBECONFIG_ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long kubeConfigId;
+
 	@Column(name = "CLUSTER_ID")
-	@GeneratedValue(generator = "UUID")
 	private UUID clusterId;
 
-	@Column(name = "CLUSTER_NAME")
-	private String clusterName;
+	@Column(name = "KUBECONFIG_NAME")
+	private String kubeConfigName;
 
-	@Column(name = "USER_ID")
-	private String userId;
+	@Column(name = "KUBECONFIG_DATA")
+	private String kubeConfigData;
 
-	@Column(name = "CLUSTER_TYPE")
-	private String type;
-
-	@Column(name = "CLUSTER_URL")
-	private String url;
+	@Column(name = "KUBECONFIG_TYPE")
+	private String kubeConfigType;
 
 	@Column(name = "STATUS")
 	private String status;
@@ -43,12 +43,11 @@ public class ClusterEntity {
 	@Column(name = "UPDATED_AT")
 	private LocalDateTime updatedAt;
 
-	public ClusterEntity(UUID clusterId, String clusterName, String type, String url, String userId, String status) {
+	public KubeConfigEntity(UUID clusterId, String kubeConfigName, String kubeConfigData, String kubeConfigType, String status) {
 		this.clusterId = clusterId;
-		this.clusterName = clusterName;
-		this.type = type;
-		this.url = url;
-		this.userId = userId;
+		this.kubeConfigName = kubeConfigName;
+		this.kubeConfigData = kubeConfigData;
+		this.kubeConfigType = kubeConfigType;
 		this.status = status;
 	}
 }

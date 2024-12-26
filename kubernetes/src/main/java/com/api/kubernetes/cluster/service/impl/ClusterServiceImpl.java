@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -31,13 +33,13 @@ public class ClusterServiceImpl implements ClusterService {
                     .block();
 
             if (response != null && response.equals("ok")) {
-                return new ResultDTO<>(Status.SUCCESS, Message.SEARCH_SUCCESS.getMessage());
+                return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_CONNECT_SUCCESS.getMessage());
             } else {
-                return new ResultDTO<>(Status.SUCCESS, Message.SEARCH_SUCCESS.getMessage());
+                return new ResultDTO<>(Status.FAIL, Message.CLUSTER_CONNECT_FAIL.getMessage());
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-            return new ResultDTO<>(Status.SUCCESS, e.getMessage());
+            return new ResultDTO<>(Status.ERROR, e.getMessage());
         }
     }
 
@@ -46,7 +48,7 @@ public class ClusterServiceImpl implements ClusterService {
                 .clusterName(clusterDTO.getClusterName())
                 .url(clusterDTO.getUrl())
                 .userId(clusterDTO.getUserId())
-                .useYn("Y")
+                .type(clusterDTO.getType())
                 .status("UP")
                 .build();
 
@@ -55,7 +57,7 @@ public class ClusterServiceImpl implements ClusterService {
 
         return new ResultDTO(
                 Status.SUCCESS,
-                Message.SEARCH_SUCCESS.message);
+                Message.CLUSTER_CREATE_SUCCESS.message);
     }
 
     public ResultDTO update(ClusterDTO clusterDTO) {
@@ -67,16 +69,15 @@ public class ClusterServiceImpl implements ClusterService {
                     .clusterName(clusterDTO.getClusterName())
                     .url(clusterDTO.getUrl())
                     .userId(clusterEntity.getUserId())
-                    .useYn(clusterEntity.getUseYn())
                     .status(clusterEntity.getStatus())
                     .build();
 
-            ClusterEntity updateDtoEntity = updateDto.toEntity();
-            clusterRepository.save(updateDtoEntity);
+            ClusterEntity updateEntity = updateDto.toEntity();
+            clusterRepository.save(updateEntity);
 
-            return new ResultDTO<>(Status.SUCCESS, Message.SEARCH_SUCCESS.message);
+            return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_UPDATE_SUCCESS.message);
         } else {
-            return new ResultDTO<>(Status.FAIL, Message.SEARCH_SUCCESS.message);
+            return new ResultDTO<>(Status.FAIL, Message.CLUSTER_UPDATE_FAIL.message);
         }
     }
 
@@ -84,24 +85,33 @@ public class ClusterServiceImpl implements ClusterService {
         ClusterEntity clusterEntity = clusterRepository.findByClusterId(clusterDTO.getClusterId());
 
         if (clusterEntity != null) {
+            ClusterDTO deleteDto = clusterDTO.builder()
+                    .clusterId(clusterEntity.getClusterId())
+                    .clusterName(clusterEntity.getClusterName())
+                    .url(clusterEntity.getUrl())
+                    .userId(clusterEntity.getUserId())
+                    .status(clusterEntity.getStatus())
+                    .build();
 
+            ClusterEntity deleteEntity = deleteDto.toEntity();
+            clusterRepository.save(deleteEntity);
+
+            return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_DELETE_SUCCESS.message);
         } else {
-
+            return new ResultDTO<>(Status.FAIL, Message.CLUSTER_DELETE_FAIL.message);
         }
-        return new ResultDTO(
-                Status.SUCCESS,
-                Message.SEARCH_SUCCESS.message);
     }
 
     public ResultDTO retrieve(ClusterDTO clusterDTO) {
-        return new ResultDTO(
-                Status.SUCCESS,
-                Message.SEARCH_SUCCESS.message);
+        List<ClusterEntity> clusterEntityList = clusterRepository.findAllByStatus(clusterDTO.getStatus());
+
+        ResultDTO resultDTO = new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_SEARCH_SUCCESS.getMessage(), clusterEntityList);
+        return resultDTO;
     }
 
     public ResultDTO datail(ClusterDTO clusterDTO) {
         return new ResultDTO(
                 Status.SUCCESS,
-                Message.SEARCH_SUCCESS.message);
+                Message.CLUSTER_SEARCH_SUCCESS.message);
     }
 }
