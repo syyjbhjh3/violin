@@ -30,7 +30,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
-	implementation("com.h2database:h2")
+	implementation ("org.mariadb.jdbc:mariadb-java-client")
+
 
 	/* Token */
 	implementation("io.jsonwebtoken:jjwt:0.9.1")

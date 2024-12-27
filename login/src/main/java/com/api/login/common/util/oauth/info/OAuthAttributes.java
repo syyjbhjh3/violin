@@ -38,6 +38,6 @@ public class OAuthAttributes {
     }
 
     public UserEntity toEntity() {
-        return new UserEntity("2", this.email, this.name, null, null, null, this.email, null, null);
+        return new UserEntity("2", this.email, this.name, null, this.email, null, null);
     }
 }
