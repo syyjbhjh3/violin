@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.UUID;
 
-public interface ClusterRepository extends JpaRepository<ClusterEntity, String> {
+public interface ClusterRepository extends JpaRepository<ClusterEntity, UUID> {
 
     ClusterEntity findByClusterId(UUID clusterId);
 
     List<ClusterEntity> findAllByStatus(String status);
 
-    List<ClusterEntity> findByUserIdAndClusterId(int userId, int clusterId);
+    List<ClusterEntity> findByUserId(String userId);
 }
