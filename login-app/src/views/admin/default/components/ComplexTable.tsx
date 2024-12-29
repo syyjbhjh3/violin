@@ -37,8 +37,8 @@ type RowObj = {
 const columnHelper = createColumnHelper<RowObj>();
 
 // const columns = columnsDataCheck;
-export default function ComplexTable(props: { tableData: any }) {
-    const { tableData } = props;
+export default function ComplexTable(props: { tableData: any, tableTitle: any }) {
+    const { tableData, tableTitle } = props;
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
@@ -181,7 +181,7 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontWeight="700"
                     lineHeight="100%"
                 >
-                    Complex Table
+                    {tableTitle}
                 </Text>
                 <Menu />
             </Flex>

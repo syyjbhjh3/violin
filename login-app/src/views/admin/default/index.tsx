@@ -36,11 +36,14 @@ import {
 import ComplexTable from 'views/admin/default/components/ComplexTable';
 import TotalSpent from 'views/admin/default/components/TotalSpent';
 import tableDataComplex from 'views/admin/default/variables/tableDataComplex';
+import axios, { AxiosError } from "axios";
+import * as process from "process";
 
 export default function UserReports() {
     // Chakra Color Mode
     const brandColor = useColorModeValue('brand.500', 'white');
     const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
+    const tableTitle = 'Cluster Status';
     return (
         <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
             <SimpleGrid
@@ -74,7 +77,7 @@ export default function UserReports() {
                 gap="20px"
                 mb="20px"
             >
-                <ComplexTable tableData={tableDataComplex} />
+                <ComplexTable tableData={tableDataComplex} tableTitle={tableTitle} />
                 <TotalSpent />
             </SimpleGrid>
         </Box>
