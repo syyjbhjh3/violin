@@ -124,10 +124,13 @@ public class UserServiceImpl implements UserService {
         return new ResultDTO(Status.SUCCESS, Message.LOGOUT_SUCCESS.message);
     }
 
-    public String refreshAccessToken(String loginId, String refreshToken) {
-        if (!redisService.isRefreshTokenValid(loginId, refreshToken)) {
+    public ResultDTO refresh(UserDTO userDTO) {
+        if (!redisService.isRefreshTokenValid(userDTO.getId(), userDTO.getRefreshToken())) {
             throw new RuntimeException(Message.TOKEN_NOTVALID.getMessage());
         }
-        return jwtTokenUtil.createToken(loginId, Type.ACCESS);
+
+        String accessToken = jwtTokenUtil.createToken(userDTO.getId(), Type.ACCESS);
+
+        return new ResultDTO<>(Status.SUCCESS, Message.LOGIN_SUCCESS.message, accessToken);
     }
 }

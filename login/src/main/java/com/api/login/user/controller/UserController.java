@@ -35,4 +35,9 @@ public class UserController {
     public ResultDTO oAuthLogin(@RequestBody UserDTO userDTO) {
         return userService.oAuthLogin(userDTO);
     }
+
+    @PostMapping("/refresh")
+    public ResultDTO refresh(@RequestBody UserDTO userDTO) {
+        return userService.refresh(userDTO);
+    }
 }

@@ -16,4 +16,6 @@ public interface UserService {
     ResultDTO login(UserDTO userDTO);
 
     ResultDTO oAuthLogin(UserDTO userDTO);
+
+    ResultDTO refresh(UserDTO userDTO);
 }
