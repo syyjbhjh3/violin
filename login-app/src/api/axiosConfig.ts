@@ -47,7 +47,8 @@ apiClient.interceptors.response.use(
                 return Promise.reject(error);
             }
 
-            const param = { id : userInfo.id, refreshToken }
+            const param = { id : userInfo.id, refreshToken };
+
             try {
                 const response = await axios.post(process.env.REACT_APP_AUTH_API_URL + '/refresh', param);
                 const newAccessToken = response.data.accessToken;
