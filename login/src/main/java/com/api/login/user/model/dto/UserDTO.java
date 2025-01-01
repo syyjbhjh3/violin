@@ -14,6 +14,7 @@ public class UserDTO {
     private String email;
     private String address;
     private String salt;
+    private String refreshToken;
 
     public UserEntity toEntity() {
         return new UserEntity(this.type, this.id, this.name, this.password, this.email, this.address, this.salt);

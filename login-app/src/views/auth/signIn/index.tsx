@@ -26,6 +26,8 @@ import { RiEyeCloseLine } from 'react-icons/ri';
 import axios, {AxiosError} from "axios";
 import * as process from "process";
 
+import { useAuthStore } from '../../../store/useAuthStore';
+
 function SignIn() {
     // Chakra color mode
     const textColor = useColorModeValue('navy.700', 'white');
@@ -69,6 +71,12 @@ function SignIn() {
                 }
             );
             console.log('Sign In Success:', response.data);
+
+            useAuthStore.getState().setUserInfo({
+                id : response.data.data.id,
+                accessToken : response.data.data.refreshToken,
+                refreshToken : response.data.data.accessToken
+            });
         } catch (error) {
             if (error instanceof AxiosError) {
                 console.error(
@@ -103,6 +111,13 @@ function SignIn() {
                 )
                 .then((response) => {
                     console.log('Sign In Success:', response.data);
+
+                    useAuthStore.getState().setUserInfo({
+                        id : response.data.data.id,
+                        accessToken : response.data.data.refreshToken,
+                        refreshToken : response.data.data.accessToken
+                    });
+
                     navigate('/admin/default');
                 })
                 .catch((error) => {

@@ -57,7 +57,7 @@ export default function Cluster() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const textColorBrand = useColorModeValue('brand.500', 'white');
 
-    const { isOpen, onOpen, onClose } = useDisclosure(); // 팝업 상태 관리
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <Box pt={{ base: '180px', md: '80px', xl: '80px' }}>
