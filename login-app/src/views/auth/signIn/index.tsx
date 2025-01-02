@@ -29,9 +29,9 @@ import AlterPopup from '../../../components/common/AlertPopup';
 
 
 import { useAuthStore } from '../../../store/useAuthStore';
-import { ApiResponse } from "../../../types/api";
-import {useModalStore} from "../../../store/useModalStore";
+import { useModalStore } from "../../../store/useModalStore";
 
+import { ApiResponse } from "../../../types/api";
 
 function SignIn() {
     const textColor = useColorModeValue('navy.700', 'white');

@@ -44,16 +44,26 @@ public class ClusterServiceImpl implements ClusterService {
     }
 
     public ResultDTO create(ClusterDTO clusterDTO) {
-        ClusterDTO createDto = clusterDTO.builder()
-                .clusterName(clusterDTO.getClusterName())
-                .url(clusterDTO.getUrl())
-                .userId(clusterDTO.getUserId())
-                .type(clusterDTO.getType())
-                .status("UP")
-                .build();
+        ResultDTO connResponse = connect(clusterDTO);
 
-        ClusterEntity clusterEntity = createDto.toEntity();
-        clusterRepository.save(clusterEntity);
+        if (connResponse.getResult().equals(Status.SUCCESS)) {
+            ClusterDTO createDto = clusterDTO.builder()
+                    .clusterName(clusterDTO.getClusterName())
+                    .url(clusterDTO.getUrl())
+                    .userId(clusterDTO.getUserId())
+                    .type(clusterDTO.getType())
+                    .status("UP")
+                    .build();
+
+            ClusterEntity clusterEntity = createDto.toEntity();
+            clusterRepository.save(clusterEntity);
+        } else {
+            return connResponse;
+        }
+
+
+
+
 
         return new ResultDTO(
                 Status.SUCCESS,
