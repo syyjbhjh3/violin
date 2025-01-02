@@ -14,7 +14,7 @@ import {
     useColorModeValue,
 } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
-import { apiClient } from '../../../api/axiosConfig';
+import { authClient } from '../../../api/axiosConfig';
 
 import DefaultAuth from 'layouts/auth/Default';
 import illustration from 'assets/img/auth/auth.png';
@@ -51,7 +51,7 @@ function SignUp() {
             name
         }
 
-        apiClient.post<ApiResponse<any>>('/signUp', param)
+        authClient.post<ApiResponse<any>>('/signUp', param)
             .then((response) => {
                 console.log(response);
                 if (response.data.result === 'SUCCESS') {

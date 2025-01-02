@@ -31,7 +31,12 @@ import {
 import MiniStatistics from 'components/card/MiniStatistics';
 import IconBox from 'components/icons/IconBox';
 import {
-    MdFileCopy,
+    MdHub,
+    MdMoveUp,
+    MdOutlineFilterDrama,
+    MdSettingsSuggest,
+    MdStars,
+    MdSchema
 } from 'react-icons/md';
 import ComplexTable from 'views/admin/default/components/ComplexTable';
 import TotalSpent from 'views/admin/default/components/TotalSpent';
@@ -51,14 +56,14 @@ export default function UserReports() {
                 <MiniStatistics
                     startContent={
                         <IconBox
-                            w="70px"
+                            w="56px"
                             h="56px"
                             bg={boxBg}
                             icon={
                                 <Icon
                                     w="32px"
                                     h="32px"
-                                    as={MdFileCopy}
+                                    as={MdHub}
                                     color={brandColor}
                                 />
                             }
@@ -78,14 +83,14 @@ export default function UserReports() {
                                 <Icon
                                     w="32px"
                                     h="32px"
-                                    as={MdFileCopy}
+                                    as={MdSettingsSuggest}
                                     color={brandColor}
                                 />
                             }
                         />
                     }
                     name="Total KubeConfig"
-                    value="2935"
+                    value="0"
                 />
 
                 <MiniStatistics
@@ -98,14 +103,14 @@ export default function UserReports() {
                                 <Icon
                                     w="32px"
                                     h="32px"
-                                    as={MdFileCopy}
+                                    as={MdStars}
                                     color={brandColor}
                                 />
                             }
                         />
                     }
                     name="Total Application"
-                    value="2935"
+                    value="0"
                 />
 
                 <MiniStatistics
@@ -118,14 +123,14 @@ export default function UserReports() {
                                 <Icon
                                     w="32px"
                                     h="32px"
-                                    as={MdFileCopy}
+                                    as={MdOutlineFilterDrama}
                                     color={brandColor}
                                 />
                             }
                         />
                     }
                     name="Total Pod"
-                    value="2935"
+                    value="0"
                 />
 
                 <MiniStatistics
@@ -138,14 +143,14 @@ export default function UserReports() {
                                 <Icon
                                     w="32px"
                                     h="32px"
-                                    as={MdFileCopy}
+                                    as={MdSchema}
                                     color={brandColor}
                                 />
                             }
                         />
                     }
                     name="Total Service"
-                    value="2935"
+                    value="0"
                 />
 
                 <MiniStatistics
@@ -158,14 +163,14 @@ export default function UserReports() {
                                 <Icon
                                     w="32px"
                                     h="32px"
-                                    as={MdFileCopy}
+                                    as={MdMoveUp}
                                     color={brandColor}
                                 />
                             }
                         />
                     }
                     name="Total Deployment"
-                    value="2935"
+                    value="0"
                 />
             </SimpleGrid>
 
