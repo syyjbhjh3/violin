@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -6,43 +6,192 @@ import {
     ModalHeader,
     ModalCloseButton,
     ModalBody,
-    ModalFooter,
     FormControl,
     FormLabel,
     Input,
     Button,
+    Text,
+    useColorModeValue,
+    Textarea
 } from '@chakra-ui/react';
 
+import axios, { AxiosError } from "axios";
+
+
 interface RegistrationPopupProps {
-    isOpen: boolean; // 팝업 열림 여부
-    onClose: () => void; // 팝업 닫기 함수
+    isOpen: boolean;
+    onClose: () => void;
 }
 
 const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }) => {
+    const [clusterName, setClusterName] = useState('');
+    const [clusterType, setClutserType] = useState('');
+    const [clusterURL, setClusterURL] = useState('');
+
+    const [kubeconfigName, setKubeconfigName] = useState('');
+    const [kubeconfigType, setKubeconfigType] = useState('');
+    const [kubeconfigData, setKubeconfigData] = useState('');
+
+    const [loading, setLoading] = useState(false);
+
+    const textColor = useColorModeValue('navy.700', 'white');
+    const brandStars = useColorModeValue('brand.500', 'brand.400');
+
+    const handleRegistCluster = async () => {
+        if (!kubeconfigName.trim() || !kubeconfigType.trim() || !kubeconfigData.trim()) {
+            return;
+        }
+
+        if (!clusterName.trim() || !clusterType.trim() || !clusterURL.trim()) {
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const response = await axios.post(
+                process.env.REACT_APP_CLUSTER_API_URL + '/create',
+                {
+                    clusterName, clusterType, clusterURL
+                },
+                {
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            ).then(
+
+            );
+            onClose();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>등록</ModalHeader>
+                <ModalHeader>Cluster Registration</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <FormControl>
-                        <FormLabel>이름</FormLabel>
-                        <Input placeholder="이름을 입력하세요" />
-                    </FormControl>
-                    <FormControl mt={4}>
-                        <FormLabel>이메일</FormLabel>
-                        <Input type="email" placeholder="이메일을 입력하세요" />
+                        <FormLabel
+                            display="flex"
+                            fontSize="sm"
+                            fontWeight="500"
+                            color={textColor}
+                            mb="8px"
+                        >
+                            Cluster Name<Text color={brandStars}>*</Text>
+                        </FormLabel>
+                        <Input
+                            required
+                            fontSize="sm"
+                            type="text"
+                            mb="24px"
+                            value={clusterName}
+                            onChange={(e) => setClusterName(e.target.value)}
+                        />
+                        <FormLabel
+                            display="flex"
+                            fontSize="sm"
+                            fontWeight="500"
+                            color={textColor}
+                            mb="8px"
+                        >
+                            Cluster Type<Text color={brandStars}>*</Text>
+                        </FormLabel>
+                        <Input
+                            required
+                            fontSize="sm"
+                            type="text"
+                            placeholder="AWS, Azure, GCP"
+                            mb="24px"
+                            value={clusterType}
+                            onChange={(e) => setClutserType(e.target.value)}
+                        />
+                        <FormLabel
+                            display="flex"
+                            fontSize="sm"
+                            fontWeight="500"
+                            color={textColor}
+                            mb="8px"
+                        >
+                            Cluster URL<Text color={brandStars}>*</Text>
+                        </FormLabel>
+                        <Input
+                            required
+                            fontSize="sm"
+                            type="url"
+                            mb="24px"
+                            value={clusterURL}
+                            onChange={(e) => setClusterURL(e.target.value)}
+                        />
+                        <FormLabel
+                            display="flex"
+                            fontSize="sm"
+                            fontWeight="500"
+                            color={textColor}
+                            mb="8px"
+                        >
+                            KubeConfig Name<Text color={brandStars}>*</Text>
+                        </FormLabel>
+                        <Input
+                            required
+                            fontSize="sm"
+                            type="text"
+                            mb="24px"
+                            value={kubeconfigName}
+                            onChange={(e) => setKubeconfigName(e.target.value)}
+                        />
+                        <FormLabel
+                            display="flex"
+                            fontSize="sm"
+                            fontWeight="500"
+                            color={textColor}
+                            mb="8px"
+                        >
+                            KubeConfig Type<Text color={brandStars}>*</Text>
+                        </FormLabel>
+                        <Input
+                            required
+                            fontSize="sm"
+                            type="text"
+                            placeholder="Admin, User, Read Only"
+                            mb="24px"
+                            value={kubeconfigType}
+                            onChange={(e) => setKubeconfigType(e.target.value)}
+                        />
+                        <FormLabel
+                            display="flex"
+                            fontSize="sm"
+                            fontWeight="500"
+                            color={textColor}
+                            mb="8px"
+                        >
+                            KubeConfig Data<Text color={brandStars}>*</Text>
+                        </FormLabel>
+                        <Textarea
+                            required
+                            fontSize="sm"
+                            mb="24px"
+                            value={kubeconfigData}
+                            onChange={(e) => setKubeconfigData(e.target.value)}
+                        />
+                        <Button
+                            isLoading={loading}
+                            onClick={handleRegistCluster}
+                            fontSize="sm"
+                            variant="brand"
+                            fontWeight="500"
+                            w="100%"
+                            mb="24px"
+                        >
+                            Regist
+                        </Button>
                     </FormControl>
                 </ModalBody>
-                <ModalFooter>
-                    <Button variant="ghost" onClick={onClose}>
-                        취소
-                    </Button>
-                    <Button colorScheme="blue" ml={3}>
-                        확인
-                    </Button>
-                </ModalFooter>
             </ModalContent>
         </Modal>
     );
