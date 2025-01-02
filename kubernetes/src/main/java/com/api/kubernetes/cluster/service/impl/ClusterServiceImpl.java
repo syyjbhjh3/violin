@@ -55,15 +55,15 @@ public class ClusterServiceImpl implements ClusterService {
                     .status("UP")
                     .build();
 
-            ClusterEntity clusterEntity = createDto.toEntity();
-            clusterRepository.save(clusterEntity);
+            ClusterEntity saveEntity = clusterRepository.save(createDto.toEntity());
+
+            if (saveEntity != null) {
+                /* KubeConfig 저장 */
+            }
+
         } else {
             return connResponse;
         }
-
-
-
-
 
         return new ResultDTO(
                 Status.SUCCESS,
