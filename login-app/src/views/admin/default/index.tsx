@@ -36,11 +36,8 @@ import {
 import ComplexTable from 'views/admin/default/components/ComplexTable';
 import TotalSpent from 'views/admin/default/components/TotalSpent';
 import tableDataComplex from 'views/admin/default/variables/tableDataComplex';
-import axios, { AxiosError } from "axios";
-import * as process from "process";
 
 export default function UserReports() {
-    // Chakra Color Mode
     const brandColor = useColorModeValue('brand.500', 'white');
     const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
     const tableTitle = 'Cluster Status';
@@ -51,6 +48,26 @@ export default function UserReports() {
                 gap="20px"
                 mb="20px"
             >
+                <MiniStatistics
+                    startContent={
+                        <IconBox
+                            w="70px"
+                            h="56px"
+                            bg={boxBg}
+                            icon={
+                                <Icon
+                                    w="32px"
+                                    h="32px"
+                                    as={MdFileCopy}
+                                    color={brandColor}
+                                />
+                            }
+                        />
+                    }
+                    name="Connect Cluster"
+                    value="0"
+                />
+
                 <MiniStatistics
                     startContent={
                         <IconBox
@@ -67,7 +84,87 @@ export default function UserReports() {
                             }
                         />
                     }
-                    name="Total Projects"
+                    name="Total KubeConfig"
+                    value="2935"
+                />
+
+                <MiniStatistics
+                    startContent={
+                        <IconBox
+                            w="56px"
+                            h="56px"
+                            bg={boxBg}
+                            icon={
+                                <Icon
+                                    w="32px"
+                                    h="32px"
+                                    as={MdFileCopy}
+                                    color={brandColor}
+                                />
+                            }
+                        />
+                    }
+                    name="Total Application"
+                    value="2935"
+                />
+
+                <MiniStatistics
+                    startContent={
+                        <IconBox
+                            w="56px"
+                            h="56px"
+                            bg={boxBg}
+                            icon={
+                                <Icon
+                                    w="32px"
+                                    h="32px"
+                                    as={MdFileCopy}
+                                    color={brandColor}
+                                />
+                            }
+                        />
+                    }
+                    name="Total Pod"
+                    value="2935"
+                />
+
+                <MiniStatistics
+                    startContent={
+                        <IconBox
+                            w="56px"
+                            h="56px"
+                            bg={boxBg}
+                            icon={
+                                <Icon
+                                    w="32px"
+                                    h="32px"
+                                    as={MdFileCopy}
+                                    color={brandColor}
+                                />
+                            }
+                        />
+                    }
+                    name="Total Service"
+                    value="2935"
+                />
+
+                <MiniStatistics
+                    startContent={
+                        <IconBox
+                            w="56px"
+                            h="56px"
+                            bg={boxBg}
+                            icon={
+                                <Icon
+                                    w="32px"
+                                    h="32px"
+                                    as={MdFileCopy}
+                                    color={brandColor}
+                                />
+                            }
+                        />
+                    }
+                    name="Total Deployment"
                     value="2935"
                 />
             </SimpleGrid>

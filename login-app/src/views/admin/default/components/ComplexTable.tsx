@@ -2,7 +2,6 @@ import {
     Box,
     Flex,
     Icon,
-    Progress,
     Table,
     Tbody,
     Td,
@@ -36,7 +35,6 @@ type RowObj = {
 
 const columnHelper = createColumnHelper<RowObj>();
 
-// const columns = columnsDataCheck;
 export default function ComplexTable(props: { tableData: any, tableTitle: any }) {
     const { tableData, tableTitle } = props;
     const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -86,19 +84,19 @@ export default function ComplexTable(props: { tableData: any, tableTitle: any })
                             info.getValue() === 'Approved'
                                 ? 'green.500'
                                 : info.getValue() === 'Disable'
-                                  ? 'red.500'
-                                  : info.getValue() === 'Error'
-                                    ? 'orange.500'
-                                    : null
+                                    ? 'red.500'
+                                    : info.getValue() === 'Error'
+                                        ? 'orange.500'
+                                        : null
                         }
                         as={
                             info.getValue() === 'Approved'
                                 ? MdCheckCircle
                                 : info.getValue() === 'Disable'
-                                  ? MdCancel
-                                  : info.getValue() === 'Error'
-                                    ? MdOutlineError
-                                    : null
+                                    ? MdCancel
+                                    : info.getValue() === 'Error'
+                                        ? MdOutlineError
+                                        : null
                         }
                     />
                     <Text color={textColor} fontSize="sm" fontWeight="700">
@@ -120,36 +118,15 @@ export default function ComplexTable(props: { tableData: any, tableTitle: any })
                 </Text>
             ),
             cell: (info) => (
-                <Text color={textColor} fontSize="sm" fontWeight="700">
-                    {info.getValue()}
-                </Text>
-            ),
-        }),
-        columnHelper.accessor('progress', {
-            id: 'progress',
-            header: () => (
-                <Text
-                    justifyContent="space-between"
-                    align="center"
-                    fontSize={{ sm: '10px', lg: '12px' }}
-                    color="gray.400"
-                >
-                    PROGRESS
-                </Text>
-            ),
-            cell: (info) => (
                 <Flex align="center">
-                    <Progress
-                        variant="table"
-                        colorScheme="brandScheme"
-                        h="8px"
-                        w="108px"
-                        value={info.getValue()}
-                    />
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
                 </Flex>
             ),
         }),
     ];
+
     const [data, setData] = React.useState(() => [...defaultData]);
     const table = useReactTable({
         data,
@@ -162,6 +139,94 @@ export default function ComplexTable(props: { tableData: any, tableTitle: any })
         getSortedRowModel: getSortedRowModel(),
         debugTable: true,
     });
+
+    // No data condition
+    if (data.length === 0) {
+        return (
+            <Card
+                flexDirection="column"
+                w="100%"
+                px="0px"
+                overflowX={{ sm: 'scroll', lg: 'hidden' }}
+            >
+                <Flex
+                    px="25px"
+                    mb="8px"
+                    justifyContent="space-between"
+                    align="center"
+                >
+                    <Text
+                        color={textColor}
+                        fontSize="22px"
+                        fontWeight="700"
+                        lineHeight="100%"
+                    >
+                        {tableTitle}
+                    </Text>
+                    <Menu />
+                </Flex>
+                <Box>
+                    <Table variant="simple" color="gray.500" mb="24px" mt="12px">
+                        <Thead>
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <Tr key={headerGroup.id}>
+                                    {headerGroup.headers.map((header) => {
+                                        return (
+                                            <Th
+                                                key={header.id}
+                                                colSpan={header.colSpan}
+                                                pe="10px"
+                                                borderColor={borderColor}
+                                                cursor="pointer"
+                                                onClick={header.column.getToggleSortingHandler()}
+                                            >
+                                                <Flex
+                                                    justifyContent="space-between"
+                                                    align="center"
+                                                    fontSize={{
+                                                        sm: '10px',
+                                                        lg: '12px',
+                                                    }}
+                                                    color="gray.400"
+                                                >
+                                                    {flexRender(
+                                                        header.column.columnDef
+                                                            .header,
+                                                        header.getContext(),
+                                                    )}
+                                                </Flex>
+                                            </Th>
+                                        );
+                                    })}
+                                </Tr>
+                            ))}
+                        </Thead>
+                        <Tbody>
+                            <Tr>
+                                <Td colSpan={columns.length}>
+                                    <Flex
+                                        justify="center"
+                                        align="center"
+                                        direction="column"
+                                    >
+                                        <Text
+                                            color={textColor}
+                                            fontSize="lg"
+                                            fontWeight="400"
+                                            textAlign="center"
+                                        >
+                                            No Data Available
+                                        </Text>
+                                    </Flex>
+                                </Td>
+                            </Tr>
+                        </Tbody>
+                    </Table>
+                </Box>
+            </Card>
+        );
+    }
+
     return (
         <Card
             flexDirection="column"
@@ -214,12 +279,6 @@ export default function ComplexTable(props: { tableData: any, tableTitle: any })
                                                         .header,
                                                     header.getContext(),
                                                 )}
-                                                {{
-                                                    asc: '',
-                                                    desc: '',
-                                                }[
-                                                    header.column.getIsSorted() as string
-                                                ] ?? null}
                                             </Flex>
                                         </Th>
                                     );
