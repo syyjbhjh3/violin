@@ -22,9 +22,13 @@ import {
 // Custom components
 import Card from 'components/card/Card';
 import Menu from 'components/menu/MainMenu';
-import * as React from 'react';
 // Assets
 import { MdCancel, MdCheckCircle, MdOutlineError } from 'react-icons/md';
+import React, { useEffect, useState } from 'react';
+import { apiClient } from "../../../../api/axiosConfig";
+import { useAuthStore } from "../../../../store/useAuthStore";
+import { ApiResponse } from "../../../../types/api";
+import { AxiosError } from "axios";
 
 type RowObj = {
     name: string;
@@ -40,6 +44,36 @@ export default function ComplexTable(props: { tableData: any, tableTitle: any })
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
+
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+
+        const param = { userId :  useAuthStore.getState().userInfo?.id };
+
+        setLoading(true);
+
+        apiClient.post<ApiResponse<any>>(process.env.REACT_APP_CLUSTER_API_URL + '/retrieve', param)
+            .then((response) => {
+                if (response.data.result === 'SUCCESS') {
+                    console.log(response);
+                    setData(response.data.data);
+                } else {
+                    // 실패 처리
+                }
+            })
+            .catch((error) => {
+                if (error instanceof AxiosError) {
+                    const errorMessage = error.response?.data?.resultMessage || error.message;
+                    console.error(errorMessage);
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [useAuthStore.getState().userInfo.id]); // rehydrate와 id 변경 시 실행
+
+
     let defaultData = tableData;
     const columns = [
         columnHelper.accessor('name', {

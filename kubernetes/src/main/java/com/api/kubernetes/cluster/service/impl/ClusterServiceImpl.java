@@ -2,6 +2,7 @@ package com.api.kubernetes.cluster.service.impl;
 
 import com.api.kubernetes.cluster.model.dto.KubernetesDTO;
 import com.api.kubernetes.cluster.model.entity.ClusterEntity;
+import com.api.kubernetes.cluster.model.entity.KubeConfigEntity;
 import com.api.kubernetes.cluster.repo.KubeConfigRepository;
 import com.api.kubernetes.common.model.dto.ResultDTO;
 import com.api.kubernetes.common.model.enums.Message;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -125,15 +128,19 @@ public class ClusterServiceImpl implements ClusterService {
     }
 
     public ResultDTO retrieve(KubernetesDTO kubernetesDTO) {
-        List<ClusterEntity> clusterEntityList = clusterRepository.findAllByStatus(kubernetesDTO.getStatus());
+        List<UUID> clusterIds = clusterRepository.findClusterIdByUserId(kubernetesDTO.getUserId());
+        List<KubeConfigEntity> kubeConfigEntities = kubeConfigRepository.findByClusterIdIn(clusterIds);
 
-        ResultDTO resultDTO = new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_SEARCH_SUCCESS.getMessage(), clusterEntityList);
-        return resultDTO;
+        return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_SEARCH_SUCCESS.getMessage(), kubeConfigEntities);
     }
 
     public ResultDTO datail(KubernetesDTO kubernetesDTO) {
-        return new ResultDTO(
-                Status.SUCCESS,
-                Message.CLUSTER_SEARCH_SUCCESS.message);
+        Optional<ClusterEntity> clusterEntity = Optional.ofNullable(clusterRepository.findByClusterId(kubernetesDTO.getClusterId()));
+        List<KubeConfigEntity> kubeConfigEntities = null;
+
+        if (clusterEntity.isPresent()) {
+            kubeConfigEntities = kubeConfigRepository.findByClusterId(clusterEntity.get().getClusterId());
+        }
+        return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_SEARCH_SUCCESS.message, kubeConfigEntities);
     }
 }

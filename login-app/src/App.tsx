@@ -16,10 +16,15 @@ export default function Main() {
     const [currentTheme, setCurrentTheme] = useState(initialTheme);
 
     const rehydrate = useAuthStore((state) => state.rehydrate);
+    const { userInfo } = useAuthStore((state) => state);
 
     useEffect(() => {
         rehydrate();
     }, [rehydrate]);
+
+    if (!userInfo) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <ChakraProvider theme={currentTheme}>
