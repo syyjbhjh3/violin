@@ -9,12 +9,18 @@ import {
     // extendTheme
 } from '@chakra-ui/react';
 import initialTheme from './theme/theme'; //  { themeGreen }
-import { useState } from 'react';
-// Chakra imports
+import { useState, useEffect } from 'react';
+import { useAuthStore } from "./store/useAuthStore";
 
 export default function Main() {
-    // eslint-disable-next-line
     const [currentTheme, setCurrentTheme] = useState(initialTheme);
+
+    const rehydrate = useAuthStore((state) => state.rehydrate);
+
+    useEffect(() => {
+        rehydrate();
+    }, [rehydrate]);
+
     return (
         <ChakraProvider theme={currentTheme}>
             <Routes>

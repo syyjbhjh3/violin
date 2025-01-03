@@ -1,5 +1,7 @@
 package com.api.kubernetes.cluster.model.entity;
 
+import com.api.kubernetes.common.model.enums.Status;
+import com.api.kubernetes.common.model.enums.Type;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,14 +28,16 @@ public class ClusterEntity {
 	@Column(name = "USER_ID")
 	private String userId;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "CLUSTER_TYPE")
-	private String type;
+	private Type type;
 
 	@Column(name = "CLUSTER_URL")
 	private String url;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "STATUS")
-	private String status;
+	private Status status;
 
 	@CreationTimestamp
 	@Column(name = "CREATED_AT")
@@ -43,7 +47,7 @@ public class ClusterEntity {
 	@Column(name = "UPDATED_AT")
 	private LocalDateTime updatedAt;
 
-	public ClusterEntity(UUID clusterId, String clusterName, String type, String url, String userId, String status) {
+	public ClusterEntity(UUID clusterId, String clusterName, Type type, String url, String userId, Status status) {
 		this.clusterId = clusterId;
 		this.clusterName = clusterName;
 		this.type = type;

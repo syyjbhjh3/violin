@@ -1,6 +1,6 @@
 package com.api.kubernetes.cluster.controller;
 
-import com.api.kubernetes.cluster.model.dto.ClusterDTO;
+import com.api.kubernetes.cluster.model.dto.KubernetesDTO;
 import com.api.kubernetes.cluster.service.ClusterService;
 import com.api.kubernetes.common.model.dto.ResultDTO;
 import lombok.RequiredArgsConstructor;
@@ -17,37 +17,37 @@ public class ClusterController {
     private final ClusterService clusterService;
 
     @PostMapping("/connect")
-    public ResultDTO connect(@RequestBody ClusterDTO clusterDTO) {
-        return clusterService.connect(clusterDTO);
+    public ResultDTO connect(@RequestBody KubernetesDTO kubernetesDTO) {
+        return clusterService.connect(kubernetesDTO);
     }
 
     @PostMapping("/status")
-    public ResultDTO status(@RequestBody ClusterDTO clusterDTO) {
-        return clusterService.datail(clusterDTO);
+    public ResultDTO status(@RequestBody KubernetesDTO kubernetesDTO) {
+        return clusterService.datail(kubernetesDTO);
     }
 
     @PostMapping("/create")
-    public ResultDTO create(@RequestBody ClusterDTO clusterDTO) {
-        return clusterService.create(clusterDTO);
+    public ResultDTO create(@RequestBody KubernetesDTO kubernetesDTO) {
+        return clusterService.create(kubernetesDTO);
     }
 
     @PostMapping("/update")
-    public ResultDTO update(@RequestBody ClusterDTO clusterDTO) {
-        return clusterService.update(clusterDTO);
+    public ResultDTO update(@RequestBody KubernetesDTO kubernetesDTO) {
+        return clusterService.update(kubernetesDTO);
     }
 
     @PostMapping("/delete")
-    public ResultDTO delete(@RequestBody ClusterDTO clusterDTO) {
-        return clusterService.delete(clusterDTO);
+    public ResultDTO delete(@RequestBody KubernetesDTO kubernetesDTO) {
+        return clusterService.delete(kubernetesDTO);
     }
 
     @PostMapping("/retrieve")
-    public ResultDTO retrieve(@RequestBody ClusterDTO clusterDTO) {
-        return clusterService.retrieve(clusterDTO);
+    public ResultDTO retrieve(@RequestBody KubernetesDTO kubernetesDTO) {
+        return clusterService.retrieve(kubernetesDTO);
     }
 
     @PostMapping("/detail")
-    public ResultDTO datail(@RequestBody ClusterDTO clusterDTO) {
-        return clusterService.datail(clusterDTO);
+    public ResultDTO datail(@RequestBody KubernetesDTO kubernetesDTO) {
+        return clusterService.datail(kubernetesDTO);
     }
 }

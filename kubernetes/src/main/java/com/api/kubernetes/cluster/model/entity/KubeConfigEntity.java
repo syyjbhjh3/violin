@@ -1,5 +1,6 @@
 package com.api.kubernetes.cluster.model.entity;
 
+import com.api.kubernetes.common.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,8 +33,9 @@ public class KubeConfigEntity {
 	@Column(name = "KUBECONFIG_TYPE")
 	private String kubeConfigType;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "STATUS")
-	private String status;
+	private Status status;
 
 	@CreationTimestamp
 	@Column(name = "CREATED_AT")
@@ -43,7 +45,7 @@ public class KubeConfigEntity {
 	@Column(name = "UPDATED_AT")
 	private LocalDateTime updatedAt;
 
-	public KubeConfigEntity(UUID clusterId, String kubeConfigName, String kubeConfigData, String kubeConfigType, String status) {
+	public KubeConfigEntity(UUID clusterId, String kubeConfigName, String kubeConfigData, String kubeConfigType, Status status) {
 		this.clusterId = clusterId;
 		this.kubeConfigName = kubeConfigName;
 		this.kubeConfigData = kubeConfigData;

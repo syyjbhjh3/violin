@@ -14,12 +14,13 @@ interface AuthState {
     setRefreshToken: (token: string) => void;
     setUserInfo: (userInfo: UserInfo) => void;
     logout: () => void;
+    rehydrate: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-    accessToken: localStorage.getItem('accessToken'),
-    refreshToken: localStorage.getItem('refreshToken'),
-    userInfo: JSON.parse(localStorage.getItem('userInfo') || 'null'),
+    accessToken: null,
+    refreshToken: null,
+    userInfo: null,
 
     setAccessToken: (token: string) => {
         localStorage.setItem('accessToken', token);
@@ -32,12 +33,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     },
 
     setUserInfo: (userInfo: UserInfo) => {
-        localStorage.setItem('accessToken', userInfo.accessToken);
-        localStorage.setItem('refreshToken', userInfo.refreshToken);
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
-        set({ accessToken: userInfo.accessToken });
-        set({ refreshToken: userInfo.refreshToken });
-        set({ userInfo });
+        set({
+            accessToken: userInfo.accessToken,
+            refreshToken: userInfo.refreshToken,
+            userInfo,
+        });
     },
 
     logout: () => {
@@ -45,5 +46,17 @@ export const useAuthStore = create<AuthState>((set) => ({
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('userInfo');
         set({ accessToken: null, refreshToken: null, userInfo: null });
+    },
+
+    rehydrate: () => {
+        const storedAccessToken = localStorage.getItem('accessToken');
+        const storedRefreshToken = localStorage.getItem('refreshToken');
+        const storedUserInfo = localStorage.getItem('userInfo');
+
+        set({
+            accessToken: storedAccessToken || null,
+            refreshToken: storedRefreshToken || null,
+            userInfo: storedUserInfo ? JSON.parse(storedUserInfo) : null,
+        });
     },
 }));

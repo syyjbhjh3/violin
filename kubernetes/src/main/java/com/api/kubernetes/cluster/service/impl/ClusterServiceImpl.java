@@ -1,12 +1,16 @@
 package com.api.kubernetes.cluster.service.impl;
 
-import com.api.kubernetes.cluster.model.dto.ClusterDTO;
+import com.api.kubernetes.cluster.model.dto.KubernetesDTO;
 import com.api.kubernetes.cluster.model.entity.ClusterEntity;
+import com.api.kubernetes.cluster.repo.KubeConfigRepository;
 import com.api.kubernetes.common.model.dto.ResultDTO;
 import com.api.kubernetes.common.model.enums.Message;
 import com.api.kubernetes.common.model.enums.Status;
 import com.api.kubernetes.cluster.repo.ClusterRepository;
 import com.api.kubernetes.cluster.service.ClusterService;
+import io.fabric8.kubernetes.client.Config;
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,70 +23,78 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClusterServiceImpl implements ClusterService {
 
+    /* Repository */
     private final ClusterRepository clusterRepository;
+    private final KubeConfigRepository kubeConfigRepository;
 
+    /* Util */
     private final WebClient webClient;
 
-
-    public ResultDTO connect(ClusterDTO clusterDTO) {
+    public ResultDTO connect(KubernetesDTO kubernetesDTO) {
         try {
-            String response = webClient.get()
-                    .uri(clusterDTO.getUrl() + "/healthz")
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .block();
+            String kubeconfigData = kubernetesDTO.getKubeconfigData();
+            Config config = Config.fromKubeconfig(kubeconfigData);
 
-            if (response != null && response.equals("ok")) {
-                return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_CONNECT_SUCCESS.getMessage());
-            } else {
-                return new ResultDTO<>(Status.FAIL, Message.CLUSTER_CONNECT_FAIL.getMessage());
+            try (KubernetesClient client = new DefaultKubernetesClient(config)) {
+                String message = client.namespaces().list().getItems().size() > 0
+                        ? Message.CLUSTER_CONNECT_SUCCESS.getMessage()
+                        : Message.CLUSTER_CONNECT_FAIL.getMessage();
+                return new ResultDTO<>(Status.SUCCESS, message);
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Cluster connection failed: ", e);
             return new ResultDTO<>(Status.ERROR, e.getMessage());
         }
     }
 
-    public ResultDTO create(ClusterDTO clusterDTO) {
-        ResultDTO connResponse = connect(clusterDTO);
+    public ResultDTO create(KubernetesDTO kubernetesDTO) {
+        /* Connect Test K8S */
+        ResultDTO connResponse = connect(kubernetesDTO);
 
         if (connResponse.getResult().equals(Status.SUCCESS)) {
-            ClusterDTO createDto = clusterDTO.builder()
-                    .clusterName(clusterDTO.getClusterName())
-                    .url(clusterDTO.getUrl())
-                    .userId(clusterDTO.getUserId())
-                    .type(clusterDTO.getType())
-                    .status("UP")
+            KubernetesDTO createClutserDTO = kubernetesDTO.builder()
+                    .clusterName(kubernetesDTO.getClusterName())
+                    .url(kubernetesDTO.getUrl())
+                    .userId(kubernetesDTO.getUserId())
+                    .type(kubernetesDTO.getType())
+                    .status(Status.ENABLE)
                     .build();
 
-            ClusterEntity clusterEntity = createDto.toEntity();
-            clusterRepository.save(clusterEntity);
+            ClusterEntity clusterEntity = clusterRepository.save(createClutserDTO.toClusterEntity());
+
+            if (clusterEntity != null) {
+                /* KubeConfig Save */
+                KubernetesDTO createKubeConfigDTO = KubernetesDTO.builder()
+                        .clusterId(clusterEntity.getClusterId())
+                        .kubeconfigName(kubernetesDTO.getKubeconfigName())
+                        .kubeconfigData(kubernetesDTO.getKubeconfigData())
+                        .kubeconfigType(kubernetesDTO.getKubeconfigType())
+                        .status(Status.ENABLE)
+                        .build();
+
+                kubeConfigRepository.save(createKubeConfigDTO.toKubeConfigEntity());
+            }
         } else {
             return connResponse;
         }
-
-
-
-
-
         return new ResultDTO(
                 Status.SUCCESS,
                 Message.CLUSTER_CREATE_SUCCESS.message);
     }
 
-    public ResultDTO update(ClusterDTO clusterDTO) {
-        ClusterEntity clusterEntity = clusterRepository.findByClusterId(clusterDTO.getClusterId());
+    public ResultDTO update(KubernetesDTO kubernetesDTO) {
+        ClusterEntity clusterEntity = clusterRepository.findByClusterId(kubernetesDTO.getClusterId());
 
         if (clusterEntity != null) {
-            ClusterDTO updateDto = clusterDTO.builder()
+            KubernetesDTO updateDto = kubernetesDTO.builder()
                     .clusterId(clusterEntity.getClusterId())
-                    .clusterName(clusterDTO.getClusterName())
-                    .url(clusterDTO.getUrl())
+                    .clusterName(kubernetesDTO.getClusterName())
+                    .url(kubernetesDTO.getUrl())
                     .userId(clusterEntity.getUserId())
                     .status(clusterEntity.getStatus())
                     .build();
 
-            ClusterEntity updateEntity = updateDto.toEntity();
+            ClusterEntity updateEntity = updateDto.toClusterEntity();
             clusterRepository.save(updateEntity);
 
             return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_UPDATE_SUCCESS.message);
@@ -91,11 +103,11 @@ public class ClusterServiceImpl implements ClusterService {
         }
     }
 
-    public ResultDTO delete(ClusterDTO clusterDTO) {
-        ClusterEntity clusterEntity = clusterRepository.findByClusterId(clusterDTO.getClusterId());
+    public ResultDTO delete(KubernetesDTO kubernetesDTO) {
+        ClusterEntity clusterEntity = clusterRepository.findByClusterId(kubernetesDTO.getClusterId());
 
         if (clusterEntity != null) {
-            ClusterDTO deleteDto = clusterDTO.builder()
+            KubernetesDTO deleteDto = kubernetesDTO.builder()
                     .clusterId(clusterEntity.getClusterId())
                     .clusterName(clusterEntity.getClusterName())
                     .url(clusterEntity.getUrl())
@@ -103,7 +115,7 @@ public class ClusterServiceImpl implements ClusterService {
                     .status(clusterEntity.getStatus())
                     .build();
 
-            ClusterEntity deleteEntity = deleteDto.toEntity();
+            ClusterEntity deleteEntity = deleteDto.toClusterEntity();
             clusterRepository.save(deleteEntity);
 
             return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_DELETE_SUCCESS.message);
@@ -112,14 +124,14 @@ public class ClusterServiceImpl implements ClusterService {
         }
     }
 
-    public ResultDTO retrieve(ClusterDTO clusterDTO) {
-        List<ClusterEntity> clusterEntityList = clusterRepository.findAllByStatus(clusterDTO.getStatus());
+    public ResultDTO retrieve(KubernetesDTO kubernetesDTO) {
+        List<ClusterEntity> clusterEntityList = clusterRepository.findAllByStatus(kubernetesDTO.getStatus());
 
         ResultDTO resultDTO = new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_SEARCH_SUCCESS.getMessage(), clusterEntityList);
         return resultDTO;
     }
 
-    public ResultDTO datail(ClusterDTO clusterDTO) {
+    public ResultDTO datail(KubernetesDTO kubernetesDTO) {
         return new ResultDTO(
                 Status.SUCCESS,
                 Message.CLUSTER_SEARCH_SUCCESS.message);

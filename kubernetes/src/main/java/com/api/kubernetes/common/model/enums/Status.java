@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum Status {
-    SUCCESS, FAIL, ERROR, INVALID;
+    SUCCESS, FAIL, ERROR, INVALID, ENABLE, DISABLE;
 }
