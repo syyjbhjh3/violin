@@ -41,6 +41,7 @@ dependencies {
 
     /* K8S Client */
     implementation("io.fabric8:kubernetes-client:6.13.4")
+    implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
 
     /* Test */
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

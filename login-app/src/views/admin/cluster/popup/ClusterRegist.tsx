@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -12,7 +12,8 @@ import {
     Button,
     Text,
     useColorModeValue,
-    Textarea
+    Textarea,
+    Select
 } from '@chakra-ui/react';
 
 import { AxiosError } from "axios";
@@ -29,7 +30,7 @@ interface RegistrationPopupProps {
 
 const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }) => {
     const [clusterName, setClusterName] = useState('');
-    const [clusterType, setClutserType] = useState('');
+    const [clusterType, setClusterType] = useState('');
     const [clusterURL, setClusterURL] = useState('');
 
     const [kubeconfigName, setKubeconfigName] = useState('');
@@ -43,28 +44,40 @@ const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }
 
     const { openModal } = useModalStore();
 
+    useEffect(() => {
+        if (clusterName.trim() && kubeconfigType.trim()) {
+            setKubeconfigName(`${clusterName}-${kubeconfigType}`);
+        } else {
+            setKubeconfigName(''); // 초기화
+        }
+    }, [clusterName, kubeconfigType]);
+
+
     const handleRegistCluster = async () => {
         if (!kubeconfigName.trim() || !kubeconfigType.trim() || !kubeconfigData.trim()) {
+            console.log(123);
             return;
         }
 
         if (!clusterName.trim() || !clusterType.trim() || !clusterURL.trim()) {
+            console.log(clusterType);
             return;
         }
 
         setLoading(true);
 
         const param = {
-            clusterName, kubeconfigName, kubeconfigType, kubeconfigData,
+            clusterName,
             type : clusterType,
             url : clusterURL,
-            userId : useAuthStore.getState().userInfo.id
+            userId : useAuthStore.getState().userInfo.id,
+            kubeconfigName, kubeconfigType, kubeconfigData
         };
 
         apiClient.post<ApiResponse<any>>(process.env.REACT_APP_CLUSTER_API_URL + '/create', param)
             .then((response) => {
                 if (response.data.result === 'SUCCESS') {
-
+                    openModal('클러스터 등록 성공', response.data.resultMessage);
                 } else {
                     openModal('클러스터 등록 실패', response.data.resultMessage);
                 }
@@ -117,15 +130,21 @@ const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }
                             >
                                 Cluster Type<Text color={brandStars}>*</Text>
                             </FormLabel>
-                            <Input
-                                required
+                            <Select
+                                w="unset"
+                                alignItems="center"
                                 fontSize="sm"
-                                type="text"
-                                placeholder="AWS, Azure, GCP"
+                                fontWeight="500"
                                 mb="24px"
                                 value={clusterType}
-                                onChange={(e) => setClutserType(e.target.value)}
-                            />
+                                onChange={(e) => setClusterType(e.target.value)}
+                            >
+                                <option value="K8S">K8S</option>
+                                <option value="GKE">GKE</option>
+                                <option value="EKS">EKS</option>
+                                <option value="AKS">AKS</option>
+                                <option value="OPENSHIFT">OPENSHIFT</option>
+                            </Select>
                             <FormLabel
                                 display="flex"
                                 fontSize="sm"
@@ -158,7 +177,7 @@ const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }
                                 type="text"
                                 mb="24px"
                                 value={kubeconfigName}
-                                onChange={(e) => setKubeconfigName(e.target.value)}
+                                disabled
                             />
                             <FormLabel
                                 display="flex"

@@ -1,21 +1,21 @@
 package com.api.kubernetes.cluster.service;
 
-import com.api.kubernetes.cluster.model.dto.ClusterDTO;
+import com.api.kubernetes.cluster.model.dto.KubernetesDTO;
 import com.api.kubernetes.common.model.dto.ResultDTO;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public interface ClusterService {
-    ResultDTO connect(ClusterDTO clusterDTO);
+    ResultDTO connect(KubernetesDTO kubernetesDTO);
 
-    ResultDTO create(ClusterDTO clusterDTO);
+    ResultDTO create(KubernetesDTO kubernetesDTO);
 
-    ResultDTO update(ClusterDTO clusterDTO);
+    ResultDTO update(KubernetesDTO kubernetesDTO);
 
-    ResultDTO delete(ClusterDTO clusterDTO);
+    ResultDTO delete(KubernetesDTO kubernetesDTO);
 
-    ResultDTO retrieve(ClusterDTO clusterDTO);
+    ResultDTO retrieve(KubernetesDTO kubernetesDTO);
 
-    ResultDTO datail(ClusterDTO clusterDTO);
+    ResultDTO datail(KubernetesDTO kubernetesDTO);
 }

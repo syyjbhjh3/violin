@@ -1,6 +1,7 @@
 package com.api.kubernetes.cluster.repo;
 
 import com.api.kubernetes.cluster.model.entity.ClusterEntity;
+import com.api.kubernetes.common.model.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface ClusterRepository extends JpaRepository<ClusterEntity, UUID> {
 
     ClusterEntity findByClusterId(UUID clusterId);
 
-    List<ClusterEntity> findAllByStatus(String status);
+    List<ClusterEntity> findAllByStatus(Status status);
 
     List<ClusterEntity> findByUserId(String userId);
 }
