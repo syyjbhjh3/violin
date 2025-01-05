@@ -133,9 +133,6 @@ export default function Cluster() {
                     <Card p="0px" mb="20px">
                         <ComplexTable tableTitle={tableTitle} />
                     </Card>
-                    {/*<Card px="0px">*/}
-                    {/*    <TableTopCreators tableData={tableDataTopCreators} />*/}
-                    {/*</Card>*/}
                 </Flex>
             </Grid>
             {/* Delete Product */}
