@@ -55,12 +55,11 @@ const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }
 
     const handleRegistCluster = async () => {
         if (!kubeconfigName.trim() || !kubeconfigType.trim() || !kubeconfigData.trim()) {
-            console.log(123);
             return;
         }
 
         if (!clusterName.trim() || !clusterType.trim() || !clusterURL.trim()) {
-            console.log(clusterType);
+            console.log(clusterType)
             return;
         }
 
@@ -137,6 +136,7 @@ const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }
                                 fontWeight="500"
                                 mb="24px"
                                 value={clusterType}
+                                defaultValue="K8S"
                                 onChange={(e) => setClusterType(e.target.value)}
                             >
                                 <option value="K8S">K8S</option>

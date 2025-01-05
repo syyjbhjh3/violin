@@ -179,7 +179,7 @@ export default function UserReports() {
                 gap="20px"
                 mb="20px"
             >
-                <ComplexTable tableData={tableDataComplex} tableTitle={tableTitle} />
+                <ComplexTable tableTitle={tableTitle} />
                 <TotalSpent />
             </SimpleGrid>
         </Box>

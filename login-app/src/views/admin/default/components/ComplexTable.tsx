@@ -22,28 +22,67 @@ import {
 // Custom components
 import Card from 'components/card/Card';
 import Menu from 'components/menu/MainMenu';
-import * as React from 'react';
 // Assets
 import { MdCancel, MdCheckCircle, MdOutlineError } from 'react-icons/md';
+import React, { useEffect, useState } from 'react';
+import { apiClient } from "../../../../api/axiosConfig";
+import { useAuthStore } from "../../../../store/useAuthStore";
+import { ApiResponse } from "../../../../types/api";
+import { AxiosError } from "axios";
 
 type RowObj = {
-    name: string;
+    kubeConfigName: string;
     status: string;
-    date: string;
-    progress: number;
+    createdAt: string;
 };
 
 const columnHelper = createColumnHelper<RowObj>();
 
-export default function ComplexTable(props: { tableData: any, tableTitle: any }) {
-    const { tableData, tableTitle } = props;
+export default function ComplexTable(props: { tableTitle: any }) {
+    const { tableTitle } = props;
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-    let defaultData = tableData;
+
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+
+        const param = { userId :  useAuthStore.getState().userInfo?.id };
+
+        setLoading(true);
+
+        apiClient.post<ApiResponse<any>>(process.env.REACT_APP_CLUSTER_API_URL + '/retrieve', param)
+        .then((response) => {
+            if (response.data.result === 'SUCCESS' && response.data.data?.length > 0) {
+                const transformedData = response.data.data.map((item: any) => ({
+                    ...item,
+                    createdAt: item.createdAt ? convertDate(item.createdAt) : null,
+                }));
+                setData(transformedData);
+            } else {
+                /* 조회 결과 없음 */
+            }
+        })
+        .catch((error) => {
+            if (error instanceof AxiosError) {
+                const errorMessage = error.response?.data?.resultMessage || error.message;
+                console.error(errorMessage);
+            }
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+}, [useAuthStore.getState().userInfo.id]);
+
+    const convertDate = (isoString: string): string => {
+        const date = new Date(isoString);
+        return date.toISOString().split("T")[0]; // YYYY-MM-DD
+    };
+
     const columns = [
-        columnHelper.accessor('name', {
-            id: 'name',
+        columnHelper.accessor('kubeConfigName', {
+            id: 'kubeConfigName',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -105,8 +144,8 @@ export default function ComplexTable(props: { tableData: any, tableTitle: any })
                 </Flex>
             ),
         }),
-        columnHelper.accessor('date', {
-            id: 'date',
+        columnHelper.accessor('createdAt', {
+            id: 'createdAt',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -126,6 +165,8 @@ export default function ComplexTable(props: { tableData: any, tableTitle: any })
             ),
         }),
     ];
+
+    let defaultData: RowObj[] = [];
 
     const [data, setData] = React.useState(() => [...defaultData]);
     const table = useReactTable({

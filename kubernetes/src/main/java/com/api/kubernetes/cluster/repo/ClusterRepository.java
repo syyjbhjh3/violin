@@ -11,7 +11,7 @@ public interface ClusterRepository extends JpaRepository<ClusterEntity, UUID> {
 
     ClusterEntity findByClusterId(UUID clusterId);
 
-    List<ClusterEntity> findAllByStatus(Status status);
+    List<ClusterEntity> findAllByUserId(String userId);
 
     List<ClusterEntity> findByUserId(String userId);
 }

@@ -7,5 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface KubeConfigRepository extends JpaRepository<KubeConfigEntity, Long> {
+    List<KubeConfigEntity> findByClusterIdIn(List<UUID> clusterIds);
+
     List<KubeConfigEntity> findByClusterId(UUID clusterId);
 }
