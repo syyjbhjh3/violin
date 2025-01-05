@@ -20,6 +20,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -128,7 +129,16 @@ public class ClusterServiceImpl implements ClusterService {
     }
 
     public ResultDTO retrieve(KubernetesDTO kubernetesDTO) {
-        List<UUID> clusterIds = clusterRepository.findClusterIdByUserId(kubernetesDTO.getUserId());
+        List<ClusterEntity> clusterEntities = clusterRepository.findAllByUserId(kubernetesDTO.getUserId());
+
+        if (clusterEntities.isEmpty()) {
+            return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_SEARCH_NOT_FOUND.getMessage());
+        }
+
+        List<UUID> clusterIds = clusterEntities.stream()
+                .map(ClusterEntity::getClusterId)
+                .collect(Collectors.toList());
+
         List<KubeConfigEntity> kubeConfigEntities = kubeConfigRepository.findByClusterIdIn(clusterIds);
 
         return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_SEARCH_SUCCESS.getMessage(), kubeConfigEntities);

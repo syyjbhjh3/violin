@@ -44,7 +44,6 @@ import Nft1 from 'assets/img/nfts/Nft1.png';
 import Nft2 from 'assets/img/nfts/Nft2.png';
 import Nft3 from 'assets/img/nfts/Nft3.png';
 import ComplexTable from "../default/components/ComplexTable";
-import tableDataComplex from "../default/variables/tableDataComplex";
 
 export default function Cluster() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -132,7 +131,7 @@ export default function Cluster() {
                     gridArea={{ xl: '1 / 3 / 2 / 4', '2xl': '1 / 2 / 2 / 3' }}
                 >
                     <Card p="0px" mb="20px">
-                        <ComplexTable tableData={tableDataComplex} tableTitle={tableTitle} />
+                        <ComplexTable tableTitle={tableTitle} />
                     </Card>
                     {/*<Card px="0px">*/}
                     {/*    <TableTopCreators tableData={tableDataTopCreators} />*/}
