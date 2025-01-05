@@ -18,7 +18,8 @@ public enum Message {
     CLUSTER_DELETE_SUCCESS("클러스터 삭제가 완료되었습니다."),
     CLUSTER_DELETE_FAIL("클러스터 삭제에 실패하였습니다."),
 
-    CLUSTER_SEARCH_SUCCESS("클러스터 목록 조회가 완료되었습니다.");
+    CLUSTER_SEARCH_SUCCESS("클러스터 목록 조회가 완료되었습니다."),
+    CLUSTER_SEARCH_NOT_FOUND("클러스터가 존재하지 않습니다.");
 
     public final String message;
 
