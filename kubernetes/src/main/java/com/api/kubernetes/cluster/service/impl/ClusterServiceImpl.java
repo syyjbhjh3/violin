@@ -128,8 +128,8 @@ public class ClusterServiceImpl implements ClusterService {
         }
     }
 
-    public ResultDTO retrieve(KubernetesDTO kubernetesDTO) {
-        List<ClusterEntity> clusterEntities = clusterRepository.findAllByUserId(kubernetesDTO.getUserId());
+    public ResultDTO retrieve(String userId) {
+        List<ClusterEntity> clusterEntities = clusterRepository.findAllByUserId(userId);
 
         if (clusterEntities.isEmpty()) {
             return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_SEARCH_NOT_FOUND.getMessage());
@@ -144,7 +144,7 @@ public class ClusterServiceImpl implements ClusterService {
         return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_SEARCH_SUCCESS.getMessage(), kubeConfigEntities);
     }
 
-    public ResultDTO datail(KubernetesDTO kubernetesDTO) {
+    public ResultDTO detail(KubernetesDTO kubernetesDTO) {
         Optional<ClusterEntity> clusterEntity = Optional.ofNullable(clusterRepository.findByClusterId(kubernetesDTO.getClusterId()));
         List<KubeConfigEntity> kubeConfigEntities = null;
 

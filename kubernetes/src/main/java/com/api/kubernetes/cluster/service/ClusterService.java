@@ -15,7 +15,7 @@ public interface ClusterService {
 
     ResultDTO delete(KubernetesDTO kubernetesDTO);
 
-    ResultDTO retrieve(KubernetesDTO kubernetesDTO);
+    ResultDTO retrieve(String userId);
 
-    ResultDTO datail(KubernetesDTO kubernetesDTO);
+    ResultDTO detail(KubernetesDTO kubernetesDTO);
 }

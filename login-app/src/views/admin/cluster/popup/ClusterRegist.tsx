@@ -73,7 +73,7 @@ const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }
             kubeconfigName, kubeconfigType, kubeconfigData
         };
 
-        apiClient.post<ApiResponse<any>>(process.env.REACT_APP_CLUSTER_API_URL + '/create', param)
+        apiClient.post<ApiResponse<any>>(process.env.REACT_APP_CLUSTER_API_URL, param)
             .then((response) => {
                 if (response.data.result === 'SUCCESS') {
                     openModal('클러스터 등록 성공', response.data.resultMessage);
