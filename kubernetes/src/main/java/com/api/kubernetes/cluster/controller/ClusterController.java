@@ -1,7 +1,7 @@
 package com.api.kubernetes.cluster.controller;
 
-import com.api.kubernetes.cluster.model.dto.KubernetesDTO;
 import com.api.kubernetes.cluster.service.ClusterService;
+import com.api.kubernetes.common.model.dto.KubernetesDTO;
 import com.api.kubernetes.common.model.dto.ResultDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

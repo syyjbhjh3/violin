@@ -40,7 +40,7 @@ import {
 } from 'react-icons/md';
 import ComplexTable from 'views/admin/default/components/ComplexTable';
 import TotalSpent from 'views/admin/default/components/TotalSpent';
-import tableDataComplex from 'views/admin/default/variables/tableDataComplex';
+import PieCard from 'views/admin/default/components/PieCard';
 
 export default function UserReports() {
     const brandColor = useColorModeValue('brand.500', 'white');
@@ -175,11 +175,21 @@ export default function UserReports() {
             </SimpleGrid>
 
             <SimpleGrid
-                columns={{ base: 1, md: 1, xl: 2 }}
+                columns={{ base: 1, md: 1, xl: 3 }}
                 gap="20px"
                 mb="20px"
             >
                 <ComplexTable tableTitle={tableTitle} />
+                <PieCard />
+                <PieCard />
+
+            </SimpleGrid>
+            <SimpleGrid
+                columns={{ base: 1, md: 1, xl: 2 }}
+                gap="20px"
+                mb="20px"
+            >
+
                 <TotalSpent />
             </SimpleGrid>
         </Box>

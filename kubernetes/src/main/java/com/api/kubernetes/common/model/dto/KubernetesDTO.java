@@ -1,4 +1,4 @@
-package com.api.kubernetes.cluster.model.dto;
+package com.api.kubernetes.common.model.dto;
 
 import com.api.kubernetes.cluster.model.entity.ClusterEntity;
 import com.api.kubernetes.cluster.model.entity.KubeConfigEntity;

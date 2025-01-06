@@ -1,9 +1,9 @@
 package com.api.kubernetes.cluster.service.impl;
 
-import com.api.kubernetes.cluster.model.dto.KubernetesDTO;
 import com.api.kubernetes.cluster.model.entity.ClusterEntity;
 import com.api.kubernetes.cluster.model.entity.KubeConfigEntity;
 import com.api.kubernetes.cluster.repo.KubeConfigRepository;
+import com.api.kubernetes.common.model.dto.KubernetesDTO;
 import com.api.kubernetes.common.model.dto.ResultDTO;
 import com.api.kubernetes.common.model.enums.Message;
 import com.api.kubernetes.common.model.enums.Status;

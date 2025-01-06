@@ -27,7 +27,7 @@ export function SidebarLinks(props: { routes: RoutesType[] }) {
     const createLinks = (routes: RoutesType[]) => {
         return routes.map((route: RoutesType, index: number) => {
 
-            const excludedRoutes = ['/sign-in', '/sign-up', '/rtl-default'];
+            const excludedRoutes = ['/sign-in', '/sign-up', '/rtl-default', '/data-tables'];
 
             if (excludedRoutes.includes(route.path)) {
                 return null;
