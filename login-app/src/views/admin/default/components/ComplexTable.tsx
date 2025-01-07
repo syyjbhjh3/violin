@@ -31,7 +31,7 @@ import { ApiResponse } from "../../../../types/api";
 import { AxiosError } from "axios";
 
 type RowObj = {
-    kubeConfigName: string;
+    clusterName: string;
     status: string;
     createdAt: string;
 };
@@ -84,8 +84,8 @@ export default function ComplexTable(props: { tableTitle: any }) {
     };
 
     const columns = [
-        columnHelper.accessor('kubeConfigName', {
-            id: 'kubeConfigName',
+        columnHelper.accessor('clusterName', {
+            id: 'clusterName',
             header: () => (
                 <Text
                     justifyContent="space-between"

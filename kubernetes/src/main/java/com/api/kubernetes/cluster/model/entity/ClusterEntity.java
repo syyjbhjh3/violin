@@ -28,12 +28,12 @@ public class ClusterEntity {
 	@Column(name = "USER_ID")
 	private String userId;
 
+	@Column(name = "KUBECONFIG_DATA")
+	private String kubeConfigData;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "CLUSTER_TYPE")
 	private Type type;
-
-	@Column(name = "CLUSTER_URL")
-	private String url;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "STATUS")
@@ -47,11 +47,11 @@ public class ClusterEntity {
 	@Column(name = "UPDATED_AT")
 	private LocalDateTime updatedAt;
 
-	public ClusterEntity(UUID clusterId, String clusterName, Type type, String url, String userId, Status status) {
+	public ClusterEntity(UUID clusterId, String clusterName, Type type, String kubeConfigData, String userId, Status status) {
 		this.clusterId = clusterId;
 		this.clusterName = clusterName;
 		this.type = type;
-		this.url = url;
+		this.kubeConfigData = kubeConfigData;
 		this.userId = userId;
 		this.status = status;
 	}

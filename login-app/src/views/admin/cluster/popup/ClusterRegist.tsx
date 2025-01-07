@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState } from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -31,11 +31,7 @@ interface RegistrationPopupProps {
 const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }) => {
     const [clusterName, setClusterName] = useState('');
     const [clusterType, setClusterType] = useState('');
-    const [clusterURL, setClusterURL] = useState('');
-
-    const [kubeconfigName, setKubeconfigName] = useState('');
-    const [kubeconfigType, setKubeconfigType] = useState('');
-    const [kubeconfigData, setKubeconfigData] = useState('');
+    const [kubeConfigData, setKubeConfigData] = useState('');
 
     const [loading, setLoading] = useState(false);
 
@@ -44,22 +40,8 @@ const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }
 
     const { openModal } = useModalStore();
 
-    useEffect(() => {
-        if (clusterName.trim() && kubeconfigType.trim()) {
-            setKubeconfigName(`${clusterName}-${kubeconfigType}`);
-        } else {
-            setKubeconfigName(''); // 초기화
-        }
-    }, [clusterName, kubeconfigType]);
-
-
     const handleRegistCluster = async () => {
-        if (!kubeconfigName.trim() || !kubeconfigType.trim() || !kubeconfigData.trim()) {
-            return;
-        }
-
-        if (!clusterName.trim() || !clusterType.trim() || !clusterURL.trim()) {
-            console.log(clusterType)
+        if (!clusterName.trim() || !clusterType.trim() || !kubeConfigData.trim()) {
             return;
         }
 
@@ -68,9 +50,8 @@ const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }
         const param = {
             clusterName,
             type : clusterType,
-            url : clusterURL,
             userId : useAuthStore.getState().userInfo.id,
-            kubeconfigName, kubeconfigType, kubeconfigData
+            kubeConfigData
         };
 
         apiClient.post<ApiResponse<any>>(process.env.REACT_APP_CLUSTER_API_URL, param)
@@ -136,7 +117,6 @@ const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }
                                 fontWeight="500"
                                 mb="24px"
                                 value={clusterType}
-                                defaultValue="K8S"
                                 onChange={(e) => setClusterType(e.target.value)}
                             >
                                 <option value="K8S">K8S</option>
@@ -152,66 +132,14 @@ const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }
                                 color={textColor}
                                 mb="8px"
                             >
-                                Cluster URL<Text color={brandStars}>*</Text>
-                            </FormLabel>
-                            <Input
-                                required
-                                fontSize="sm"
-                                type="url"
-                                mb="24px"
-                                value={clusterURL}
-                                onChange={(e) => setClusterURL(e.target.value)}
-                            />
-                            <FormLabel
-                                display="flex"
-                                fontSize="sm"
-                                fontWeight="500"
-                                color={textColor}
-                                mb="8px"
-                            >
-                                KubeConfig Name<Text color={brandStars}>*</Text>
-                            </FormLabel>
-                            <Input
-                                required
-                                fontSize="sm"
-                                type="text"
-                                mb="24px"
-                                value={kubeconfigName}
-                                disabled
-                            />
-                            <FormLabel
-                                display="flex"
-                                fontSize="sm"
-                                fontWeight="500"
-                                color={textColor}
-                                mb="8px"
-                            >
-                                KubeConfig Type<Text color={brandStars}>*</Text>
-                            </FormLabel>
-                            <Input
-                                required
-                                fontSize="sm"
-                                type="text"
-                                placeholder="Admin, User, Read Only"
-                                mb="24px"
-                                value={kubeconfigType}
-                                onChange={(e) => setKubeconfigType(e.target.value)}
-                            />
-                            <FormLabel
-                                display="flex"
-                                fontSize="sm"
-                                fontWeight="500"
-                                color={textColor}
-                                mb="8px"
-                            >
                                 KubeConfig Data<Text color={brandStars}>*</Text>
                             </FormLabel>
                             <Textarea
                                 required
                                 fontSize="sm"
                                 mb="24px"
-                                value={kubeconfigData}
-                                onChange={(e) => setKubeconfigData(e.target.value)}
+                                value={kubeConfigData}
+                                onChange={(e) => setKubeConfigData(e.target.value)}
                             />
                             <Button
                                 isLoading={loading}

@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Slf4j
 @CrossOrigin("*")
 @RestController
@@ -15,14 +17,14 @@ public class PodController {
 
     private final PodService podService;
 
-    @GetMapping({"/{kubeConfigId}", "/{loginId}"})
+    @GetMapping({"/{loginId}"})
     public ResultDTO retrieve(
-            @PathVariable(required = false) Long kubeConfigId,
+            @PathVariable(required = false) UUID clusterId,
             @PathVariable(required = false) String loginId) {
 
-        if (kubeConfigId == null) {
+        if (clusterId == null) {
             return podService.retrieveAll(loginId);
         }
-        return podService.retrieve(kubeConfigId);
+        return podService.retrieve(clusterId);
     }
 }
