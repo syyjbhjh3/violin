@@ -14,6 +14,7 @@ import Cluster from 'views/admin/cluster';
 import Profile from 'views/admin/profile';
 import DataTables from 'views/admin/dataTables';
 import RTL from 'views/admin/rtl';
+import Pod from 'views/admin/pod';
 
 // Auth Imports
 import SignInCentered from 'views/auth/signIn';
@@ -40,7 +41,20 @@ const routes = [
             />
         ),
         component: <Cluster />,
-        secondary: true,
+    },
+    {
+        name: 'Pod',
+        layout: '/admin',
+        path: '/pod',
+        icon: (
+            <Icon
+                as={MdLock}
+                width="20px"
+                height="20px"
+                color="inherit"
+            />
+        ),
+        component: <Pod />,
     },
     {
         name: 'Data Tables',

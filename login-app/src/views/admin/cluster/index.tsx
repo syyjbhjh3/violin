@@ -100,7 +100,7 @@ export default function Cluster() {
                                 ]}
                                 image={Nft1}
                                 currentbid="0.91 ETH"
-                                download="#"
+                                download="/admin/pod"
                                 btn="Pod"
                             />
                             <NFT

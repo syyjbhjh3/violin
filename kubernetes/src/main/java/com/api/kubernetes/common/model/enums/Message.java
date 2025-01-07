@@ -19,7 +19,11 @@ public enum Message {
     CLUSTER_DELETE_FAIL("클러스터 삭제에 실패하였습니다."),
 
     CLUSTER_SEARCH_SUCCESS("클러스터 목록 조회가 완료되었습니다."),
-    CLUSTER_SEARCH_NOT_FOUND("클러스터가 존재하지 않습니다.");
+    CLUSTER_SEARCH_NOT_FOUND("클러스터가 존재하지 않습니다."),
+
+    /* Kubernetes Resource - POD */
+    POD_SEARCH_SUCCESS("파드 목록 조회가 완료되었습니다."),
+    POD_SEARCH_NOT_FOUND("파드가 존재하지 않습니다.");
 
     public final String message;
 

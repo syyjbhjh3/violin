@@ -1,9 +1,7 @@
 package com.api.kubernetes.common.util.k8sClient;
 
 import com.api.kubernetes.cluster.model.entity.ClusterEntity;
-import com.api.kubernetes.cluster.model.entity.KubeConfigEntity;
 import com.api.kubernetes.cluster.repo.ClusterRepository;
-import com.api.kubernetes.cluster.repo.KubeConfigRepository;
 import io.fabric8.kubernetes.client.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,29 +20,21 @@ public class UserClusterClientManager {
 
     private final ClusterRepository clusterRepository;
 
-    private final KubeConfigRepository kubeConfigRepository;
-
     private final Map<Integer, Map<Integer, KubernetesClient>> userClusterClients = new HashMap<>();
 
     public void initCluster(String userId) {
         List<ClusterEntity> clusterEntities = clusterRepository.findByUserId(userId);
 
         for (ClusterEntity clusterEntity : clusterEntities) {
-            List<KubeConfigEntity> kubeConfigEntities = kubeConfigRepository.findByClusterId(clusterEntity.getClusterId());
-
-            for (KubeConfigEntity kubeConfigEntity : kubeConfigEntities) {
-                if (kubeConfigEntities.isEmpty()) {
-                    continue;
-                } else {
-                    String redisKey = clusterEntity.getClusterId() + ":" + kubeConfigEntity.getKubeConfigId();
-                    redisTemplate.opsForValue().set(redisKey, kubeConfigEntity.getKubeConfigData());
-                }
-            }
+            redisTemplate.opsForValue().set(
+                    clusterEntity.getClusterId().toString(),
+                    clusterEntity.getKubeConfigData()
+            );
         }
     }
 
-    public KubernetesClient getClusterClient(UUID clusterId, String kubeConfigId) {
-        String kubeconfigData = redisTemplate.opsForValue().get(clusterId + ":" + kubeConfigId);
+    public KubernetesClient getClusterClient(UUID clusterId) {
+        String kubeconfigData = redisTemplate.opsForValue().get(clusterId);
 
         KubernetesClient newClient = new KubernetesClientBuilder()
                 .withConfig(kubeconfigData)

@@ -1,7 +1,7 @@
 package com.api.kubernetes.cluster.controller;
 
-import com.api.kubernetes.cluster.model.dto.KubernetesDTO;
 import com.api.kubernetes.cluster.service.ClusterService;
+import com.api.kubernetes.common.model.dto.KubernetesDTO;
 import com.api.kubernetes.common.model.dto.ResultDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,39 +16,33 @@ public class ClusterController {
 
     private final ClusterService clusterService;
 
-    /* K8S Cluster */
-    @PostMapping("/connect")
-    public ResultDTO connect(@RequestBody KubernetesDTO kubernetesDTO) {
-        return clusterService.connect(kubernetesDTO);
-    }
-
-    @PostMapping("/status")
-    public ResultDTO status(@RequestBody KubernetesDTO kubernetesDTO) {
-        return clusterService.datail(kubernetesDTO);
-    }
-
-    @PostMapping("/create")
-    public ResultDTO create(@RequestBody KubernetesDTO kubernetesDTO) {
+    /* 클러스터 생성 */
+    @PostMapping
+    public ResultDTO createCluster(@RequestBody KubernetesDTO kubernetesDTO) {
         return clusterService.create(kubernetesDTO);
     }
 
-    @PostMapping("/update")
-    public ResultDTO update(@RequestBody KubernetesDTO kubernetesDTO) {
+    /* 클러스터 업데이트 */
+    @PutMapping("/{clusterId}")
+    public ResultDTO updateCluster(@RequestBody KubernetesDTO kubernetesDTO) {
         return clusterService.update(kubernetesDTO);
     }
 
-    @PostMapping("/delete")
-    public ResultDTO delete(@RequestBody KubernetesDTO kubernetesDTO) {
+    /* 클러스터 삭제 */
+    @DeleteMapping("/{clusterId}")
+    public ResultDTO deleteCluster(@RequestBody KubernetesDTO kubernetesDTO) {
         return clusterService.delete(kubernetesDTO);
     }
 
-    @PostMapping("/retrieve")
-    public ResultDTO retrieve(@RequestBody KubernetesDTO kubernetesDTO) {
-        return clusterService.retrieve(kubernetesDTO);
+    /* 클러스터 목록 조회 */
+    @GetMapping("/{userId}")
+    public ResultDTO getClusters(@PathVariable String userId) {
+        return clusterService.retrieve(userId);
     }
 
-    @PostMapping("/detail")
-    public ResultDTO datail(@RequestBody KubernetesDTO kubernetesDTO) {
-        return clusterService.datail(kubernetesDTO);
+    /* 특정 클러스터 상세 조회 */
+    @GetMapping("/detail/{clusterId}")
+    public ResultDTO getClusterDetail(@RequestBody KubernetesDTO kubernetesDTO) {
+        return clusterService.detail(kubernetesDTO);
     }
 }

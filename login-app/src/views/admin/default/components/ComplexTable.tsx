@@ -31,7 +31,7 @@ import { ApiResponse } from "../../../../types/api";
 import { AxiosError } from "axios";
 
 type RowObj = {
-    kubeConfigName: string;
+    clusterName: string;
     status: string;
     createdAt: string;
 };
@@ -47,12 +47,15 @@ export default function ComplexTable(props: { tableTitle: any }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const userInfo = useAuthStore.getState().userInfo;
 
-        const param = { userId :  useAuthStore.getState().userInfo?.id };
+        if (!userInfo || !userInfo.id) {
+            throw new Error('User info or ID is missing');
+        }
 
         setLoading(true);
 
-        apiClient.post<ApiResponse<any>>(process.env.REACT_APP_CLUSTER_API_URL + '/retrieve', param)
+        apiClient.get<ApiResponse<any>>(`${process.env.REACT_APP_CLUSTER_API_URL}/${userInfo.id}`)
         .then((response) => {
             if (response.data.result === 'SUCCESS' && response.data.data?.length > 0) {
                 const transformedData = response.data.data.map((item: any) => ({
@@ -81,8 +84,8 @@ export default function ComplexTable(props: { tableTitle: any }) {
     };
 
     const columns = [
-        columnHelper.accessor('kubeConfigName', {
-            id: 'kubeConfigName',
+        columnHelper.accessor('clusterName', {
+            id: 'clusterName',
             header: () => (
                 <Text
                     justifyContent="space-between"

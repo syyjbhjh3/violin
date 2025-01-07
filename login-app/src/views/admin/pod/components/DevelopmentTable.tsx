@@ -195,7 +195,7 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontWeight="700"
                     lineHeight="100%"
                 >
-                    Complex Table
+                    Pod List
                 </Text>
                 <Menu />
             </Flex>

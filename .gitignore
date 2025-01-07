@@ -7,3 +7,8 @@ kubernetes/.gradle
 kubernetes/gradle
 kubernetes/settings.gradle.kts
 kubernetes/build/*
+
+login/src/main/resources/application-local.yml
+login/src/main/resources/application.yml
+kubernetes/src/main/resources/application-local.yml
+
