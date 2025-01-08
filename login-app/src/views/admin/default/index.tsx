@@ -49,8 +49,10 @@ import { AxiosError } from "axios";
 
 export default function UserReports() {
     const [loading, setLoading] = useState(true);
+    const [totalClusterCnt, setTotalClusterCnt] = useState('');
     const [totalPodCnt, setTotalPodCnt] = useState('');
     const [totalNodeCnt, setTotalNodeCnt] = useState('');
+    const [totalNamespaceCnt, setTotalNamespaceCnt] = useState('');
     const [totalSvcCnt, setTotalSvcCnt] = useState('');
     const [totalDeployCnt, setTotalDeployCnt] = useState('');
 
@@ -63,8 +65,11 @@ export default function UserReports() {
             .then((response) => {
                 if (response.data.result === 'SUCCESS') {
                     const status = response.data.data;
+
+                    setTotalClusterCnt(status.totalClusters);
                     setTotalPodCnt(status.totalPods);
                     setTotalNodeCnt(status.totalNodes);
+                    setTotalNamespaceCnt(status.totalNamespaces);
                     setTotalSvcCnt(status.totalServices);
                     setTotalDeployCnt(status.totalDeployments);
                 }
@@ -107,7 +112,7 @@ export default function UserReports() {
                         />
                     }
                     name="Connect Cluster"
-                    value="0"
+                    value={totalClusterCnt}
                 />
 
                 <MiniStatistics
@@ -146,8 +151,8 @@ export default function UserReports() {
                             }
                         />
                     }
-                    name="Total Application"
-                    value="0"
+                    name="Total Namespace"
+                    value={totalNamespaceCnt}
                 />
 
                 <MiniStatistics

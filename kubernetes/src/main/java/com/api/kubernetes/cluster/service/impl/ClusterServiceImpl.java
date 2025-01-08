@@ -40,17 +40,21 @@ public class ClusterServiceImpl implements ClusterService {
         int totalPods = 0;
         int totalServices = 0;
         int totalDeployments = 0;
+        int totalNamespaces = 0;
 
         for (ClusterEntity clusterEntity : clusterEntities.parallelStream().toList()) {
             KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getClusterId());
             totalNodes += kubernetesClient.nodes().list().getItems().size();
+            totalNamespaces += kubernetesClient.namespaces().list().getItems().size();
             totalPods += kubernetesClient.pods().inAnyNamespace().list().getItems().size();
             totalServices += kubernetesClient.services().inAnyNamespace().list().getItems().size();
             totalDeployments += kubernetesClient.apps().deployments().inAnyNamespace().list().getItems().size();
         }
 
         ClusterResourceSummaryDTO totalSummary = ClusterResourceSummaryDTO.builder()
+                .totalClusters(clusterEntities.size())
                 .totalNodes(totalNodes)
+                .totalNamespaces(totalNamespaces)
                 .totalPods(totalPods)
                 .totalServices(totalServices)
                 .totalDeployments(totalDeployments)
