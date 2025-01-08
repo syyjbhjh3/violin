@@ -72,6 +72,7 @@ const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }
             })
             .finally(() => {
                 setLoading(false);
+                onClose();
             });
     };
 
@@ -136,6 +137,7 @@ const RegistrationPopup: React.FC<RegistrationPopupProps> = ({ isOpen, onClose }
                             </FormLabel>
                             <Textarea
                                 required
+                                height="300"
                                 fontSize="sm"
                                 mb="24px"
                                 value={kubeConfigData}

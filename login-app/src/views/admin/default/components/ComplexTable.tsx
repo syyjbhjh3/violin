@@ -49,34 +49,30 @@ export default function ComplexTable(props: { tableTitle: any }) {
     useEffect(() => {
         const userInfo = useAuthStore.getState().userInfo;
 
-        if (!userInfo || !userInfo.id) {
-            throw new Error('User info or ID is missing');
-        }
-
         setLoading(true);
 
         apiClient.get<ApiResponse<any>>(`${process.env.REACT_APP_CLUSTER_API_URL}/${userInfo.id}`)
-        .then((response) => {
-            if (response.data.result === 'SUCCESS' && response.data.data?.length > 0) {
-                const transformedData = response.data.data.map((item: any) => ({
-                    ...item,
-                    createdAt: item.createdAt ? convertDate(item.createdAt) : null,
-                }));
-                setData(transformedData);
-            } else {
-                /* 조회 결과 없음 */
-            }
-        })
-        .catch((error) => {
-            if (error instanceof AxiosError) {
-                const errorMessage = error.response?.data?.resultMessage || error.message;
-                console.error(errorMessage);
-            }
-        })
-        .finally(() => {
-            setLoading(false);
-        });
-}, [useAuthStore.getState().userInfo.id]);
+            .then((response) => {
+                if (response.data.result === 'SUCCESS' && response.data.data?.length > 0) {
+                    const transformedData = response.data.data.map((item: any) => ({
+                        ...item,
+                        createdAt: item.createdAt ? convertDate(item.createdAt) : null,
+                    }));
+                    setData(transformedData);
+                } else {
+                    /* 조회 결과 없음 */
+                }
+            })
+            .catch((error) => {
+                if (error instanceof AxiosError) {
+                    const errorMessage = error.response?.data?.resultMessage || error.message;
+                    console.error(errorMessage);
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [useAuthStore.getState().userInfo?.id]);
 
     const convertDate = (isoString: string): string => {
         const date = new Date(isoString);

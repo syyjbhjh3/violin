@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -26,10 +25,10 @@ import java.util.stream.Collectors;
 public class PodServiceImpl implements PodService {
 
     /* Repository */
-    ClusterRepository clusterRepository;
+    private final ClusterRepository clusterRepository;
 
     /* Util */
-    UserClusterClientManager k8sClientManager;
+    private final UserClusterClientManager k8sClientManager;
 
     private List<PodDTO> retrievePodList(UUID clusterId) {
         ClusterEntity clusterEntity = clusterRepository.findByClusterId(clusterId);
@@ -45,20 +44,19 @@ public class PodServiceImpl implements PodService {
                 .collect(Collectors.toList());
     }
 
-    public ResultDTO retrieve(UUID clusterId) {
+    public ResultDTO retrieveClusterPod(UUID clusterId) {
         List<PodDTO> podList = retrievePodList(clusterId);
         return new ResultDTO<>(Status.SUCCESS, Message.POD_SEARCH_NOT_FOUND.getMessage(), podList);
     }
 
     public ResultDTO retrieveAll(String loginId) {
-        List<ClusterEntity> clusterEntities = clusterRepository.findAllByUserId(loginId);
+        List<ClusterEntity> clusterEntities = clusterRepository.findByUserId(loginId);
         List<PodDTO> podList = new ArrayList<>();
 
         for (ClusterEntity clusterEntity : clusterEntities) {
             List<PodDTO> podDTOList = retrievePodList(clusterEntity.getClusterId());
             podList.addAll(podDTOList);
         }
-
         return new ResultDTO<>(Status.SUCCESS, Message.POD_SEARCH_NOT_FOUND.getMessage(), podList);
     }
 }

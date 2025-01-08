@@ -9,21 +9,36 @@ import {
     // extendTheme
 } from '@chakra-ui/react';
 import initialTheme from './theme/theme'; //  { themeGreen }
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuthStore } from "./store/useAuthStore";
+import { Center, Spinner } from "@chakra-ui/icons";
 
 export default function Main() {
     const [currentTheme, setCurrentTheme] = useState(initialTheme);
+    const [isLoading, setIsLoading] = useState(true); // 초기화 상태 관리
 
     const rehydrate = useAuthStore((state) => state.rehydrate);
     const { userInfo } = useAuthStore((state) => state);
 
     useEffect(() => {
-        rehydrate();
+        async function initializeUserInfo() {
+            await rehydrate();
+            setIsLoading(false);
+        }
+        initializeUserInfo();
     }, [rehydrate]);
 
+    if (isLoading) {
+        return (
+            <Center height="100vh">
+                <Spinner size="xl" />
+            </Center>
+        );
+    }
+
+    // rehydrate 완료 후 userInfo가 없으면 로그인 페이지로 리다이렉트
     if (!userInfo) {
-        return <div>Loading...</div>;
+        return <Navigate to="/auth/sign-in" replace />;
     }
 
     return (

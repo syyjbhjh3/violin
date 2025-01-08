@@ -18,31 +18,31 @@ public class ClusterController {
 
     /* 클러스터 생성 */
     @PostMapping
-    public ResultDTO createCluster(@RequestBody KubernetesDTO kubernetesDTO) {
+    public ResultDTO create(@RequestBody KubernetesDTO kubernetesDTO) {
         return clusterService.create(kubernetesDTO);
     }
 
     /* 클러스터 업데이트 */
     @PutMapping("/{clusterId}")
-    public ResultDTO updateCluster(@RequestBody KubernetesDTO kubernetesDTO) {
+    public ResultDTO update(@RequestBody KubernetesDTO kubernetesDTO) {
         return clusterService.update(kubernetesDTO);
     }
 
     /* 클러스터 삭제 */
     @DeleteMapping("/{clusterId}")
-    public ResultDTO deleteCluster(@RequestBody KubernetesDTO kubernetesDTO) {
+    public ResultDTO delete(@RequestBody KubernetesDTO kubernetesDTO) {
         return clusterService.delete(kubernetesDTO);
     }
 
     /* 클러스터 목록 조회 */
     @GetMapping("/{userId}")
-    public ResultDTO getClusters(@PathVariable String userId) {
+    public ResultDTO retrieve(@PathVariable String userId) {
         return clusterService.retrieve(userId);
     }
 
     /* 특정 클러스터 상세 조회 */
     @GetMapping("/detail/{clusterId}")
-    public ResultDTO getClusterDetail(@RequestBody KubernetesDTO kubernetesDTO) {
+    public ResultDTO detail(@RequestBody KubernetesDTO kubernetesDTO) {
         return clusterService.detail(kubernetesDTO);
     }
 }

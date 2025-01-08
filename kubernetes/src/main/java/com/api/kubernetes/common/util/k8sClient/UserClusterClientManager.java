@@ -34,7 +34,8 @@ public class UserClusterClientManager {
     }
 
     public KubernetesClient getClusterClient(UUID clusterId) {
-        String kubeconfigData = redisTemplate.opsForValue().get(clusterId);
+        //String kubeconfigData = redisTemplate.opsForValue().get(clusterId.toString());
+        String kubeconfigData = clusterRepository.findByClusterId(clusterId).getKubeConfigData();
 
         KubernetesClient newClient = new KubernetesClientBuilder()
                 .withConfig(kubeconfigData)
