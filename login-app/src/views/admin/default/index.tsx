@@ -41,8 +41,45 @@ import {
 import ComplexTable from 'views/admin/default/components/ComplexTable';
 import TotalSpent from 'views/admin/default/components/TotalSpent';
 import PieCard from 'views/admin/default/components/PieCard';
+import { useEffect, useState } from "react";
+import { useAuthStore } from "../../../store/useAuthStore";
+import { apiClient } from "../../../api/axiosConfig";
+import { ApiResponse } from "../../../types/api";
+import { AxiosError } from "axios";
 
 export default function UserReports() {
+    const [loading, setLoading] = useState(true);
+    const [totalPodCnt, setTotalPodCnt] = useState('');
+    const [totalNodeCnt, setTotalNodeCnt] = useState('');
+    const [totalSvcCnt, setTotalSvcCnt] = useState('');
+    const [totalDeployCnt, setTotalDeployCnt] = useState('');
+
+    useEffect(() => {
+        const userInfo = useAuthStore.getState().userInfo;
+
+        setLoading(true);
+
+        apiClient.get<ApiResponse<any>>(`${process.env.REACT_APP_CLUSTER_API_URL}/status/${userInfo.id}`)
+            .then((response) => {
+                if (response.data.result === 'SUCCESS') {
+                    const status = response.data.data;
+                    setTotalPodCnt(status.totalPods);
+                    setTotalNodeCnt(status.totalNodes);
+                    setTotalSvcCnt(status.totalServices);
+                    setTotalDeployCnt(status.totalDeployments);
+                }
+            })
+            .catch((error) => {
+                if (error instanceof AxiosError) {
+                    const errorMessage = error.response?.data?.resultMessage || error.message;
+                    console.error(errorMessage);
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [useAuthStore.getState().userInfo?.id]);
+
     const brandColor = useColorModeValue('brand.500', 'white');
     const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
     const tableTitle = 'Cluster Status';
@@ -89,8 +126,8 @@ export default function UserReports() {
                             }
                         />
                     }
-                    name="Total KubeConfig"
-                    value="0"
+                    name="Total Node"
+                    value={totalNodeCnt}
                 />
 
                 <MiniStatistics
@@ -130,7 +167,7 @@ export default function UserReports() {
                         />
                     }
                     name="Total Pod"
-                    value="0"
+                    value={totalPodCnt}
                 />
 
                 <MiniStatistics
@@ -150,7 +187,7 @@ export default function UserReports() {
                         />
                     }
                     name="Total Service"
-                    value="0"
+                    value={totalSvcCnt}
                 />
 
                 <MiniStatistics
@@ -170,7 +207,7 @@ export default function UserReports() {
                         />
                     }
                     name="Total Deployment"
-                    value="0"
+                    value={totalDeployCnt}
                 />
             </SimpleGrid>
 

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ClusterService {
+    ResultDTO status(String userId);
+
     ResultDTO connect(KubernetesDTO kubernetesDTO);
 
     ResultDTO create(KubernetesDTO kubernetesDTO);

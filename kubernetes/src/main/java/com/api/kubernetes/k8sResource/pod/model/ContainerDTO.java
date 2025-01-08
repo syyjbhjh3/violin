@@ -1,4 +1,4 @@
-package com.api.kubernetes.k8sResource.model;
+package com.api.kubernetes.k8sResource.pod.model;
 
 import lombok.Builder;
 import lombok.Getter;

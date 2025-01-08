@@ -16,6 +16,12 @@ public class ClusterController {
 
     private final ClusterService clusterService;
 
+    /* 클러스터 메인 보드 상태 */
+    @GetMapping("/status/{userId}")
+    public ResultDTO status(@PathVariable String userId) {
+        return clusterService.status(userId);
+    }
+
     /* 클러스터 생성 */
     @PostMapping
     public ResultDTO create(@RequestBody KubernetesDTO kubernetesDTO) {

@@ -1,4 +1,4 @@
-package com.api.kubernetes.k8sResource.model;
+package com.api.kubernetes.k8sResource.pod.model;
 
 import io.fabric8.kubernetes.api.model.Pod;
 import lombok.Builder;
@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 @Builder
 @Getter
 public class PodDTO {
+    private String clusterName;
     private String name;
     private String namespace;
     private String phase;
@@ -22,7 +23,7 @@ public class PodDTO {
     private List<ContainerDTO> containers;
     private List<String> volumes;
 
-    public static PodDTO fromPod(Pod pod) {
+    public static PodDTO fromPod(Pod pod, String clusterName) {
         return PodDTO.builder()
                 .name(pod.getMetadata().getName())
                 .namespace(pod.getMetadata().getNamespace())
@@ -43,6 +44,7 @@ public class PodDTO {
                                 .build())
                         .collect(Collectors.toList()))
                 .volumes(pod.getSpec().getVolumes().stream().map(volume -> volume.getName()).collect(Collectors.toList()))
+                .clusterName(clusterName)
                 .build();
     }
 }

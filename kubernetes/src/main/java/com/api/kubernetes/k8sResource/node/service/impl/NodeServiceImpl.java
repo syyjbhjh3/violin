@@ -1,4 +1,4 @@
-package com.api.kubernetes.k8sResource.service.impl;
+package com.api.kubernetes.k8sResource.node.service.impl;
 
 import com.api.kubernetes.cluster.model.entity.ClusterEntity;
 import com.api.kubernetes.cluster.repo.ClusterRepository;
@@ -6,15 +6,13 @@ import com.api.kubernetes.common.model.dto.ResultDTO;
 import com.api.kubernetes.common.model.enums.Message;
 import com.api.kubernetes.common.model.enums.Status;
 import com.api.kubernetes.common.util.k8sClient.UserClusterClientManager;
-import com.api.kubernetes.k8sResource.model.PodDTO;
-import com.api.kubernetes.k8sResource.service.PodService;
+import com.api.kubernetes.k8sResource.node.model.NodeDTO;
+import com.api.kubernetes.k8sResource.node.service.NodeService;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -22,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PodServiceImpl implements PodService {
+public class NodeServiceImpl implements NodeService {
 
     /* Repository */
     private final ClusterRepository clusterRepository;
@@ -30,33 +28,34 @@ public class PodServiceImpl implements PodService {
     /* Util */
     private final UserClusterClientManager k8sClientManager;
 
-    private List<PodDTO> retrievePodList(UUID clusterId) {
+    private List<NodeDTO> retrieveNodeList(UUID clusterId) {
         ClusterEntity clusterEntity = clusterRepository.findByClusterId(clusterId);
+        String clusterName = clusterEntity.getClusterName();
 
         KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getClusterId());
 
-        return kubernetesClient.pods()
-                .inAnyNamespace()
+        return kubernetesClient.nodes()
                 .list()
                 .getItems()
                 .stream()
-                .map(PodDTO::fromPod)
+                .map(node -> NodeDTO.fromNode(node, clusterName))
                 .collect(Collectors.toList());
     }
 
-    public ResultDTO retrieveClusterPod(UUID clusterId) {
-        List<PodDTO> podList = retrievePodList(clusterId);
-        return new ResultDTO<>(Status.SUCCESS, Message.POD_SEARCH_NOT_FOUND.getMessage(), podList);
+    public ResultDTO retrieveClusterNode(UUID clusterId) {
+        List<NodeDTO> nodeList = retrieveNodeList(clusterId);
+        return new ResultDTO<>(Status.SUCCESS, Message.NODE_SEARCH_SUCCESS.getMessage(), nodeList);
     }
 
     public ResultDTO retrieveAll(String loginId) {
         List<ClusterEntity> clusterEntities = clusterRepository.findByUserId(loginId);
-        List<PodDTO> podList = new ArrayList<>();
 
-        for (ClusterEntity clusterEntity : clusterEntities) {
-            List<PodDTO> podDTOList = retrievePodList(clusterEntity.getClusterId());
-            podList.addAll(podDTOList);
-        }
-        return new ResultDTO<>(Status.SUCCESS, Message.POD_SEARCH_NOT_FOUND.getMessage(), podList);
+        List<NodeDTO> nodeList = clusterEntities.stream()
+                .parallel()
+                .flatMap(clusterEntity -> retrieveNodeList(clusterEntity.getClusterId()).stream())
+                .collect(Collectors.toList());
+
+        return new ResultDTO<>(Status.SUCCESS, Message.NODE_SEARCH_SUCCESS.getMessage(), nodeList);
     }
+
 }

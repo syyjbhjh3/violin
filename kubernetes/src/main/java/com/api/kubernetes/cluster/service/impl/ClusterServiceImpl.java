@@ -1,5 +1,6 @@
 package com.api.kubernetes.cluster.service.impl;
 
+import com.api.kubernetes.cluster.model.dto.ClusterResourceSummaryDTO;
 import com.api.kubernetes.cluster.model.entity.ClusterEntity;
 import com.api.kubernetes.common.model.dto.KubernetesDTO;
 import com.api.kubernetes.common.model.dto.ResultDTO;
@@ -7,6 +8,7 @@ import com.api.kubernetes.common.model.enums.Message;
 import com.api.kubernetes.common.model.enums.Status;
 import com.api.kubernetes.cluster.repo.ClusterRepository;
 import com.api.kubernetes.cluster.service.ClusterService;
+import com.api.kubernetes.common.util.k8sClient.UserClusterClientManager;
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -29,7 +31,33 @@ public class ClusterServiceImpl implements ClusterService {
     private final ClusterRepository clusterRepository;
 
     /* Util */
-    private final WebClient webClient;
+    private final UserClusterClientManager k8sClientManager;
+
+    public ResultDTO status(String userId) {
+        List<ClusterEntity> clusterEntities = clusterRepository.findAllByUserId(userId);
+
+        int totalNodes = 0;
+        int totalPods = 0;
+        int totalServices = 0;
+        int totalDeployments = 0;
+
+        for (ClusterEntity clusterEntity : clusterEntities.parallelStream().toList()) {
+            KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getClusterId());
+            totalNodes += kubernetesClient.nodes().list().getItems().size();
+            totalPods += kubernetesClient.pods().inAnyNamespace().list().getItems().size();
+            totalServices += kubernetesClient.services().inAnyNamespace().list().getItems().size();
+            totalDeployments += kubernetesClient.apps().deployments().inAnyNamespace().list().getItems().size();
+        }
+
+        ClusterResourceSummaryDTO totalSummary = ClusterResourceSummaryDTO.builder()
+                .totalNodes(totalNodes)
+                .totalPods(totalPods)
+                .totalServices(totalServices)
+                .totalDeployments(totalDeployments)
+                .build();
+
+        return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_STATUS_SUCCESS.getMessage(), totalSummary);
+    }
 
     public ResultDTO connect(KubernetesDTO kubernetesDTO) {
         try {
