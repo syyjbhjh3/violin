@@ -1,7 +1,7 @@
-package com.api.kubernetes.k8sResource.node.controller;
+package com.api.kubernetes.k8sResource.namespace.controller;
 
 import com.api.kubernetes.common.model.dto.ResultDTO;
-import com.api.kubernetes.k8sResource.node.service.NodeService;
+import com.api.kubernetes.k8sResource.namespace.service.NamespaceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,17 +15,17 @@ import java.util.UUID;
 @CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
-public class NodeController {
+public class NamespaceController {
 
-    private final NodeService nodeService;
+    private final NamespaceService namespaceService;
 
-    @GetMapping({"/cluster/{clusterId}/node"})
+    @GetMapping({"/cluster/{clusterId}/namespace"})
     public ResultDTO retrieve(@PathVariable UUID clusterId) {
-        return nodeService.retrieve(clusterId);
+        return namespaceService.retrieve(clusterId);
     }
 
-    @GetMapping({"/node/{loginId}"})
+    @GetMapping({"/namespace/{loginId}"})
     public ResultDTO retrieveAll(@PathVariable String loginId) {
-        return nodeService.retrieveAll(loginId);
+        return namespaceService.retrieveAll(loginId);
     }
 }

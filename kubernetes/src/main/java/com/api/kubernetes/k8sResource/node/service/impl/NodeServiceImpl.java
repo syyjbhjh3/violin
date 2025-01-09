@@ -42,7 +42,7 @@ public class NodeServiceImpl implements NodeService {
                 .collect(Collectors.toList());
     }
 
-    public ResultDTO retrieveClusterNode(UUID clusterId) {
+    public ResultDTO retrieve(UUID clusterId) {
         List<NodeDTO> nodeList = retrieveNodeList(clusterId);
         return new ResultDTO<>(Status.SUCCESS, Message.NODE_SEARCH_SUCCESS.getMessage(), nodeList);
     }

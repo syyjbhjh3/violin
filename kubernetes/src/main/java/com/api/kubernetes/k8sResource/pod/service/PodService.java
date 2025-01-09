@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Service
 public interface PodService {
-    ResultDTO retrieveClusterPod(UUID clusterId);
+    ResultDTO retrieve(UUID clusterId);
 
     ResultDTO retrieveAll(String loginId);
 }

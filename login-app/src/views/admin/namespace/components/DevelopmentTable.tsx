@@ -32,12 +32,16 @@ import { MdCancel, MdCheckCircle, MdOutlineError } from "react-icons/md";
 // Assets
 type RowObj = {
     name: string;
-    namespace: string;
+    status: string;
     clusterName: string;
-    phase: string;
-    nodeName: string;
-    restartCount: string;
-    startTime: string;
+    creator: string;
+    cpuLimits: string;
+    cpuRequests: string;
+    memoryLimits: string;
+    memoryRequests: string;
+    storage: string;
+    istioInjection: string;
+    creationTimestamp: string;
 };
 
 const columnHelper = createColumnHelper<RowObj>();
@@ -51,12 +55,12 @@ export default function ComplexTable(props: { tableData: any }) {
 
         setLoading(true);
 
-        apiClient.get<ApiResponse<any>>(`${process.env.REACT_APP_K8S_API_URL}/pod/${userInfo.id}`)
+        apiClient.get<ApiResponse<any>>(`${process.env.REACT_APP_K8S_API_URL}/node/${userInfo.id}`)
             .then((response) => {
                 if (response.data.result === 'SUCCESS' && response.data.data?.length > 0) {
                     const transformedData = response.data.data.map((item: any) => ({
                         ...item,
-                        startTime: item.startTime ? convertDate(item.startTime) : null,
+                        creationTimestamp: item.creationTimestamp ? convertDate(item.creationTimestamp) : null,
                     }));
                     setData(transformedData);
                 } else {
@@ -82,7 +86,6 @@ export default function ComplexTable(props: { tableData: any }) {
     const { tableData } = props;
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const textColor = useColorModeValue('secondaryGray.900', 'white');
-    const warnTextColor = useColorModeValue('red.500', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
     let defaultData = tableData;
     const columns = [
@@ -106,68 +109,8 @@ export default function ComplexTable(props: { tableData: any }) {
                 </Flex>
             ),
         }),
-        columnHelper.accessor('clusterName', {
-            id: 'clusterName',
-            header: () => (
-                <Text
-                    justifyContent="space-between"
-                    align="center"
-                    fontSize={{ sm: '10px', lg: '12px' }}
-                    color="gray.400"
-                >
-                    Cluster
-                </Text>
-            ),
-            cell: (info: any) => (
-                <Flex align="center">
-                    <Text color={textColor} fontSize="sm" fontWeight="700">
-                        {info.getValue()}
-                    </Text>
-                </Flex>
-            ),
-        }),
-        columnHelper.accessor('namespace', {
-            id: 'namespace',
-            header: () => (
-                <Text
-                    justifyContent="space-between"
-                    align="center"
-                    fontSize={{ sm: '10px', lg: '12px' }}
-                    color="gray.400"
-                >
-                    Namespace
-                </Text>
-            ),
-            cell: (info: any) => (
-                <Flex align="center">
-                    <Text color={textColor} fontSize="sm" fontWeight="700">
-                        {info.getValue()}
-                    </Text>
-                </Flex>
-            ),
-        }),
-        columnHelper.accessor('nodeName', {
-            id: 'nodeName',
-            header: () => (
-                <Text
-                    justifyContent="space-between"
-                    align="center"
-                    fontSize={{ sm: '10px', lg: '12px' }}
-                    color="gray.400"
-                >
-                    Node
-                </Text>
-            ),
-            cell: (info: any) => (
-                <Flex align="center">
-                    <Text color={textColor} fontSize="sm" fontWeight="700">
-                        {info.getValue()}
-                    </Text>
-                </Flex>
-            ),
-        }),
-        columnHelper.accessor('phase', {
-            id: 'phase',
+        columnHelper.accessor('status', {
+            id: 'status',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -209,8 +152,8 @@ export default function ComplexTable(props: { tableData: any }) {
                 </Flex>
             ),
         }),
-        columnHelper.accessor('restartCount', {
-            id: 'restartCount',
+        columnHelper.accessor('clusterName', {
+            id: 'clusterName',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -218,19 +161,155 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    restart count
+                    Cluster
                 </Text>
             ),
             cell: (info: any) => (
                 <Flex align="center">
-                    <Text color={info.getValue() > 50 ? warnTextColor : textColor}  fontSize="sm" fontWeight="700">
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
                         {info.getValue()}
                     </Text>
                 </Flex>
             ),
         }),
-        columnHelper.accessor('startTime', {
-            id: 'startTime',
+        columnHelper.accessor('creator', {
+            id: 'creator',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    creator
+                </Text>
+            ),
+            cell: (info: any) => (
+                <Flex align="center">
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
+                </Flex>
+            ),
+        }),
+        columnHelper.accessor('cpuRequests', {
+            id: 'cpuRequests',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    cpuRequests
+                </Text>
+            ),
+            cell: (info: any) => (
+                <Flex align="center">
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
+                </Flex>
+            ),
+        }),
+        columnHelper.accessor('cpuLimits', {
+            id: 'cpuLimits',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    cpuLimits
+                </Text>
+            ),
+            cell: (info: any) => (
+                <Flex align="center">
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
+                </Flex>
+            ),
+        }),
+        columnHelper.accessor('memoryRequests', {
+            id: 'memoryRequests',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    memoryRequests
+                </Text>
+            ),
+            cell: (info: any) => (
+                <Flex align="center">
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
+                </Flex>
+            ),
+        }),
+        columnHelper.accessor('memoryLimits', {
+            id: 'memoryLimits',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    memoryLimits
+                </Text>
+            ),
+            cell: (info: any) => (
+                <Flex align="center">
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
+                </Flex>
+            ),
+        }),
+        columnHelper.accessor('storage', {
+            id: 'storage',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    storage
+                </Text>
+            ),
+            cell: (info) => (
+                <Text color={textColor} fontSize="sm" fontWeight="700">
+                    {info.getValue()}
+                </Text>
+            ),
+        }),
+        columnHelper.accessor('istioInjection', {
+            id: 'istioInjection',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    istioInjection
+                </Text>
+            ),
+            cell: (info) => (
+                <Text color={textColor} fontSize="sm" fontWeight="700">
+                    {info.getValue()}
+                </Text>
+            ),
+        }),
+        columnHelper.accessor('creationTimestamp', {
+            id: 'creationTimestamp',
             header: () => (
                 <Text
                     justifyContent="space-between"

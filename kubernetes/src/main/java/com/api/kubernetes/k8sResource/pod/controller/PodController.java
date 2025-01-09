@@ -17,8 +17,8 @@ public class PodController {
     private final PodService podService;
 
     @GetMapping({"/cluster/{clusterId}/pod"})
-    public ResultDTO retrieveClusterPod(@PathVariable UUID clusterId) {
-        return podService.retrieveClusterPod(clusterId);
+    public ResultDTO retrieve(@PathVariable UUID clusterId) {
+        return podService.retrieve(clusterId);
     }
 
     @GetMapping({"/pod/{loginId}"})
