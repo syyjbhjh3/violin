@@ -34,7 +34,6 @@ type RowObj = {
     name: string;
     status: string;
     clusterName: string;
-    creator: string;
     cpuLimits: string;
     cpuRequests: string;
     memoryLimits: string;
@@ -55,7 +54,7 @@ export default function ComplexTable(props: { tableData: any }) {
 
         setLoading(true);
 
-        apiClient.get<ApiResponse<any>>(`${process.env.REACT_APP_K8S_API_URL}/node/${userInfo.id}`)
+        apiClient.get<ApiResponse<any>>(`${process.env.REACT_APP_K8S_API_URL}/namespace/${userInfo.id}`)
             .then((response) => {
                 if (response.data.result === 'SUCCESS' && response.data.data?.length > 0) {
                     const transformedData = response.data.data.map((item: any) => ({
@@ -162,26 +161,6 @@ export default function ComplexTable(props: { tableData: any }) {
                     color="gray.400"
                 >
                     Cluster
-                </Text>
-            ),
-            cell: (info: any) => (
-                <Flex align="center">
-                    <Text color={textColor} fontSize="sm" fontWeight="700">
-                        {info.getValue()}
-                    </Text>
-                </Flex>
-            ),
-        }),
-        columnHelper.accessor('creator', {
-            id: 'creator',
-            header: () => (
-                <Text
-                    justifyContent="space-between"
-                    align="center"
-                    fontSize={{ sm: '10px', lg: '12px' }}
-                    color="gray.400"
-                >
-                    creator
                 </Text>
             ),
             cell: (info: any) => (
@@ -358,7 +337,7 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontWeight="700"
                     lineHeight="100%"
                 >
-                    Pod List
+                    Namespace List
                 </Text>
                 <Menu />
             </Flex>
