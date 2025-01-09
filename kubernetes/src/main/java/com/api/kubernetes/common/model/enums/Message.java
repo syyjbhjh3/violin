@@ -21,9 +21,14 @@ public enum Message {
     CLUSTER_SEARCH_SUCCESS("클러스터 목록 조회가 완료되었습니다."),
     CLUSTER_SEARCH_NOT_FOUND("클러스터가 존재하지 않습니다."),
 
+    CLUSTER_STATUS_SUCCESS("클러스터 상태 조회가 완료되었습니다"),
+
     /* Kubernetes Resource - POD */
     POD_SEARCH_SUCCESS("파드 목록 조회가 완료되었습니다."),
-    POD_SEARCH_NOT_FOUND("파드가 존재하지 않습니다.");
+    POD_SEARCH_NOT_FOUND("파드가 존재하지 않습니다."),
+
+    NODE_SEARCH_SUCCESS("노드 목록 조회가 완료되었습니다."),
+    NODE_SEARCH_NOT_FOUND("노드가 존재하지 않습니다.");
 
     public final String message;
 

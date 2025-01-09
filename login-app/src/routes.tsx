@@ -4,7 +4,6 @@ import {
     MdPerson,
     MdHome,
     MdLock,
-    MdOutlineShoppingCart,
     MdBallot,
 } from 'react-icons/md';
 
@@ -15,6 +14,9 @@ import Profile from 'views/admin/profile';
 import DataTables from 'views/admin/dataTables';
 import RTL from 'views/admin/rtl';
 import Pod from 'views/admin/pod';
+import Namespace from 'views/admin/namespace';
+import Node from 'views/admin/node';
+
 
 // Auth Imports
 import SignInCentered from 'views/auth/signIn';
@@ -41,6 +43,34 @@ const routes = [
             />
         ),
         component: <Cluster />,
+    },
+    {
+        name: 'Node',
+        layout: '/admin',
+        path: '/node',
+        icon: (
+            <Icon
+                as={MdLock}
+                width="20px"
+                height="20px"
+                color="inherit"
+            />
+        ),
+        component: <Node />,
+    },
+    {
+        name: 'NameSpace',
+        layout: '/admin',
+        path: '/namespace',
+        icon: (
+            <Icon
+                as={MdLock}
+                width="20px"
+                height="20px"
+                color="inherit"
+            />
+        ),
+        component: <Namespace />,
     },
     {
         name: 'Pod',

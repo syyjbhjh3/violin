@@ -1,7 +1,6 @@
 import {
     Box,
-    Flex,
-    Progress,
+    Flex, Icon,
     Table,
     Tbody,
     Td,
@@ -22,25 +21,68 @@ import {
 // Custom components
 import Card from 'components/card/Card';
 import Menu from 'components/menu/MainMenu';
-import { AndroidLogo, AppleLogo, WindowsLogo } from 'components/icons/Icons';
 import * as React from 'react';
-// Assets
+import { useEffect, useState } from "react";
+import { useAuthStore } from "../../../../store/useAuthStore";
+import { apiClient } from "../../../../api/axiosConfig";
+import { ApiResponse } from "../../../../types/api";
+import { AxiosError } from "axios";
+import { MdCancel, MdCheckCircle, MdOutlineError } from "react-icons/md";
 
+// Assets
 type RowObj = {
     name: string;
-    tech: any;
-    date: string;
-    progress: number;
+    namespace: string;
+    clusterName: string;
+    phase: string;
+    nodeName: string;
+    restartCount: string;
+    startTime: string;
 };
 
 const columnHelper = createColumnHelper<RowObj>();
 
 // const columns = columnsDataCheck;
 export default function ComplexTable(props: { tableData: any }) {
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const userInfo = useAuthStore.getState().userInfo;
+
+        setLoading(true);
+
+        apiClient.get<ApiResponse<any>>(`${process.env.REACT_APP_K8S_API_URL}/pod/${userInfo.id}`)
+            .then((response) => {
+                if (response.data.result === 'SUCCESS' && response.data.data?.length > 0) {
+                    const transformedData = response.data.data.map((item: any) => ({
+                        ...item,
+                        startTime: item.startTime ? convertDate(item.startTime) : null,
+                    }));
+                    setData(transformedData);
+                } else {
+                    setData([]);
+                }
+            })
+            .catch((error) => {
+                if (error instanceof AxiosError) {
+                    const errorMessage = error.response?.data?.resultMessage || error.message;
+                    console.error(errorMessage);
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [useAuthStore.getState().userInfo?.id]);
+
+    const convertDate = (isoString: string): string => {
+        const date = new Date(isoString);
+        return date.toISOString().split("T")[0];
+    };
+
     const { tableData } = props;
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const textColor = useColorModeValue('secondaryGray.900', 'white');
-    const iconColor = useColorModeValue('secondaryGray.500', 'white');
+    const warnTextColor = useColorModeValue('red.500', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
     let defaultData = tableData;
     const columns = [
@@ -53,7 +95,7 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    NAME
+                    Pod
                 </Text>
             ),
             cell: (info: any) => (
@@ -64,8 +106,68 @@ export default function ComplexTable(props: { tableData: any }) {
                 </Flex>
             ),
         }),
-        columnHelper.accessor('tech', {
-            id: 'tech',
+        columnHelper.accessor('clusterName', {
+            id: 'clusterName',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    Cluster
+                </Text>
+            ),
+            cell: (info: any) => (
+                <Flex align="center">
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
+                </Flex>
+            ),
+        }),
+        columnHelper.accessor('namespace', {
+            id: 'namespace',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    Namespace
+                </Text>
+            ),
+            cell: (info: any) => (
+                <Flex align="center">
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
+                </Flex>
+            ),
+        }),
+        columnHelper.accessor('nodeName', {
+            id: 'nodeName',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    Node
+                </Text>
+            ),
+            cell: (info: any) => (
+                <Flex align="center">
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
+                </Flex>
+            ),
+        }),
+        columnHelper.accessor('phase', {
+            id: 'phase',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -78,43 +180,57 @@ export default function ComplexTable(props: { tableData: any }) {
             ),
             cell: (info) => (
                 <Flex align="center">
-                    {info.getValue().map((item: string, key: number) => {
-                        if (item === 'apple') {
-                            return (
-                                <AppleLogo
-                                    key={key}
-                                    color={iconColor}
-                                    me="16px"
-                                    h="18px"
-                                    w="15px"
-                                />
-                            );
-                        } else if (item === 'android') {
-                            return (
-                                <AndroidLogo
-                                    key={key}
-                                    color={iconColor}
-                                    me="16px"
-                                    h="18px"
-                                    w="16px"
-                                />
-                            );
-                        } else if (item === 'windows') {
-                            return (
-                                <WindowsLogo
-                                    key={key}
-                                    color={iconColor}
-                                    h="18px"
-                                    w="19px"
-                                />
-                            );
+                    <Icon
+                        w="24px"
+                        h="24px"
+                        me="5px"
+                        color={
+                            info.getValue() === 'Running' || 'Succeeded'
+                                ? 'green.500'
+                                : info.getValue() === 'Failed' || 'Unknown'
+                                    ? 'red.500'
+                                    : info.getValue() === 'Pending'
+                                        ? 'orange.500'
+                                        : null
                         }
-                    })}
+                        as={
+                            info.getValue() === 'Running' ||  'Succeeded'
+                                ? MdCheckCircle
+                                : info.getValue() === 'Failed' || 'Unknown'
+                                    ? MdCancel
+                                    : info.getValue() === 'Pending'
+                                        ? MdOutlineError
+                                        : null
+                        }
+                    />
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
                 </Flex>
             ),
         }),
-        columnHelper.accessor('date', {
-            id: 'date',
+        columnHelper.accessor('restartCount', {
+            id: 'restartCount',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    restart count
+                </Text>
+            ),
+            cell: (info: any) => (
+                <Flex align="center">
+                    <Text color={info.getValue() > 50 ? warnTextColor : textColor}  fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
+                </Flex>
+            ),
+        }),
+        columnHelper.accessor('startTime', {
+            id: 'startTime',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -129,38 +245,6 @@ export default function ComplexTable(props: { tableData: any }) {
                 <Text color={textColor} fontSize="sm" fontWeight="700">
                     {info.getValue()}
                 </Text>
-            ),
-        }),
-        columnHelper.accessor('progress', {
-            id: 'progress',
-            header: () => (
-                <Text
-                    justifyContent="space-between"
-                    align="center"
-                    fontSize={{ sm: '10px', lg: '12px' }}
-                    color="gray.400"
-                >
-                    PROGRESS
-                </Text>
-            ),
-            cell: (info) => (
-                <Flex align="center">
-                    <Text
-                        me="10px"
-                        color={textColor}
-                        fontSize="sm"
-                        fontWeight="700"
-                    >
-                        {info.getValue()}%
-                    </Text>
-                    <Progress
-                        variant="table"
-                        colorScheme="brandScheme"
-                        h="8px"
-                        w="63px"
-                        value={info.getValue()}
-                    />
-                </Flex>
             ),
         }),
     ];

@@ -1,8 +1,7 @@
 
 // Chakra imports
 import { Box, SimpleGrid } from '@chakra-ui/react';
-import DevelopmentTable from 'views/admin/pod/components/DevelopmentTable';
-import PieCard from 'views/admin/pod/components/PieCard';
+import DevelopmentTable from 'views/admin/node/components/DevelopmentTable';
 import React, { useState} from "react";
 
 export default function Settings() {
@@ -29,9 +28,6 @@ export default function Settings() {
                 columns={{ sm: 1, md: 3 }}
                 spacing={{ base: '20px', xl: '20px' }}
             >
-                <PieCard />
-                <PieCard />
-                <PieCard />
             </SimpleGrid>
 
             <SimpleGrid
