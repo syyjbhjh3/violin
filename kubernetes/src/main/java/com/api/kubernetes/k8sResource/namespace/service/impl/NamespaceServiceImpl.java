@@ -44,18 +44,18 @@ public class NamespaceServiceImpl implements NamespaceService {
 
     public ResultDTO retrieve(UUID clusterId) {
         List<NamespaceDTO> namespaceList = retrieveNamespaceList(clusterId);
-        return new ResultDTO<>(Status.SUCCESS, Message.NODE_SEARCH_SUCCESS.getMessage(), namespaceList);
+        return new ResultDTO<>(Status.SUCCESS, Message.NAMESPACE_SEARCH_SUCCESS.getMessage(), namespaceList);
     }
 
     public ResultDTO retrieveAll(String loginId) {
-        List<ClusterEntity> clusterEntities = clusterRepository.findByUserId(loginId);
+        List<ClusterEntity> clusterEntities = clusterRepository.findByUserIdAndStatus(loginId, Status.ENABLE);
 
         List<NamespaceDTO> namespaceList = clusterEntities.stream()
                 .parallel()
                 .flatMap(clusterEntity -> retrieveNamespaceList(clusterEntity.getClusterId()).stream())
                 .collect(Collectors.toList());
 
-        return new ResultDTO<>(Status.SUCCESS, Message.NODE_SEARCH_SUCCESS.getMessage(), namespaceList);
+        return new ResultDTO<>(Status.SUCCESS, Message.NAMESPACE_SEARCH_SUCCESS.getMessage(), namespaceList);
     }
 
 }

@@ -50,7 +50,7 @@ public class PodServiceImpl implements PodService {
 
     public ResultDTO retrieveAll(String loginId) {
         /* 병렬 스트림으로 변경하니 254 -> 166밀리초 */
-        List<ClusterEntity> clusterEntities = clusterRepository.findByUserId(loginId);
+        List<ClusterEntity> clusterEntities = clusterRepository.findByUserIdAndStatus(loginId, Status.ENABLE);
 
         List<PodDTO> podList = clusterEntities.stream()
                 .parallel()

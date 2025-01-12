@@ -1,4 +1,4 @@
-package com.api.kubernetes.k8sResource.node.service.impl;
+package com.api.kubernetes.k8sResource.persistentVolume.service.impl;
 
 import com.api.kubernetes.cluster.model.entity.ClusterEntity;
 import com.api.kubernetes.cluster.repo.ClusterRepository;
@@ -6,8 +6,8 @@ import com.api.kubernetes.common.model.dto.ResultDTO;
 import com.api.kubernetes.common.model.enums.Message;
 import com.api.kubernetes.common.model.enums.Status;
 import com.api.kubernetes.common.util.k8sClient.UserClusterClientManager;
-import com.api.kubernetes.k8sResource.node.model.NodeDTO;
-import com.api.kubernetes.k8sResource.node.service.NodeService;
+import com.api.kubernetes.k8sResource.persistentVolume.model.PersistentVolumeDTO;
+import com.api.kubernetes.k8sResource.persistentVolume.service.PersistentVolumeService;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class NodeServiceImpl implements NodeService {
+public class PersistentVolumeServiceImpl implements PersistentVolumeService {
 
     /* Repository */
     private final ClusterRepository clusterRepository;
@@ -28,34 +28,34 @@ public class NodeServiceImpl implements NodeService {
     /* Util */
     private final UserClusterClientManager k8sClientManager;
 
-    private List<NodeDTO> retrieveNodeList(UUID clusterId) {
+    private List<PersistentVolumeDTO> retrieveNamespaceList(UUID clusterId) {
         ClusterEntity clusterEntity = clusterRepository.findByClusterId(clusterId);
         String clusterName = clusterEntity.getClusterName();
 
         KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getClusterId());
 
-        return kubernetesClient.nodes()
+        return kubernetesClient.persistentVolumes()
                 .list()
                 .getItems()
                 .stream()
-                .map(node -> NodeDTO.fromNode(node, clusterName))
+                .map(persistentVolume -> PersistentVolumeDTO.fromPersistentVolume(persistentVolume, clusterName))
                 .collect(Collectors.toList());
     }
 
     public ResultDTO retrieve(UUID clusterId) {
-        List<NodeDTO> nodeList = retrieveNodeList(clusterId);
-        return new ResultDTO<>(Status.SUCCESS, Message.NODE_SEARCH_SUCCESS.getMessage(), nodeList);
+        List<PersistentVolumeDTO> namespaceList = retrieveNamespaceList(clusterId);
+        return new ResultDTO<>(Status.SUCCESS, Message.PERSISTENTVOLUME_SEARCH_SUCCESS.getMessage(), namespaceList);
     }
 
     public ResultDTO retrieveAll(String loginId) {
         List<ClusterEntity> clusterEntities = clusterRepository.findByUserIdAndStatus(loginId, Status.ENABLE);
 
-        List<NodeDTO> nodeList = clusterEntities.stream()
+        List<PersistentVolumeDTO> persistentVolumeList = clusterEntities.stream()
                 .parallel()
-                .flatMap(clusterEntity -> retrieveNodeList(clusterEntity.getClusterId()).stream())
+                .flatMap(clusterEntity -> retrieveNamespaceList(clusterEntity.getClusterId()).stream())
                 .collect(Collectors.toList());
 
-        return new ResultDTO<>(Status.SUCCESS, Message.NODE_SEARCH_SUCCESS.getMessage(), nodeList);
+        return new ResultDTO<>(Status.SUCCESS, Message.PERSISTENTVOLUME_SEARCH_SUCCESS.getMessage(), persistentVolumeList);
     }
 
 }

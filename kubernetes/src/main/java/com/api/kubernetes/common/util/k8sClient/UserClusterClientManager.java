@@ -23,7 +23,7 @@ public class UserClusterClientManager {
     private final Map<Integer, Map<Integer, KubernetesClient>> userClusterClients = new HashMap<>();
 
     public void initCluster(String userId) {
-        List<ClusterEntity> clusterEntities = clusterRepository.findByUserId(userId);
+        List<ClusterEntity> clusterEntities = clusterRepository.findAllByUserId(userId);
 
         for (ClusterEntity clusterEntity : clusterEntities) {
             redisTemplate.opsForValue().set(
