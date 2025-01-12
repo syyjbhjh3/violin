@@ -20,26 +20,26 @@ export default function Main() {
     const rehydrate = useAuthStore((state) => state.rehydrate);
     const { userInfo } = useAuthStore((state) => state);
 
-    useEffect(() => {
-        async function initializeUserInfo() {
-            await rehydrate();
-            setIsLoading(false);
-        }
-        initializeUserInfo();
-    }, [rehydrate]);
-
-    if (isLoading) {
-        return (
-            <Center height="100vh">
-                <Spinner size="xl" />
-            </Center>
-        );
-    }
-
-    // rehydrate 완료 후 userInfo가 없으면 로그인 페이지로 리다이렉트
-    if (!userInfo) {
-        return <Navigate to="/auth/sign-in" replace />;
-    }
+    // useEffect(() => {
+    //     async function initializeUserInfo() {
+    //         await rehydrate();
+    //         setIsLoading(false);
+    //     }
+    //     initializeUserInfo();
+    // }, [rehydrate]);
+    //
+    // if (isLoading) {
+    //     return (
+    //         <Center height="100vh">
+    //             <Spinner size="xl" />
+    //         </Center>
+    //     );
+    // }
+    //
+    // // rehydrate 완료 후 userInfo가 없으면 로그인 페이지로 리다이렉트
+    // if (!userInfo) {
+    //     return <Navigate to="/auth/sign-in" replace />;
+    // }
 
     return (
         <ChakraProvider theme={currentTheme}>

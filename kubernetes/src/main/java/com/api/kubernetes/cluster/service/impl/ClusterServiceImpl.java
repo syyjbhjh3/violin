@@ -2,6 +2,7 @@ package com.api.kubernetes.cluster.service.impl;
 
 import com.api.kubernetes.cluster.model.dto.ClusterResourceSummaryDTO;
 import com.api.kubernetes.cluster.model.entity.ClusterEntity;
+import com.api.kubernetes.common.model.dto.ChartDataDTO;
 import com.api.kubernetes.common.model.dto.KubernetesDTO;
 import com.api.kubernetes.common.model.dto.ResultDTO;
 import com.api.kubernetes.common.model.enums.Message;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,6 +43,8 @@ public class ClusterServiceImpl implements ClusterService {
         int totalServices = 0;
         int totalDeployments = 0;
         int totalNamespaces = 0;
+        List<ChartDataDTO> nodesChartData = new ArrayList<>();
+        List<ChartDataDTO> podsChartData = new ArrayList<>();
 
         for (ClusterEntity clusterEntity : clusterEntities.parallelStream().toList()) {
             KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getClusterId());
@@ -49,6 +53,32 @@ public class ClusterServiceImpl implements ClusterService {
             totalPods += kubernetesClient.pods().inAnyNamespace().list().getItems().size();
             totalServices += kubernetesClient.services().inAnyNamespace().list().getItems().size();
             totalDeployments += kubernetesClient.apps().deployments().inAnyNamespace().list().getItems().size();
+
+            /* Pie Chart Data */
+            String clusterName = clusterEntity.getClusterName();
+            long readyNodes = kubernetesClient.nodes().list().getItems().stream()
+                    .filter(node -> node.getStatus().getConditions().stream()
+                            .anyMatch(condition -> "Ready".equals(condition.getType()) && "True".equals(condition.getStatus())))
+                    .count();
+
+            long runningPods = kubernetesClient.pods().inAnyNamespace().list().getItems().stream()
+                    .filter(pod -> "Running".equals(pod.getStatus().getPhase()))
+                    .count();
+
+            ChartDataDTO nodePieChartDTO = ChartDataDTO.builder()
+                    .clusterName(clusterName)
+                    .currentData(readyNodes)
+                    .totalData(totalNodes)
+                    .build();
+
+            ChartDataDTO podPieChartDTO = ChartDataDTO.builder()
+                    .clusterName(clusterName)
+                    .currentData(runningPods)
+                    .totalData(totalPods)
+                    .build();
+
+            nodesChartData.add(nodePieChartDTO);
+            podsChartData.add(podPieChartDTO);
         }
 
         ClusterResourceSummaryDTO totalSummary = ClusterResourceSummaryDTO.builder()
@@ -58,6 +88,8 @@ public class ClusterServiceImpl implements ClusterService {
                 .totalPods(totalPods)
                 .totalServices(totalServices)
                 .totalDeployments(totalDeployments)
+                .nodePieChart(nodesChartData)
+                .podPieChart(podsChartData)
                 .build();
 
         return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_STATUS_SUCCESS.getMessage(), totalSummary);
