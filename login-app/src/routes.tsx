@@ -16,7 +16,10 @@ import RTL from 'views/admin/rtl';
 import Pod from 'views/admin/pod';
 import Namespace from 'views/admin/namespace';
 import Node from 'views/admin/node';
-
+import Deployment from 'views/admin/deployment';
+import Service from 'views/admin/service';
+import PersistentVolume from 'views/admin/volume/persistentVolume';
+import PersistentVolumeClaims from 'views/admin/volume/persistentVolumeClaims';
 
 // Auth Imports
 import SignInCentered from 'views/auth/signIn';
@@ -73,6 +76,20 @@ const routes = [
         component: <Namespace />,
     },
     {
+        name: 'Deployment',
+        layout: '/admin',
+        path: '/deployment',
+        icon: (
+            <Icon
+                as={MdLock}
+                width="20px"
+                height="20px"
+                color="inherit"
+            />
+        ),
+        component: <Deployment />,
+    },
+    {
         name: 'Pod',
         layout: '/admin',
         path: '/pod',
@@ -85,6 +102,48 @@ const routes = [
             />
         ),
         component: <Pod />,
+    },
+    {
+        name: 'Service',
+        layout: '/admin',
+        path: '/svc',
+        icon: (
+            <Icon
+                as={MdLock}
+                width="20px"
+                height="20px"
+                color="inherit"
+            />
+        ),
+        component: <Service />,
+    },
+    {
+        name: 'PersistentVolume',
+        layout: '/admin',
+        path: '/pv',
+        icon: (
+            <Icon
+                as={MdLock}
+                width="20px"
+                height="20px"
+                color="inherit"
+            />
+        ),
+        component: <PersistentVolume />,
+    },
+    {
+        name: 'PersistentVolumeClaims',
+        layout: '/admin',
+        path: '/pvc',
+        icon: (
+            <Icon
+                as={MdLock}
+                width="20px"
+                height="20px"
+                color="inherit"
+            />
+        ),
+        component: <PersistentVolumeClaims />,
     },
     {
         name: 'Data Tables',

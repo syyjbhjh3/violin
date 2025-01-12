@@ -19,25 +19,26 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 // Custom components
-import Card from 'components/card/Card';
-import Menu from 'components/menu/MainMenu';
+import Card from '../../../../../components/card/Card';
+import Menu from '../../../../../components/menu/MainMenu';
 import * as React from 'react';
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../../../../store/useAuthStore";
-import { apiClient } from "../../../../api/axiosConfig";
-import { ApiResponse } from "../../../../types/api";
+import { useAuthStore } from "../../../../../store/useAuthStore";
+import { apiClient } from "../../../../../api/axiosConfig";
+import { ApiResponse } from "../../../../../types/api";
 import { AxiosError } from "axios";
-import { MdCancel, MdCheckCircle, MdOutlineError } from "react-icons/md";
+import { MdCancel, MdCheckCircle } from "react-icons/md";
 
 // Assets
 type RowObj = {
     name: string;
-    namespace: string;
+    status: string;
     clusterName: string;
-    phase: string;
-    nodeName: string;
-    restartCount: string;
-    startTime: string;
+    namespace: string;
+    persistentVolume: string;
+    requestedCapacity: string;
+    capacity: string;
+    creationTimestamp: string;
 };
 
 const columnHelper = createColumnHelper<RowObj>();
@@ -51,13 +52,14 @@ export default function ComplexTable(props: { tableData: any }) {
 
         setLoading(true);
 
-        apiClient.get<ApiResponse<any>>(`${process.env.REACT_APP_K8S_API_URL}/pod/${userInfo.id}`)
+        apiClient.get<ApiResponse<any>>(`${process.env.REACT_APP_K8S_API_URL}/persistentVolumeClaim/${userInfo.id}`)
             .then((response) => {
                 if (response.data.result === 'SUCCESS' && response.data.data?.length > 0) {
                     const transformedData = response.data.data.map((item: any) => ({
                         ...item,
-                        startTime: item.startTime ? convertDate(item.startTime) : null,
+                        creationTimestamp: item.creationTimestamp ? convertDate(item.creationTimestamp) : null,
                     }));
+                    console.log(transformedData)
                     setData(transformedData);
                 } else {
                     setData([]);
@@ -106,6 +108,45 @@ export default function ComplexTable(props: { tableData: any }) {
                 </Flex>
             ),
         }),
+        columnHelper.accessor('status', {
+            id: 'status',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    STATUS
+                </Text>
+            ),
+            cell: (info) => (
+                <Flex align="center">
+                    <Icon
+                        w="24px"
+                        h="24px"
+                        me="5px"
+                        color={
+                            info.getValue() === 'Ready'
+                                ? 'green.500'
+                                : info.getValue() === 'NotReady'
+                                    ? 'red.500'
+                                        : null
+                        }
+                        as={
+                            info.getValue() === 'Ready'
+                                ? MdCheckCircle
+                                : info.getValue() === 'NotReady'
+                                    ? MdCancel
+                                        : null
+                        }
+                    />
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
+                </Flex>
+            ),
+        }),
         columnHelper.accessor('clusterName', {
             id: 'clusterName',
             header: () => (
@@ -135,7 +176,7 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    Namespace
+                    namespace
                 </Text>
             ),
             cell: (info: any) => (
@@ -146,8 +187,8 @@ export default function ComplexTable(props: { tableData: any }) {
                 </Flex>
             ),
         }),
-        columnHelper.accessor('nodeName', {
-            id: 'nodeName',
+        columnHelper.accessor('persistentVolume', {
+            id: 'persistentVolume',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -155,7 +196,7 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    Node
+                    persistentVolume
                 </Text>
             ),
             cell: (info: any) => (
@@ -166,8 +207,8 @@ export default function ComplexTable(props: { tableData: any }) {
                 </Flex>
             ),
         }),
-        columnHelper.accessor('phase', {
-            id: 'phase',
+        columnHelper.accessor('requestedCapacity', {
+            id: 'requestedCapacity',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -175,42 +216,19 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    STATUS
+                    requestedCapacity
                 </Text>
             ),
-            cell: (info) => (
+            cell: (info: any) => (
                 <Flex align="center">
-                    <Icon
-                        w="24px"
-                        h="24px"
-                        me="5px"
-                        color={
-                            info.getValue() === 'Running' || 'Succeeded'
-                                ? 'green.500'
-                                : info.getValue() === 'Failed' || 'Unknown'
-                                    ? 'red.500'
-                                    : info.getValue() === 'Pending'
-                                        ? 'orange.500'
-                                        : null
-                        }
-                        as={
-                            info.getValue() === 'Running' ||  'Succeeded'
-                                ? MdCheckCircle
-                                : info.getValue() === 'Failed' || 'Unknown'
-                                    ? MdCancel
-                                    : info.getValue() === 'Pending'
-                                        ? MdOutlineError
-                                        : null
-                        }
-                    />
                     <Text color={textColor} fontSize="sm" fontWeight="700">
                         {info.getValue()}
                     </Text>
                 </Flex>
             ),
         }),
-        columnHelper.accessor('restartCount', {
-            id: 'restartCount',
+        columnHelper.accessor('capacity', {
+            id: 'capacity',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -218,19 +236,19 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    restart count
+                    capacity
                 </Text>
             ),
             cell: (info: any) => (
                 <Flex align="center">
-                    <Text color={info.getValue() > 50 ? warnTextColor : textColor}  fontSize="sm" fontWeight="700">
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
                         {info.getValue()}
                     </Text>
                 </Flex>
             ),
         }),
-        columnHelper.accessor('startTime', {
-            id: 'startTime',
+        columnHelper.accessor('creationTimestamp', {
+            id: 'creationTimestamp',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -279,7 +297,7 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontWeight="700"
                     lineHeight="100%"
                 >
-                    Pod List
+                    PersistentVolumeClaim List
                 </Text>
                 <Menu />
             </Flex>

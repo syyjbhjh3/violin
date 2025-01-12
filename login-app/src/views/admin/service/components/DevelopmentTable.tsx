@@ -34,10 +34,12 @@ type RowObj = {
     name: string;
     namespace: string;
     clusterName: string;
-    phase: string;
-    nodeName: string;
-    restartCount: string;
-    startTime: string;
+    type: string;
+    labels: Map<string, string>;
+    podSelectors: Map<string, string>;
+    clusterIP: string;
+    ports: Array<string>;
+    creationTimestamp: string;
 };
 
 const columnHelper = createColumnHelper<RowObj>();
@@ -51,13 +53,14 @@ export default function ComplexTable(props: { tableData: any }) {
 
         setLoading(true);
 
-        apiClient.get<ApiResponse<any>>(`${process.env.REACT_APP_K8S_API_URL}/pod/${userInfo.id}`)
+        apiClient.get<ApiResponse<any>>(`${process.env.REACT_APP_K8S_API_URL}/svc/${userInfo.id}`)
             .then((response) => {
                 if (response.data.result === 'SUCCESS' && response.data.data?.length > 0) {
                     const transformedData = response.data.data.map((item: any) => ({
                         ...item,
-                        startTime: item.startTime ? convertDate(item.startTime) : null,
+                        creationTimestamp: item.creationTimestamp ? convertDate(item.creationTimestamp) : null,
                     }));
+                    console.log(transformedData)
                     setData(transformedData);
                 } else {
                     setData([]);
@@ -106,6 +109,26 @@ export default function ComplexTable(props: { tableData: any }) {
                 </Flex>
             ),
         }),
+        columnHelper.accessor('namespace', {
+            id: 'namespace',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    namespace
+                </Text>
+            ),
+            cell: (info: any) => (
+                <Flex align="center">
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
+                        {info.getValue()}
+                    </Text>
+                </Flex>
+            ),
+        }),
         columnHelper.accessor('clusterName', {
             id: 'clusterName',
             header: () => (
@@ -126,8 +149,8 @@ export default function ComplexTable(props: { tableData: any }) {
                 </Flex>
             ),
         }),
-        columnHelper.accessor('namespace', {
-            id: 'namespace',
+        columnHelper.accessor('type', {
+            id: 'type',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -135,7 +158,7 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    Namespace
+                    type
                 </Text>
             ),
             cell: (info: any) => (
@@ -146,8 +169,8 @@ export default function ComplexTable(props: { tableData: any }) {
                 </Flex>
             ),
         }),
-        columnHelper.accessor('nodeName', {
-            id: 'nodeName',
+        columnHelper.accessor('labels', {
+            id: 'labels',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -155,7 +178,58 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    Node
+                    label
+                </Text>
+            ),
+            cell: (info: any) => (
+                <Flex direction="column" align="flex-start">
+                    {Object.entries(info.row.original.labels || {} as Record<string, string>)
+                        .filter(([key]) => key !== 'objectset.rio.cattle.io/hash')
+                        .map(([key, value]) => (
+                            <Flex key={key} align="center" mb="2px">
+                                <Text color="blue.500" fontSize="sm" fontWeight="700" mr="4px">
+                                    {key}:
+                                </Text>
+                                <Text color="red.500" fontSize="sm" fontWeight="700">
+                                    {value as React.ReactNode}
+                                </Text>
+                            </Flex>
+                        ))}
+                </Flex>
+            ),
+        }),
+        columnHelper.accessor('podSelectors', {
+            id: 'podSelectors',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    Selector
+                </Text>
+            ),
+            cell: (info: any) => (
+                <Flex direction="column" align="flex-start">
+                    {Object.entries(info.row.original.podSelectors || {}).map(([key, value]) => (
+                        <Text key={key} color="gray.700" fontSize="sm" fontWeight="700">
+                            {`${key}: ${value}`}
+                        </Text>
+                    ))}
+                </Flex>
+            ),
+        }),
+        columnHelper.accessor('clusterIP', {
+            id: 'clusterIP',
+            header: () => (
+                <Text
+                    justifyContent="space-between"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    clusterIP
                 </Text>
             ),
             cell: (info: any) => (
@@ -166,8 +240,8 @@ export default function ComplexTable(props: { tableData: any }) {
                 </Flex>
             ),
         }),
-        columnHelper.accessor('phase', {
-            id: 'phase',
+        columnHelper.accessor('ports', {
+            id: 'ports',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -175,62 +249,21 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    STATUS
-                </Text>
-            ),
-            cell: (info) => (
-                <Flex align="center">
-                    <Icon
-                        w="24px"
-                        h="24px"
-                        me="5px"
-                        color={
-                            info.getValue() === 'Running' || 'Succeeded'
-                                ? 'green.500'
-                                : info.getValue() === 'Failed' || 'Unknown'
-                                    ? 'red.500'
-                                    : info.getValue() === 'Pending'
-                                        ? 'orange.500'
-                                        : null
-                        }
-                        as={
-                            info.getValue() === 'Running' ||  'Succeeded'
-                                ? MdCheckCircle
-                                : info.getValue() === 'Failed' || 'Unknown'
-                                    ? MdCancel
-                                    : info.getValue() === 'Pending'
-                                        ? MdOutlineError
-                                        : null
-                        }
-                    />
-                    <Text color={textColor} fontSize="sm" fontWeight="700">
-                        {info.getValue()}
-                    </Text>
-                </Flex>
-            ),
-        }),
-        columnHelper.accessor('restartCount', {
-            id: 'restartCount',
-            header: () => (
-                <Text
-                    justifyContent="space-between"
-                    align="center"
-                    fontSize={{ sm: '10px', lg: '12px' }}
-                    color="gray.400"
-                >
-                    restart count
+                    port
                 </Text>
             ),
             cell: (info: any) => (
-                <Flex align="center">
-                    <Text color={info.getValue() > 50 ? warnTextColor : textColor}  fontSize="sm" fontWeight="700">
-                        {info.getValue()}
-                    </Text>
+                <Flex align="center" direction="column">
+                    {info.getValue().map((port: string, index: number) => (
+                        <Text key={index} color={textColor} fontSize="sm" fontWeight="700">
+                            {port}
+                        </Text>
+                    ))}
                 </Flex>
             ),
         }),
-        columnHelper.accessor('startTime', {
-            id: 'startTime',
+        columnHelper.accessor('creationTimestamp', {
+            id: 'creationTimestamp',
             header: () => (
                 <Text
                     justifyContent="space-between"
@@ -279,7 +312,7 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontWeight="700"
                     lineHeight="100%"
                 >
-                    Pod List
+                    Service List
                 </Text>
                 <Menu />
             </Flex>
@@ -317,7 +350,7 @@ export default function ComplexTable(props: { tableData: any }) {
                                                     desc: '',
                                                 }[
                                                     header.column.getIsSorted() as string
-                                                ] ?? null}
+                                                    ] ?? null}
                                             </Flex>
                                         </Th>
                                     );
