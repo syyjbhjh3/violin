@@ -124,16 +124,16 @@ export default function ComplexTable(props: { tableData: any }) {
                         h="24px"
                         me="5px"
                         color={
-                            info.getValue() === 'Ready'
+                            info.getValue() === 'Available' || 'Bound'
                                 ? 'green.500'
-                                : info.getValue() === 'NotReady'
+                                : info.getValue() === 'Fail'
                                     ? 'red.500'
                                         : null
                         }
                         as={
-                            info.getValue() === 'Ready'
+                            info.getValue() === 'Available' || 'Bound'
                                 ? MdCheckCircle
-                                : info.getValue() === 'NotReady'
+                                : info.getValue() === 'Fail'
                                     ? MdCancel
                                         : null
                         }

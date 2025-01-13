@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { Box, Card, Flex, Text, Select } from '@chakra-ui/react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Card, Flex, Text, Select, Box } from '@chakra-ui/react';
 import PieChart from 'components/charts/PieChart';
 
 // Helper function to generate dynamic colors
 const generateColors = (length: number): string[] => {
     const colors: string[] = [];
     for (let i = 0; i < length; i++) {
-        const hue = Math.floor(Math.random() * 360); // Random hue
-        const saturation = Math.random() * 50 + 50; // 50% to 100% saturation
-        const lightness = Math.random() * 30 + 60; // 60% to 90% lightness
+        const hue = Math.floor(Math.random() * 360);
+        const saturation = Math.random() * 50 + 50;
+        const lightness = Math.random() * 30 + 60;
         colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
     }
     return colors;
@@ -24,38 +24,35 @@ interface ConversionProps {
     [x: string]: any;
 }
 
-const Conversion = ({ chartTitle, pieChartData, ...rest }: ConversionProps) => {
-    const [selectedOption, setSelectedOption] = useState('monthly'); // Option state to manage Select value
+const Conversion: React.FC<ConversionProps> = ({ chartTitle, pieChartData, ...rest }) => {
+    const [selectedOption, setSelectedOption] = useState('monthly');
+    const [chartKey, setChartKey] = useState(0);
+    const [isChartReady, setIsChartReady] = useState(false);
+    const [chartOptions, setChartOptions] = useState(null);
+    const [pieChartColors, setPieChartColors] = useState<string[]>([]);
 
-    const textColor = 'black'; // Replace with appropriate color mode hook
-    const cardColor = 'white'; // Replace with appropriate color mode hook
+    const textColor = 'black';
+    const cardColor = 'white';
     const cardShadow = '0px 18px 40px rgba(112, 144, 176, 0.12)';
 
-    // 클러스터별 통합 값을 구하기
-    const totalDataSum = pieChartData.reduce((sum, node) => sum + node.totalData, 0);
-    //const currentDataSum = pieChartData.reduce((sum, node) => sum + node.currentData, 0);
-
-    // 비율을 구하기
-    const pieChartValues = pieChartData.map(
-        (node) => (node.currentData / totalDataSum) * 100
+    const totalNodes = pieChartData.reduce((sum, cluster) => sum + cluster.currentData, 0);
+    const pieChartValues = pieChartData.map(cluster =>
+        (cluster.currentData / totalNodes) * 100
     );
 
-    // 각 클러스터의 색상 생성
-    const pieChartColors = generateColors(pieChartData.length);
+    // Generate colors when pieChartData length changes
+    useEffect(() => {
+        const colors = generateColors(pieChartData.length);
+        setPieChartColors(colors);
+    }, [pieChartData.length]);
 
-    // Update pie chart options dynamically based on selectedOption
-    const dynamicPieChartOptions = {
-        labels: pieChartData.map((node) => node.clusterName),
+    const dynamicPieChartOptions = useCallback(() => ({
+        labels: pieChartData.map(cluster => cluster.clusterName),
         colors: pieChartColors,
         chart: {
-            width: '50px',
-        },
-        states: {
-            hover: {
-                filter: {
-                    type: 'none',
-                },
-            },
+            type: 'pie',
+            height: '100%',
+            width: '100%',
         },
         legend: {
             show: false,
@@ -63,27 +60,38 @@ const Conversion = ({ chartTitle, pieChartData, ...rest }: ConversionProps) => {
         dataLabels: {
             enabled: false,
         },
-        hover: { mode: 'none' },
-        plotOptions: {
-            donut: {
-                expandOnClick: false,
-                donut: {
-                    labels: {
-                        show: false,
-                    },
-                },
-            },
-        },
-        fill: {
-            colors: pieChartColors,
-        },
         tooltip: {
             enabled: true,
             theme: 'dark',
+            y: {
+                formatter: (value: number) => `${value.toFixed(1)}%`
+            }
         },
-    };
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }]
+    }), [pieChartData, pieChartColors]);
 
-    // Handle option change
+    useEffect(() => {
+        setChartKey(prevKey => prevKey + 1);
+    }, [pieChartData, selectedOption]);
+
+    useEffect(() => {
+        if (pieChartColors.length > 0) {
+            const options = dynamicPieChartOptions();
+            setChartOptions(options);
+            setIsChartReady(true);
+        }
+    }, [dynamicPieChartOptions, pieChartColors]);
+
     const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedOption(e.target.value);
     };
@@ -110,7 +118,7 @@ const Conversion = ({ chartTitle, pieChartData, ...rest }: ConversionProps) => {
                     fontSize="sm"
                     variant="subtle"
                     value={selectedOption}
-                    onChange={handleOptionChange} // Handle option change
+                    onChange={handleOptionChange}
                     width="unset"
                     fontWeight="700"
                 >
@@ -120,12 +128,15 @@ const Conversion = ({ chartTitle, pieChartData, ...rest }: ConversionProps) => {
                 </Select>
             </Flex>
 
-            <PieChart
-                h="100%"
-                w="100%"
-                chartData={pieChartValues}
-                chartOptions={dynamicPieChartOptions}
-            />
+            {isChartReady && chartOptions && (
+                <PieChart
+                    key={chartKey}
+                    h="100%"
+                    w="100%"
+                    chartData={pieChartValues}
+                    chartOptions={chartOptions}
+                />
+            )}
 
             <Card
                 bg={cardColor}
@@ -137,7 +148,7 @@ const Conversion = ({ chartTitle, pieChartData, ...rest }: ConversionProps) => {
                 mt="15px"
                 mx="auto"
             >
-                {pieChartData.map((node, index) => (
+                {pieChartData.map((cluster, index) => (
                     <Flex key={index} direction="column" py="5px" me="10px">
                         <Flex align="center">
                             <Box
@@ -153,11 +164,11 @@ const Conversion = ({ chartTitle, pieChartData, ...rest }: ConversionProps) => {
                                 fontWeight="700"
                                 mb="5px"
                             >
-                                {node.clusterName}
+                                {cluster.clusterName}
                             </Text>
                         </Flex>
                         <Text fontSize="lg" color={textColor} fontWeight="700">
-                            {((node.currentData / node.totalData) * 100).toFixed(1)}%
+                            {((cluster.currentData / totalNodes) * 100).toFixed(1)}%
                         </Text>
                     </Flex>
                 ))}

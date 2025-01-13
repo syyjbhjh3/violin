@@ -4,7 +4,7 @@ import {
     MdPerson,
     MdHome,
     MdLock,
-    MdBallot,
+    MdBallot, MdStars, MdSettingsSuggest, MdOutlineFilterDrama, MdSchema, MdMoveUp, MdSaveAs, MdSave,
 } from 'react-icons/md';
 
 // Admin Imports
@@ -53,7 +53,7 @@ const routes = [
         path: '/node',
         icon: (
             <Icon
-                as={MdLock}
+                as={MdSettingsSuggest}
                 width="20px"
                 height="20px"
                 color="inherit"
@@ -67,7 +67,7 @@ const routes = [
         path: '/namespace',
         icon: (
             <Icon
-                as={MdLock}
+                as={MdStars}
                 width="20px"
                 height="20px"
                 color="inherit"
@@ -81,7 +81,7 @@ const routes = [
         path: '/deployment',
         icon: (
             <Icon
-                as={MdLock}
+                as={MdMoveUp}
                 width="20px"
                 height="20px"
                 color="inherit"
@@ -95,7 +95,7 @@ const routes = [
         path: '/pod',
         icon: (
             <Icon
-                as={MdLock}
+                as={MdOutlineFilterDrama}
                 width="20px"
                 height="20px"
                 color="inherit"
@@ -109,7 +109,7 @@ const routes = [
         path: '/svc',
         icon: (
             <Icon
-                as={MdLock}
+                as={MdSchema}
                 width="20px"
                 height="20px"
                 color="inherit"
@@ -123,7 +123,7 @@ const routes = [
         path: '/pv',
         icon: (
             <Icon
-                as={MdLock}
+                as={MdSave}
                 width="20px"
                 height="20px"
                 color="inherit"
@@ -137,7 +137,7 @@ const routes = [
         path: '/pvc',
         icon: (
             <Icon
-                as={MdLock}
+                as={MdSaveAs}
                 width="20px"
                 height="20px"
                 color="inherit"
