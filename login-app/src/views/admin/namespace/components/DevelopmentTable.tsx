@@ -97,7 +97,7 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    Pod
+                    name
                 </Text>
             ),
             cell: (info: any) => (

@@ -1,25 +1,3 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 // Chakra imports
 import {
     Box,
@@ -55,6 +33,11 @@ export default function UserReports() {
     const [totalNamespaceCnt, setTotalNamespaceCnt] = useState('');
     const [totalSvcCnt, setTotalSvcCnt] = useState('');
     const [totalDeployCnt, setTotalDeployCnt] = useState('');
+    const [nodePieChartData, setNodePieChartData] = useState([]);
+    const [podPieChartData, setPodPieChartData] = useState([]);
+
+    const nodesChartTitle = 'Node Operation rate';
+    const podsChartTitle = 'Pod Operation rate';
 
     useEffect(() => {
         const userInfo = useAuthStore.getState().userInfo;
@@ -72,6 +55,9 @@ export default function UserReports() {
                     setTotalNamespaceCnt(status.totalNamespaces);
                     setTotalSvcCnt(status.totalServices);
                     setTotalDeployCnt(status.totalDeployments);
+
+                    setNodePieChartData(status.nodePieChart || []);
+                    setPodPieChartData(status.podPieChart || []);
                 }
             })
             .catch((error) => {
@@ -222,8 +208,14 @@ export default function UserReports() {
                 mb="20px"
             >
                 <ComplexTable tableTitle={tableTitle} />
-                <PieCard />
-                <PieCard />
+                <PieCard
+                    chartTitle= { nodesChartTitle }
+                    pieChartData= { nodePieChartData }
+                />
+                <PieCard
+                    chartTitle= { podsChartTitle }
+                    pieChartData= { podPieChartData }
+                />
 
             </SimpleGrid>
             <SimpleGrid

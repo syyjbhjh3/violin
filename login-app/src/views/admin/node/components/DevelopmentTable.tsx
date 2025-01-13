@@ -83,7 +83,6 @@ export default function ComplexTable(props: { tableData: any }) {
     const { tableData } = props;
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const textColor = useColorModeValue('secondaryGray.900', 'white');
-    const warnTextColor = useColorModeValue('red.500', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
     let defaultData = tableData;
     const columns = [
@@ -96,7 +95,7 @@ export default function ComplexTable(props: { tableData: any }) {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    Node
+                    name
                 </Text>
             ),
             cell: (info: any) => (

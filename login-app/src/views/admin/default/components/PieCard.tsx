@@ -1,20 +1,101 @@
-// Chakra imports
-import { Box, Flex, Text, Select, useColorModeValue } from '@chakra-ui/react';
-// Custom components
-import Card from 'components/card/Card';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Card, Flex, Text, Select, Box } from '@chakra-ui/react';
 import PieChart from 'components/charts/PieChart';
-import { pieChartData, pieChartOptions } from 'variables/charts';
-import { VSeparator } from 'components/separator/Separator';
-export default function Conversion(props: { [x: string]: any }) {
-    const { ...rest } = props;
 
-    // Chakra Color Mode
-    const textColor = useColorModeValue('secondaryGray.900', 'white');
-    const cardColor = useColorModeValue('white', 'navy.700');
-    const cardShadow = useColorModeValue(
-        '0px 18px 40px rgba(112, 144, 176, 0.12)',
-        'unset',
+// Helper function to generate dynamic colors
+const generateColors = (length: number): string[] => {
+    const colors: string[] = [];
+    for (let i = 0; i < length; i++) {
+        const hue = Math.floor(Math.random() * 360);
+        const saturation = Math.random() * 50 + 50;
+        const lightness = Math.random() * 30 + 60;
+        colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+    }
+    return colors;
+};
+
+interface ConversionProps {
+    chartTitle: string;
+    pieChartData: Array<{
+        clusterName: string;
+        currentData: number;
+        totalData: number;
+    }>;
+    [x: string]: any;
+}
+
+const Conversion: React.FC<ConversionProps> = ({ chartTitle, pieChartData, ...rest }) => {
+    const [selectedOption, setSelectedOption] = useState('monthly');
+    const [chartKey, setChartKey] = useState(0);
+    const [isChartReady, setIsChartReady] = useState(false);
+    const [chartOptions, setChartOptions] = useState(null);
+    const [pieChartColors, setPieChartColors] = useState<string[]>([]);
+
+    const textColor = 'black';
+    const cardColor = 'white';
+    const cardShadow = '0px 18px 40px rgba(112, 144, 176, 0.12)';
+
+    const totalNodes = pieChartData.reduce((sum, cluster) => sum + cluster.currentData, 0);
+    const pieChartValues = pieChartData.map(cluster =>
+        (cluster.currentData / totalNodes) * 100
     );
+
+    // Generate colors when pieChartData length changes
+    useEffect(() => {
+        const colors = generateColors(pieChartData.length);
+        setPieChartColors(colors);
+    }, [pieChartData.length]);
+
+    const dynamicPieChartOptions = useCallback(() => ({
+        labels: pieChartData.map(cluster => cluster.clusterName),
+        colors: pieChartColors,
+        chart: {
+            type: 'pie',
+            height: '100%',
+            width: '100%',
+        },
+        legend: {
+            show: false,
+        },
+        dataLabels: {
+            enabled: false,
+        },
+        tooltip: {
+            enabled: true,
+            theme: 'dark',
+            y: {
+                formatter: (value: number) => `${value.toFixed(1)}%`
+            }
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }]
+    }), [pieChartData, pieChartColors]);
+
+    useEffect(() => {
+        setChartKey(prevKey => prevKey + 1);
+    }, [pieChartData, selectedOption]);
+
+    useEffect(() => {
+        if (pieChartColors.length > 0) {
+            const options = dynamicPieChartOptions();
+            setChartOptions(options);
+            setIsChartReady(true);
+        }
+    }, [dynamicPieChartOptions, pieChartColors]);
+
+    const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedOption(e.target.value);
+    };
+
     return (
         <Card
             p="20px"
@@ -31,12 +112,13 @@ export default function Conversion(props: { [x: string]: any }) {
                 mb="8px"
             >
                 <Text color={textColor} fontSize="md" fontWeight="600" mt="4px">
-                    Your Pie Chart
+                    {chartTitle}
                 </Text>
                 <Select
                     fontSize="sm"
                     variant="subtle"
-                    defaultValue="monthly"
+                    value={selectedOption}
+                    onChange={handleOptionChange}
                     width="unset"
                     fontWeight="700"
                 >
@@ -46,12 +128,16 @@ export default function Conversion(props: { [x: string]: any }) {
                 </Select>
             </Flex>
 
-            <PieChart
-                h="100%"
-                w="100%"
-                chartData={pieChartData}
-                chartOptions={pieChartOptions}
-            />
+            {isChartReady && chartOptions && (
+                <PieChart
+                    key={chartKey}
+                    h="100%"
+                    w="100%"
+                    chartData={pieChartValues}
+                    chartOptions={chartOptions}
+                />
+            )}
+
             <Card
                 bg={cardColor}
                 flexDirection="row"
@@ -62,52 +148,33 @@ export default function Conversion(props: { [x: string]: any }) {
                 mt="15px"
                 mx="auto"
             >
-                <Flex direction="column" py="5px">
-                    <Flex align="center">
-                        <Box
-                            h="8px"
-                            w="8px"
-                            bg="brand.500"
-                            borderRadius="50%"
-                            me="4px"
-                        />
-                        <Text
-                            fontSize="xs"
-                            color="secondaryGray.600"
-                            fontWeight="700"
-                            mb="5px"
-                        >
-                            Your files
+                {pieChartData.map((cluster, index) => (
+                    <Flex key={index} direction="column" py="5px" me="10px">
+                        <Flex align="center">
+                            <Box
+                                h="8px"
+                                w="8px"
+                                bg={pieChartColors[index]}
+                                borderRadius="50%"
+                                me="4px"
+                            />
+                            <Text
+                                fontSize="xs"
+                                color="secondaryGray.600"
+                                fontWeight="700"
+                                mb="5px"
+                            >
+                                {cluster.clusterName}
+                            </Text>
+                        </Flex>
+                        <Text fontSize="lg" color={textColor} fontWeight="700">
+                            {((cluster.currentData / totalNodes) * 100).toFixed(1)}%
                         </Text>
                     </Flex>
-                    <Text fontSize="lg" color={textColor} fontWeight="700">
-                        63%
-                    </Text>
-                </Flex>
-                <VSeparator mx={{ base: '60px', xl: '60px', '2xl': '60px' }} />
-                <Flex direction="column" py="5px" me="10px">
-                    <Flex align="center">
-                        <Box
-                            h="8px"
-                            w="8px"
-                            bg="#6AD2FF"
-                            borderRadius="50%"
-                            me="4px"
-                        />
-                        <Text
-                            fontSize="xs"
-                            color="secondaryGray.600"
-                            fontWeight="700"
-                            mb="5px"
-                        >
-                            System
-                        </Text>
-                    </Flex>
-                    <Text fontSize="lg" color={textColor} fontWeight="700">
-                        25%
-                    </Text>
-                </Flex>
+                ))}
             </Card>
         </Card>
     );
-}
+};
+
+export default Conversion;

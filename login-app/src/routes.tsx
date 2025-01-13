@@ -4,7 +4,7 @@ import {
     MdPerson,
     MdHome,
     MdLock,
-    MdBallot,
+    MdBallot, MdStars, MdSettingsSuggest, MdOutlineFilterDrama, MdSchema, MdMoveUp, MdSaveAs, MdSave,
 } from 'react-icons/md';
 
 // Admin Imports
@@ -16,7 +16,10 @@ import RTL from 'views/admin/rtl';
 import Pod from 'views/admin/pod';
 import Namespace from 'views/admin/namespace';
 import Node from 'views/admin/node';
-
+import Deployment from 'views/admin/deployment';
+import Service from 'views/admin/service';
+import PersistentVolume from 'views/admin/volume/persistentVolume';
+import PersistentVolumeClaims from 'views/admin/volume/persistentVolumeClaims';
 
 // Auth Imports
 import SignInCentered from 'views/auth/signIn';
@@ -50,7 +53,7 @@ const routes = [
         path: '/node',
         icon: (
             <Icon
-                as={MdLock}
+                as={MdSettingsSuggest}
                 width="20px"
                 height="20px"
                 color="inherit"
@@ -64,7 +67,7 @@ const routes = [
         path: '/namespace',
         icon: (
             <Icon
-                as={MdLock}
+                as={MdStars}
                 width="20px"
                 height="20px"
                 color="inherit"
@@ -73,18 +76,74 @@ const routes = [
         component: <Namespace />,
     },
     {
+        name: 'Deployment',
+        layout: '/admin',
+        path: '/deployment',
+        icon: (
+            <Icon
+                as={MdMoveUp}
+                width="20px"
+                height="20px"
+                color="inherit"
+            />
+        ),
+        component: <Deployment />,
+    },
+    {
         name: 'Pod',
         layout: '/admin',
         path: '/pod',
         icon: (
             <Icon
-                as={MdLock}
+                as={MdOutlineFilterDrama}
                 width="20px"
                 height="20px"
                 color="inherit"
             />
         ),
         component: <Pod />,
+    },
+    {
+        name: 'Service',
+        layout: '/admin',
+        path: '/svc',
+        icon: (
+            <Icon
+                as={MdSchema}
+                width="20px"
+                height="20px"
+                color="inherit"
+            />
+        ),
+        component: <Service />,
+    },
+    {
+        name: 'PersistentVolume',
+        layout: '/admin',
+        path: '/pv',
+        icon: (
+            <Icon
+                as={MdSave}
+                width="20px"
+                height="20px"
+                color="inherit"
+            />
+        ),
+        component: <PersistentVolume />,
+    },
+    {
+        name: 'PersistentVolumeClaims',
+        layout: '/admin',
+        path: '/pvc',
+        icon: (
+            <Icon
+                as={MdSaveAs}
+                width="20px"
+                height="20px"
+                color="inherit"
+            />
+        ),
+        component: <PersistentVolumeClaims />,
     },
     {
         name: 'Data Tables',
