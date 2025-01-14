@@ -24,6 +24,7 @@ import { useAuthStore } from "../../../store/useAuthStore";
 import { apiClient } from "../../../api/axiosConfig";
 import { ApiResponse } from "../../../types/api";
 import { AxiosError } from "axios";
+import UserActivity from "./components/UserActivity";
 
 export default function UserReports() {
     const [loading, setLoading] = useState(true);
@@ -225,6 +226,7 @@ export default function UserReports() {
             >
 
                 <TotalSpent />
+                <UserActivity />
             </SimpleGrid>
         </Box>
     );
