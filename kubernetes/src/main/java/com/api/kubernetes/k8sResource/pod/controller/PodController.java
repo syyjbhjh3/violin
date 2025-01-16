@@ -11,18 +11,19 @@ import java.util.UUID;
 @Slf4j
 @CrossOrigin("*")
 @RestController
+@RequestMapping("/pod")
 @RequiredArgsConstructor
 public class PodController {
 
     private final PodService podService;
 
-    @GetMapping({"/cluster/{clusterId}/pod"})
-    public ResultDTO retrieve(@PathVariable UUID clusterId) {
+    @GetMapping({"/cluster"})
+    public ResultDTO retrieve(@RequestHeader("X-Cluster-Id") UUID clusterId) {
         return podService.retrieve(clusterId);
     }
 
-    @GetMapping({"/pod/{loginId}"})
-    public ResultDTO retrieveAll(@PathVariable String loginId) {
-        return podService.retrieveAll(loginId);
+    @GetMapping({"/user"})
+    public ResultDTO retrieveAll(@RequestHeader("X-User-Id") String userId) {
+        return podService.retrieveAll(userId);
     }
 }

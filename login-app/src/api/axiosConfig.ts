@@ -23,6 +23,7 @@ apiClient.interceptors.request.use(
 
         if (accessToken) {
             config.headers['Authorization'] = `Bearer ${accessToken}`;
+            config.headers['X-User-Id'] = useAuthStore.getState().userInfo.id;
         }
         return config;
     },
