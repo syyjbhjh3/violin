@@ -1,14 +1,14 @@
 .idea/*
-login/.gradle
-login/gradle
-login/settings.gradle.kts
-login/build/*
+user/.gradle
+user/gradle
+user/settings.gradle.kts
+user/build/*
 kubernetes/.gradle
 kubernetes/gradle
 kubernetes/settings.gradle.kts
 kubernetes/build/*
 
-login/src/main/resources/application-local.yml
-login/src/main/resources/application.yml
+user/src/main/resources/application-local.yml
+user/src/main/resources/application.yml
 kubernetes/src/main/resources/application-local.yml
 
