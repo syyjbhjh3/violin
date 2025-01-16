@@ -28,8 +28,8 @@ user:
   jwt:
     secret: qkrdudwn
     expiration:
-       access: 900000
-       refresh: 604800000
+      access: 900000
+      refresh: 604800000
 logging:
   level:
     org:
