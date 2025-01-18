@@ -4,28 +4,26 @@ import com.api.kubernetes.common.model.dto.ResultDTO;
 import com.api.kubernetes.k8sResource.deployment.service.DeploymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @Slf4j
 @CrossOrigin("*")
 @RestController
+@RequestMapping("/deployment")
 @RequiredArgsConstructor
 public class DeploymentController {
 
     private final DeploymentService deploymentService;
 
-    @GetMapping({"/cluster/{clusterId}/deployment"})
-    public ResultDTO retrieve(@PathVariable UUID clusterId) {
+    @GetMapping({"/cluster"})
+    public ResultDTO retrieve(@RequestHeader("X-Cluster-Id") UUID clusterId) {
         return deploymentService.retrieve(clusterId);
     }
 
-    @GetMapping({"/deployment/{loginId}"})
-    public ResultDTO retrieveAll(@PathVariable String loginId) {
-        return deploymentService.retrieveAll(loginId);
+    @GetMapping({"/user"})
+    public ResultDTO retrieveAll(@RequestHeader("X-User-Id") String userId) {
+        return deploymentService.retrieveAll(userId);
     }
 }

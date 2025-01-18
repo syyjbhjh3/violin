@@ -14,30 +14,31 @@ import java.util.UUID;
 @Slf4j
 @CrossOrigin("*")
 @RestController
+@RequestMapping("/namespace")
 @RequiredArgsConstructor
 public class NamespaceController {
 
     private final NamespaceService namespaceService;
 
-    @GetMapping({"/cluster/{clusterId}/namespace"})
-    public ResultDTO retrieve(@PathVariable UUID clusterId) {
+    @GetMapping({"/cluster"})
+    public ResultDTO retrieve(@RequestHeader("X-Cluster-Id") UUID clusterId) {
         return namespaceService.retrieve(clusterId);
     }
 
-    @GetMapping({"/namespace/{loginId}"})
-    public ResultDTO retrieveAll(@PathVariable String loginId) {
-        return namespaceService.retrieveAll(loginId);
+    @GetMapping({"/user"})
+    public ResultDTO retrieveAll(@RequestHeader("X-User-Id") String userId) {
+        return namespaceService.retrieveAll(userId);
     }
 
-    @PostMapping({"/namespace"})
+    @PostMapping
     public ResultDTO create(@RequestBody NamespaceDTO namespaceDTO) {
         return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_CREATE_SUCCESS.getMessage());
     }
-    @PutMapping({"/namespace/{namespace}"})
+    @PutMapping({"{namespace}"})
     public ResultDTO update(@RequestBody NamespaceDTO namespaceDTO) {
         return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_CREATE_SUCCESS.getMessage());
     }
-    @DeleteMapping({"/namespace/{namespace}"})
+    @DeleteMapping({"{namespace}"})
     public ResultDTO delete(@RequestBody NamespaceDTO namespaceDTO) {
         return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_CREATE_SUCCESS.getMessage());
     }
