@@ -39,10 +39,8 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-    /* Temporo */
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'io.micrometer:micrometer-tracing-bridge-otel'
-    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+    /* Prometheus */
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
     /* K8S Client */
     implementation("io.fabric8:kubernetes-client:6.13.4")
