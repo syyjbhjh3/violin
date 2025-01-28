@@ -26,4 +26,13 @@ public class DeploymentController {
     public ResultDTO retrieveAll(@RequestHeader("X-User-Id") String userId) {
         return deploymentService.retrieveAll(userId);
     }
+
+    @GetMapping({"/namespaces/{namespace}/{deployment}"})
+    public ResultDTO detail(
+            @RequestHeader("X-Cluster-Id") UUID clusterId,
+            @PathVariable String namespace,
+            @PathVariable String deployment
+    ) {
+        return deploymentService.detail(clusterId, namespace, deployment);
+    }
 }

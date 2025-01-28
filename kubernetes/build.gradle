@@ -46,6 +46,9 @@ dependencies {
     implementation("io.fabric8:kubernetes-client:6.13.4")
     implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
 
+    /* Swagger */
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
     /* Test */
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

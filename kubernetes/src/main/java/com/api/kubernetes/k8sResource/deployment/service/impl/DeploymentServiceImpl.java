@@ -8,6 +8,7 @@ import com.api.kubernetes.common.model.enums.Status;
 import com.api.kubernetes.common.util.k8sClient.UserClusterClientManager;
 import com.api.kubernetes.k8sResource.deployment.model.DeploymentDTO;
 import com.api.kubernetes.k8sResource.deployment.service.DeploymentService;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class DeploymentServiceImpl implements DeploymentService {
         ClusterEntity clusterEntity = clusterRepository.findByClusterId(clusterId);
         String clusterName = clusterEntity.getClusterName();
 
-        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getClusterId());
+        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getKubeConfigData());
 
         return kubernetesClient.apps()
                 .deployments()
@@ -57,6 +58,13 @@ public class DeploymentServiceImpl implements DeploymentService {
                 .collect(Collectors.toList());
 
         return new ResultDTO<>(Status.SUCCESS, Message.DEPLOYMENT_SEARCH_SUCCESS.getMessage(), deploymentList);
+    }
+
+    public ResultDTO detail(UUID clusterId, String namespace, String deploymentName) {
+        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterId);
+
+        Deployment deployment = kubernetesClient.apps().deployments().inNamespace(namespace).withName(deploymentName).get();
+        return new ResultDTO<>(Status.SUCCESS, Message.DEPLOYMENT_SEARCH_SUCCESS.getMessage(), deployment);
     }
 
 }
