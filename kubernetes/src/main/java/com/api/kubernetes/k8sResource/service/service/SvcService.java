@@ -11,4 +11,6 @@ public interface SvcService {
     ResultDTO retrieve(UUID clusterId);
 
     ResultDTO retrieveAll(String loginId);
+
+    ResultDTO detail(UUID clusterId, String namespace, String serviceName);
 }

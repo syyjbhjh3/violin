@@ -26,4 +26,13 @@ public class PodController {
     public ResultDTO retrieveAll(@RequestHeader("X-User-Id") String userId) {
         return podService.retrieveAll(userId);
     }
+
+    @GetMapping({"/namespaces/{namespace}/{pod}"})
+    public ResultDTO detail(
+            @RequestHeader("X-Cluster-Id") UUID clusterId,
+            @PathVariable String namespace,
+            @PathVariable String pod
+    ) {
+        return podService.detail(clusterId, namespace, pod);
+    }
 }

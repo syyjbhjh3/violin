@@ -8,6 +8,7 @@ import com.api.kubernetes.common.model.enums.Status;
 import com.api.kubernetes.common.util.k8sClient.UserClusterClientManager;
 import com.api.kubernetes.k8sResource.namespace.model.NamespaceDTO;
 import com.api.kubernetes.k8sResource.namespace.service.NamespaceService;
+import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class NamespaceServiceImpl implements NamespaceService {
         ClusterEntity clusterEntity = clusterRepository.findByClusterId(clusterId);
         String clusterName = clusterEntity.getClusterName();
 
-        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getClusterId());
+        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getKubeConfigData());
 
         return kubernetesClient.namespaces()
                 .list()
@@ -58,4 +59,10 @@ public class NamespaceServiceImpl implements NamespaceService {
         return new ResultDTO<>(Status.SUCCESS, Message.NAMESPACE_SEARCH_SUCCESS.getMessage(), namespaceList);
     }
 
+    public ResultDTO detail(UUID clusterId, String namespaceName) {
+        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterId);
+        Namespace namespace = kubernetesClient.namespaces().withName(namespaceName).get();
+
+        return new ResultDTO<>(Status.SUCCESS, Message.NAMESPACE_SEARCH_SUCCESS.getMessage(), namespace);
+    }
 }

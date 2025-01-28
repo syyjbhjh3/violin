@@ -8,6 +8,7 @@ import com.api.kubernetes.common.model.enums.Status;
 import com.api.kubernetes.common.util.k8sClient.UserClusterClientManager;
 import com.api.kubernetes.k8sResource.node.model.NodeDTO;
 import com.api.kubernetes.k8sResource.node.service.NodeService;
+import io.fabric8.kubernetes.api.model.Node;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class NodeServiceImpl implements NodeService {
         ClusterEntity clusterEntity = clusterRepository.findByClusterId(clusterId);
         String clusterName = clusterEntity.getClusterName();
 
-        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getClusterId());
+        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getKubeConfigData());
 
         return kubernetesClient.nodes()
                 .list()
@@ -56,6 +57,13 @@ public class NodeServiceImpl implements NodeService {
                 .collect(Collectors.toList());
 
         return new ResultDTO<>(Status.SUCCESS, Message.NODE_SEARCH_SUCCESS.getMessage(), nodeList);
+    }
+
+    public ResultDTO detail(UUID clusterId, String nodeName) {
+        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterId);
+        Node node = kubernetesClient.nodes().withName(nodeName).get();
+
+        return new ResultDTO<>(Status.SUCCESS, Message.NODE_SEARCH_SUCCESS.getMessage(), node);
     }
 
 }

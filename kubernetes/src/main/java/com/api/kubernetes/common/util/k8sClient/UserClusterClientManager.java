@@ -44,6 +44,14 @@ public class UserClusterClientManager {
         return newClient;
     }
 
+    public KubernetesClient getClusterClient(String kubeconfigData) {
+        KubernetesClient newClient = new KubernetesClientBuilder()
+                .withConfig(kubeconfigData)
+                .build();
+
+        return newClient;
+    }
+
     public void disconnectCluster(UUID clusterId, String kubeConfigId) {
         String redisKey = clusterId + ":" + kubeConfigId;
         redisTemplate.delete(redisKey);

@@ -30,13 +30,13 @@ public enum Message {
     NODE_SEARCH_SUCCESS("노드 목록 조회가 완료되었습니다."),
     NODE_SEARCH_NOT_FOUND("노드가 존재하지 않습니다."),
 
-    NAMESPACE_SEARCH_SUCCESS("네임스페이스 목록 조회가 완료되었습니다."),
+    NAMESPACE_SEARCH_SUCCESS("네임스페이스 조회가 완료되었습니다."),
 
-    DEPLOYMENT_SEARCH_SUCCESS("디플로이먼트 목록 조회가 완료되었습니다."),
+    DEPLOYMENT_SEARCH_SUCCESS("디플로이먼트 조회가 완료되었습니다."),
 
-    PERSISTENTVOLUME_SEARCH_SUCCESS("퍼시스턴트볼륨 목록 조회가 완료되었습니다."),
+    PERSISTENTVOLUME_SEARCH_SUCCESS("퍼시스턴트볼륨 조회가 완료되었습니다."),
 
-    PERSISTENTVOLUMECLAIM_SEARCH_SUCCESS("퍼시스턴트볼륨클레임 목록 조회가 완료되었습니다.");
+    PERSISTENTVOLUMECLAIM_SEARCH_SUCCESS("퍼시스턴트볼륨클레임 조회가 완료되었습니다.");
 
     public final String message;
 

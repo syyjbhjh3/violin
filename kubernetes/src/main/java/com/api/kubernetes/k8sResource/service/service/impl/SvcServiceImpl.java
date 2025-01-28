@@ -28,11 +28,11 @@ public class SvcServiceImpl implements SvcService {
     /* Util */
     private final UserClusterClientManager k8sClientManager;
 
-    private List<ServiceDTO> retrieveNamespaceList(UUID clusterId) {
+    private List<ServiceDTO> retrieveServiceList(UUID clusterId) {
         ClusterEntity clusterEntity = clusterRepository.findByClusterId(clusterId);
         String clusterName = clusterEntity.getClusterName();
 
-        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getClusterId());
+        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getKubeConfigData());
 
         return kubernetesClient.services()
                 .list()
@@ -43,19 +43,26 @@ public class SvcServiceImpl implements SvcService {
     }
 
     public ResultDTO retrieve(UUID clusterId) {
-        List<ServiceDTO> namespaceList = retrieveNamespaceList(clusterId);
-        return new ResultDTO<>(Status.SUCCESS, Message.PERSISTENTVOLUME_SEARCH_SUCCESS.getMessage(), namespaceList);
+        List<ServiceDTO> serviceList = retrieveServiceList(clusterId);
+        return new ResultDTO<>(Status.SUCCESS, Message.PERSISTENTVOLUME_SEARCH_SUCCESS.getMessage(), serviceList);
     }
 
     public ResultDTO retrieveAll(String loginId) {
         List<ClusterEntity> clusterEntities = clusterRepository.findByUserIdAndStatus(loginId, Status.ENABLE);
 
-        List<ServiceDTO> persistentVolumeList = clusterEntities.stream()
+        List<ServiceDTO> serviceList = clusterEntities.stream()
                 .parallel()
-                .flatMap(clusterEntity -> retrieveNamespaceList(clusterEntity.getClusterId()).stream())
+                .flatMap(clusterEntity -> retrieveServiceList(clusterEntity.getClusterId()).stream())
                 .collect(Collectors.toList());
 
-        return new ResultDTO<>(Status.SUCCESS, Message.PERSISTENTVOLUME_SEARCH_SUCCESS.getMessage(), persistentVolumeList);
+        return new ResultDTO<>(Status.SUCCESS, Message.PERSISTENTVOLUME_SEARCH_SUCCESS.getMessage(), serviceList);
     }
 
+    public ResultDTO detail(UUID clusterId, String namespace, String serviceName) {
+        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterId);
+        io.fabric8.kubernetes.api.model.Service service = kubernetesClient.services().inNamespace(namespace).withName(serviceName).get();
+
+        return new ResultDTO<>(Status.SUCCESS, Message.PERSISTENTVOLUME_SEARCH_SUCCESS.getMessage(), service);
+
+    }
 }
