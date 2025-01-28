@@ -8,6 +8,7 @@ import com.api.kubernetes.common.model.enums.Status;
 import com.api.kubernetes.common.util.k8sClient.UserClusterClientManager;
 import com.api.kubernetes.k8sResource.persistentVolume.model.PersistentVolumeDTO;
 import com.api.kubernetes.k8sResource.persistentVolume.service.PersistentVolumeService;
+import io.fabric8.kubernetes.api.model.PersistentVolume;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class PersistentVolumeServiceImpl implements PersistentVolumeService {
         ClusterEntity clusterEntity = clusterRepository.findByClusterId(clusterId);
         String clusterName = clusterEntity.getClusterName();
 
-        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getClusterId());
+        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getKubeConfigData());
 
         return kubernetesClient.persistentVolumes()
                 .list()
@@ -58,4 +59,10 @@ public class PersistentVolumeServiceImpl implements PersistentVolumeService {
         return new ResultDTO<>(Status.SUCCESS, Message.PERSISTENTVOLUME_SEARCH_SUCCESS.getMessage(), persistentVolumeList);
     }
 
+    public ResultDTO detail(UUID clusterId, String persistentVolumeName) {
+        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterId);
+        PersistentVolume persistentVolume = kubernetesClient.persistentVolumes().withName(persistentVolumeName).get();
+
+        return new ResultDTO<>(Status.SUCCESS, Message.PERSISTENTVOLUME_SEARCH_SUCCESS.getMessage(), persistentVolume);
+    }
 }

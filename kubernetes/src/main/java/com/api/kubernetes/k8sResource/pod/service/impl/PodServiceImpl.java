@@ -8,6 +8,7 @@ import com.api.kubernetes.common.model.enums.Status;
 import com.api.kubernetes.common.util.k8sClient.UserClusterClientManager;
 import com.api.kubernetes.k8sResource.pod.model.PodDTO;
 import com.api.kubernetes.k8sResource.pod.service.PodService;
+import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class PodServiceImpl implements PodService {
         ClusterEntity clusterEntity = clusterRepository.findByClusterId(clusterId);
         String clusterName = clusterEntity.getClusterName();
 
-        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getClusterId());
+        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterEntity.getKubeConfigData());
 
         return kubernetesClient.pods()
                 .inAnyNamespace()
@@ -58,5 +59,12 @@ public class PodServiceImpl implements PodService {
                 .collect(Collectors.toList());
 
         return new ResultDTO<>(Status.SUCCESS, Message.POD_SEARCH_SUCCESS.getMessage(), podList);
+    }
+
+    public ResultDTO detail(UUID clusterId, String namespace, String podName) {
+        KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(clusterId);
+        Pod pod = kubernetesClient.pods().inNamespace(namespace).withName(podName).get();
+
+        return new ResultDTO<>(Status.SUCCESS, Message.POD_SEARCH_SUCCESS.getMessage(), pod);
     }
 }

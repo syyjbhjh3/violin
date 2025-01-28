@@ -26,4 +26,12 @@ public class PersistentVolumeClaimController {
     public ResultDTO retrieveAll(@RequestHeader("X-User-Id") String userId) {
         return persistentVolumeClaimService.retrieveAll(userId);
     }
+
+    @GetMapping({"/{persistentVolumeClaim}"})
+    public ResultDTO detail(
+            @RequestHeader("X-Cluster-Id") UUID clusterId,
+            @PathVariable String persistentVolumeClaim
+    ) {
+        return persistentVolumeClaimService.detail(clusterId, persistentVolumeClaim);
+    }
 }

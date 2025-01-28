@@ -26,4 +26,13 @@ public class SvcController {
     public ResultDTO retrieveAll(@RequestHeader("X-User-Id") String userId) {
         return svcService.retrieveAll(userId);
     }
+
+    @GetMapping({"/namespaces/{namespace}/{service}"})
+    public ResultDTO detail(
+            @RequestHeader("X-Cluster-Id") UUID clusterId,
+            @PathVariable String namespace,
+            @PathVariable String service
+    ) {
+        return svcService.detail(clusterId, namespace, service);
+    }
 }

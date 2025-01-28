@@ -26,4 +26,12 @@ public class NodeController {
     public ResultDTO retrieveAll(@RequestHeader("X-User-Id") String userId) {
         return nodeService.retrieveAll(userId);
     }
+
+    @GetMapping({"/{node}"})
+    public ResultDTO detail(
+            @RequestHeader("X-Cluster-Id") UUID clusterId,
+            @PathVariable String node
+    ) {
+        return nodeService.detail(clusterId, node);
+    }
 }

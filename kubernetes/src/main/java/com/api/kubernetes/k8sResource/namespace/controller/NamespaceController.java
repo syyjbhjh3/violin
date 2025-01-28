@@ -30,6 +30,13 @@ public class NamespaceController {
         return namespaceService.retrieveAll(userId);
     }
 
+    @GetMapping({"/{namespace}}"})
+    public ResultDTO detail(
+            @RequestHeader("X-Cluster-Id") UUID clusterId,
+            @PathVariable String namespace) {
+        return namespaceService.detail(clusterId, namespace);
+    }
+
     @PostMapping
     public ResultDTO create(@RequestBody NamespaceDTO namespaceDTO) {
         return new ResultDTO<>(Status.SUCCESS, Message.CLUSTER_CREATE_SUCCESS.getMessage());
