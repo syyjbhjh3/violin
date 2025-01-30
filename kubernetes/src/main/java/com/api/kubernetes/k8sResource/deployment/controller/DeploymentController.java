@@ -41,22 +41,4 @@ public class DeploymentController {
     ) {
         return deploymentService.detail(clusterId, namespace, deployment);
     }
-
-    @PostMapping
-    public ResultDTO create(@RequestHeader("X-Cluster-Id") UUID clusterId, @RequestBody ResourceDTO resourceDTO) throws IOException {
-        resourceDTO.initInfo(clusterId, Action.CREATE);
-        return commonService.resourceProcess(resourceDTO);
-    }
-
-    @PutMapping
-    public ResultDTO update(@RequestHeader("X-Cluster-Id") UUID clusterId, @RequestBody ResourceDTO resourceDTO) throws IOException {
-        resourceDTO.initInfo(clusterId, Action.UPDATE);
-        return commonService.resourceProcess(resourceDTO);
-    }
-
-    @DeleteMapping
-    public ResultDTO delete(@RequestHeader("X-Cluster-Id") UUID clusterId, @RequestBody ResourceDTO resourceDTO) throws IOException {
-        resourceDTO.initInfo(clusterId, Action.DELETE);
-        return commonService.resourceProcess(resourceDTO);
-    }
 }

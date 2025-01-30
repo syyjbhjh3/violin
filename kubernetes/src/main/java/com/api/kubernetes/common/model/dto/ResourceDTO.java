@@ -1,6 +1,7 @@
 package com.api.kubernetes.common.model.dto;
 
 import com.api.kubernetes.common.model.enums.Action;
+import com.api.kubernetes.common.model.enums.Type;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,6 +14,7 @@ public class ResourceDTO {
     private String resourceYaml;
     private String namespace;
     private Action action;
+    private Type type;
 
     public void initInfo(UUID clusterId, Action action){
         this.clusterId = clusterId;
