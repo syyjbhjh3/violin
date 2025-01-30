@@ -36,7 +36,11 @@ public enum Message {
 
     PERSISTENTVOLUME_SEARCH_SUCCESS("퍼시스턴트볼륨 조회가 완료되었습니다."),
 
-    PERSISTENTVOLUMECLAIM_SEARCH_SUCCESS("퍼시스턴트볼륨클레임 조회가 완료되었습니다.");
+    PERSISTENTVOLUMECLAIM_SEARCH_SUCCESS("퍼시스턴트볼륨클레임 조회가 완료되었습니다."),
+
+    RESOURCE_APPLY("Resource가 적용되었습니다."),
+    RESOURCE_EMPTY("Yaml이 존재하지 않습니다."),
+    RESOURCE_INVALID("Yaml이 유효하지 않습니다.");
 
     public final String message;
 
