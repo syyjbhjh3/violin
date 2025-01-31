@@ -30,7 +30,7 @@ public class NamespaceController {
         return namespaceService.retrieveAll(userId);
     }
 
-    @GetMapping({"/{namespace}}"})
+    @GetMapping({"/{namespace}"})
     public ResultDTO detail(
             @RequestHeader("X-Cluster-Id") UUID clusterId,
             @PathVariable String namespace) {
