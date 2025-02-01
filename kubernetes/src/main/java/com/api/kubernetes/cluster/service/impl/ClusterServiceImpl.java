@@ -16,13 +16,10 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -108,7 +105,7 @@ public class ClusterServiceImpl implements ClusterService {
             }
         } catch (Exception e) {
             log.error("Cluster connection failed: ", e);
-            return new ResultDTO<>(Status.ERROR, e.getMessage());
+            throw new RuntimeException("Cluster connection failed", e);
         }
     }
 

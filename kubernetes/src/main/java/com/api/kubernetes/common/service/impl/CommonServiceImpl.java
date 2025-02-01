@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -21,7 +20,7 @@ import java.util.List;
 public class CommonServiceImpl implements CommonService {
     private final UserClusterClientManager k8sClientManager;
 
-    public ResultDTO resourceProcess(ResourceDTO resourceDTO) throws IOException {
+    public ResultDTO resourceProcess(ResourceDTO resourceDTO) {
         Action action = resourceDTO.getAction();
         KubernetesClient kubernetesClient = k8sClientManager.getClusterClient(resourceDTO.getClusterId());
         HasMetadata resource = parseYaml(resourceDTO.getResourceYaml(), kubernetesClient);
@@ -36,7 +35,7 @@ public class CommonServiceImpl implements CommonService {
         return new ResultDTO<>(Status.SUCCESS, Message.RESOURCE_APPLY.message);
     }
 
-    private HasMetadata parseYaml(String yaml, KubernetesClient kubernetesClient) throws IOException {
+    private HasMetadata parseYaml(String yaml, KubernetesClient kubernetesClient) {
         List<HasMetadata> resources = kubernetesClient.load(new ByteArrayInputStream(yaml.getBytes())).get();
 
         if (resources == null || resources.isEmpty()) {
