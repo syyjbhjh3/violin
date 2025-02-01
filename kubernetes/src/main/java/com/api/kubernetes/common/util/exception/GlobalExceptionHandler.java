@@ -22,4 +22,16 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage(), e);
         return new ResultDTO<>(Status.ERROR, e.getMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResultDTO handleException(IllegalArgumentException e) {
+        log.error(e.getMessage(), e);
+        return new ResultDTO<>(Status.ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResultDTO handleException(RuntimeException e) {
+        log.error(e.getMessage(), e);
+        return new ResultDTO<>(Status.ERROR, e.getMessage());
+    }
 }
