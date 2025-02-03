@@ -38,6 +38,7 @@ dependencies {
     implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
 
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
     /* Prometheus */
     implementation 'io.micrometer:micrometer-registry-prometheus'
