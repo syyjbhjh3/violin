@@ -34,4 +34,9 @@ public class NodeController {
     ) {
         return nodeService.detail(clusterId, node);
     }
+
+    @PostMapping
+    public ResultDTO create(@RequestHeader("X-Cluster-Id") UUID clusterId) {
+        return null;
+    }
 }
