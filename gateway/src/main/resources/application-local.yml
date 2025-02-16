@@ -1,0 +1,24 @@
+server:
+  port: 9093
+
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: spring-cloud-service
+          uri: lb://SPRING-CLOUD-SERVICE
+          predicates:
+            - Path=/spring-cloud-service/**
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:9092/eureka
