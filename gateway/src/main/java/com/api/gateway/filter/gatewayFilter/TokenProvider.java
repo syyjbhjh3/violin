@@ -1,4 +1,4 @@
-package com.api.gateway.filter;
+package com.api.gateway.filter.gatewayFilter;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;

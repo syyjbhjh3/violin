@@ -1,4 +1,4 @@
-package com.api.gateway.filter;
+package com.api.gateway.filter.gatewayFilter;
 
 import com.api.gateway.redis.RedisService;
 import lombok.Getter;
