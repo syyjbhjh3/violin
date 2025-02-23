@@ -14,7 +14,7 @@ public class TokenProvider {
 
     public boolean isExpired(String token) {
         Date expiredDate = extractClaims(token).getExpiration();
-        return expiredDate.before(new Date());
+        return expiredDate.after(new Date());
     }
 
     private Claims extractClaims(String token) {
