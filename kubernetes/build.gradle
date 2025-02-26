@@ -20,6 +20,7 @@ ext {
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom("io.fabric8:kubernetes-client-bom:6.12.1")
     }
 }
 
@@ -58,7 +59,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
     /* K8S Client */
-    implementation("io.fabric8:kubernetes-client:6.13.4")
+    implementation("io.fabric8:kubernetes-client")
     implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
 
     /* Swagger */
